@@ -1,3 +1,3 @@
 # Compiler
 
-CACT compiler
+Antlr and CACT compiler demo.
