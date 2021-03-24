@@ -1,0 +1,3 @@
+/home/teacher/workspace/demo_cact_compiler/build/CMakeFiles/rebuild_cache.dir
+/home/teacher/workspace/demo_cact_compiler/build/CMakeFiles/edit_cache.dir
+/home/teacher/workspace/demo_cact_compiler/build/CMakeFiles/main.dir
