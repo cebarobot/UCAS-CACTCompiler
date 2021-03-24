@@ -14,7 +14,7 @@ make
 ## Run demo
 
 ```shell
-./main ../samples/00_main.cact
+./compiler ../samples/00_main.cact
 ```
 
 

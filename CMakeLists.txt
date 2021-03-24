@@ -24,4 +24,4 @@ FILE(GLOB SOURCE_FILES "src/*.cpp" "grammar/*.cpp")
 
 add_definitions(-w -g)
 
-add_executable(main ${SOURCE_FILES})
+add_executable(compiler ${SOURCE_FILES})
