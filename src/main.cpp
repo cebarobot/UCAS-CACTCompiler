@@ -18,6 +18,18 @@ int main(int argc, const char* argv[]) {
     CACTParser parser(&tokens);
 
     tree::ParseTree *tree = parser.compUnit();
+
+    if (lexer.getNumberOfSyntaxErrors() > 0)
+    {
+        std::cout << "Error: There is " << lexer.getNumberOfSyntaxErrors() << " syntax errors reported by lexer." << std::endl;
+        return 1;
+    }
+    if (parser.getNumberOfSyntaxErrors() > 0)
+    {
+        std::cout << "Error: There is " << parser.getNumberOfSyntaxErrors() << " syntax errors reported by parser." << std::endl;
+        return 1;
+    }
+
     SemanticAnalysis listener;
     tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
     
@@ -27,4 +39,5 @@ int main(int argc, const char* argv[]) {
     std::cout << "-------------------------Print AST:--------------------------" << std::endl;
     std::cout << tree->toStringTree(&parser) << std::endl;
 
+    return 0;
 }
