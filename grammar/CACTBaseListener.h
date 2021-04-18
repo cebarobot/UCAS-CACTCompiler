@@ -44,6 +44,66 @@ public:
   virtual void enterVarDef(CACTParser::VarDefContext * /*ctx*/) override { }
   virtual void exitVarDef(CACTParser::VarDefContext * /*ctx*/) override { }
 
+  virtual void enterFuncDef(CACTParser::FuncDefContext * /*ctx*/) override { }
+  virtual void exitFuncDef(CACTParser::FuncDefContext * /*ctx*/) override { }
+
+  virtual void enterFuncType(CACTParser::FuncTypeContext * /*ctx*/) override { }
+  virtual void exitFuncType(CACTParser::FuncTypeContext * /*ctx*/) override { }
+
+  virtual void enterFuncFParams(CACTParser::FuncFParamsContext * /*ctx*/) override { }
+  virtual void exitFuncFParams(CACTParser::FuncFParamsContext * /*ctx*/) override { }
+
+  virtual void enterFuncFParam(CACTParser::FuncFParamContext * /*ctx*/) override { }
+  virtual void exitFuncFParam(CACTParser::FuncFParamContext * /*ctx*/) override { }
+
+  virtual void enterBlock(CACTParser::BlockContext * /*ctx*/) override { }
+  virtual void exitBlock(CACTParser::BlockContext * /*ctx*/) override { }
+
+  virtual void enterBlockItem(CACTParser::BlockItemContext * /*ctx*/) override { }
+  virtual void exitBlockItem(CACTParser::BlockItemContext * /*ctx*/) override { }
+
+  virtual void enterStmt(CACTParser::StmtContext * /*ctx*/) override { }
+  virtual void exitStmt(CACTParser::StmtContext * /*ctx*/) override { }
+
+  virtual void enterExp(CACTParser::ExpContext * /*ctx*/) override { }
+  virtual void exitExp(CACTParser::ExpContext * /*ctx*/) override { }
+
+  virtual void enterCond(CACTParser::CondContext * /*ctx*/) override { }
+  virtual void exitCond(CACTParser::CondContext * /*ctx*/) override { }
+
+  virtual void enterLVal(CACTParser::LValContext * /*ctx*/) override { }
+  virtual void exitLVal(CACTParser::LValContext * /*ctx*/) override { }
+
+  virtual void enterPrimaryExp(CACTParser::PrimaryExpContext * /*ctx*/) override { }
+  virtual void exitPrimaryExp(CACTParser::PrimaryExpContext * /*ctx*/) override { }
+
+  virtual void enterUnaryExp(CACTParser::UnaryExpContext * /*ctx*/) override { }
+  virtual void exitUnaryExp(CACTParser::UnaryExpContext * /*ctx*/) override { }
+
+  virtual void enterUnaryOp(CACTParser::UnaryOpContext * /*ctx*/) override { }
+  virtual void exitUnaryOp(CACTParser::UnaryOpContext * /*ctx*/) override { }
+
+  virtual void enterFuncRParams(CACTParser::FuncRParamsContext * /*ctx*/) override { }
+  virtual void exitFuncRParams(CACTParser::FuncRParamsContext * /*ctx*/) override { }
+
+  virtual void enterMulExp(CACTParser::MulExpContext * /*ctx*/) override { }
+  virtual void exitMulExp(CACTParser::MulExpContext * /*ctx*/) override { }
+
+  virtual void enterAddExp(CACTParser::AddExpContext * /*ctx*/) override { }
+  virtual void exitAddExp(CACTParser::AddExpContext * /*ctx*/) override { }
+
+  virtual void enterRelExp(CACTParser::RelExpContext * /*ctx*/) override { }
+  virtual void exitRelExp(CACTParser::RelExpContext * /*ctx*/) override { }
+
+  virtual void enterEqExp(CACTParser::EqExpContext * /*ctx*/) override { }
+  virtual void exitEqExp(CACTParser::EqExpContext * /*ctx*/) override { }
+
+  virtual void enterLAndExp(CACTParser::LAndExpContext * /*ctx*/) override { }
+  virtual void exitLAndExp(CACTParser::LAndExpContext * /*ctx*/) override { }
+
+  virtual void enterLOrExp(CACTParser::LOrExpContext * /*ctx*/) override { }
+  virtual void exitLOrExp(CACTParser::LOrExpContext * /*ctx*/) override { }
+
   virtual void enterConstExpNumber(CACTParser::ConstExpNumberContext * /*ctx*/) override { }
   virtual void exitConstExpNumber(CACTParser::ConstExpNumberContext * /*ctx*/) override { }
 

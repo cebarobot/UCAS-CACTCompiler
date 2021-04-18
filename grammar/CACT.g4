@@ -12,7 +12,7 @@ options {
 
 /********** Parser **********/
 compUnit
-    : (decl)+ EOF
+    : (decl | funcDef) (compUnit)* EOF
     ;
 
 decl
@@ -27,17 +27,20 @@ constDecl
 bType
     : 'int'
     | 'bool'
+    | 'double'
+    | 'float'
     ;
 
 constDef
-    : Ident '=' constInitVal
+    : Ident ('[' IntConst ']')? '=' constInitVal
     ;
 
 constInitVal
     locals[
         int basic_or_array_and_type
     ]
-    : constExp                                             
+    : constExp
+    | '{' (constExp (',' constExp)*)? '}'                                             
     ;
 
 varDecl
@@ -45,7 +48,114 @@ varDecl
     ;
 
 varDef
-    : Ident ('=' constInitVal)?
+    : Ident ('[' IntConst ']')?
+    | Ident ('[' IntConst ']')? '=' constInitVal
+    ;
+
+funcDef
+    : funcType Ident '(' (funcFParams)? ')' block
+    ;
+
+funcType
+    : 'void'
+    | 'int'
+    | 'float'
+    | 'double'
+    | 'bool'
+    ;
+
+funcFParams
+    : funcFParam (',' funcFParam)*
+    ;
+
+funcFParam
+    : bType Ident ('[' ']')?
+    ;
+
+block
+    : '{' (blockItem)* '}'
+    ;
+
+blockItem
+    : decl 
+    | stmt
+    ;
+
+stmt
+    : lVal '=' exp ';'
+    | (exp)? ';'
+    | block
+    | 'if' '(' cond ')' stmt ('else' stmt)?
+    | 'while' '(' cond ')' stmt
+    | 'break' ';' 
+    | 'contine' ';'
+    | 'return' (exp)? ';'
+    ;
+
+exp
+    : addExp
+    | BoolConst
+    ;
+
+cond
+    : lOrExp
+    ;
+
+lVal
+    : Ident ('[' exp ']')?
+    ;
+
+primaryExp
+    : '(' exp ')' 
+    | lVal 
+    | number 
+    ;
+
+unaryExp
+    : primaryExp
+    | Ident '(' (funcRParams)? ')'
+    | unaryOp unaryExp
+    ;
+
+unaryOp
+    : '+'
+    | '-'
+    | '!'
+    ;
+
+funcRParams
+    : exp (',' exp)*
+    ;
+
+mulExp
+    : unaryExp 
+    | mulExp ('*' | '/' | '%') unaryExp
+    ;
+
+addExp
+    : mulExp
+    | addExp ('+' | '-') mulExp
+    ;
+
+relExp
+    : addExp
+    | relExp ('<' | '>' | '<=' | '>=') addExp
+    | BoolConst
+    ;
+
+eqExp
+    : relExp
+    | eqExp ('==' | '!=') relExp
+    ;
+
+lAndExp
+    : eqExp
+    | lAndExp ('&&') eqExp
+    ;
+
+lOrExp
+    : lAndExp
+    | lOrExp ('||') lAndExp
     ;
 
 constExp
@@ -61,9 +171,28 @@ number
         int basic_or_array_and_type,
     ]
     : IntConst
+    | DoubleConst
+    | FloatConst
     ;
 
 /********** Lexer **********/
+
+// /** keywords */
+// BREAK       : 'break';
+// CONTINUE    : 'continue';
+// IF          : 'if';
+// ELSE        : 'else';
+// WHILE       : 'while';
+// RETURN      : 'return';
+// TRUE        : 'true';
+// FALSE       : 'false';
+// VOID        : 'void';
+// BOOL        : 'bool';
+// INT         : 'int';
+// FLOAT       : 'float';
+// DOUBLE      : 'double';
+// CONST       : 'const';
+
 BoolConst : 'true' | 'false';
 
 Ident
@@ -121,6 +250,40 @@ HexadecimalPrefix
 fragment
 HexadecimalDigit
     : [0-9a-fA-F]
+    ;
+
+FloatConst
+    : DoubleConst ('F' | 'f')
+    ;
+
+DoubleConst
+    : ExpNum
+    | NonExpNum
+    ;
+
+fragment
+ExpNum
+    : Base Index
+    ;
+
+fragment
+Base
+    : '.' (Digit)+ 
+    | (Digit)+ '.'
+    | (Digit)+ '.' (Digit)+
+    | (Digit)+
+    ;
+
+fragment
+Index
+    : ('E' | 'e') ('+' | '-')? (Digit)+
+    ;
+
+fragment
+NonExpNum
+    : '.' (Digit)+
+    | (Digit)+ '.'
+    | (Digit)+ '.' (Digit)+
     ;
 
 NewLine

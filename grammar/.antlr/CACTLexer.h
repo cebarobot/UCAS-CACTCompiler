@@ -3,7 +3,7 @@
     #include <string>
 
 
-// Generated from /home/teacher/workspace/compiler/demo_cact_compiler/grammar/CACT.g4 by ANTLR 4.8
+// Generated from /home/compiler13/compiler/grammar/CACT.g4 by ANTLR 4.8
 
 #pragma once
 
@@ -16,9 +16,14 @@
 class  CACTLexer : public antlr4::Lexer {
 public:
   enum {
-    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, BoolConst = 7, 
-    Ident = 8, IntConst = 9, NewLine = 10, WhiteSpace = 11, BlockComment = 12, 
-    LineComment = 13
+    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
+    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
+    T__14 = 15, T__15 = 16, T__16 = 17, T__17 = 18, T__18 = 19, T__19 = 20, 
+    T__20 = 21, T__21 = 22, T__22 = 23, T__23 = 24, T__24 = 25, T__25 = 26, 
+    T__26 = 27, T__27 = 28, T__28 = 29, T__29 = 30, T__30 = 31, T__31 = 32, 
+    T__32 = 33, T__33 = 34, T__34 = 35, BoolConst = 36, Ident = 37, IntConst = 38, 
+    FloatConst = 39, DoubleConst = 40, NewLine = 41, WhiteSpace = 42, BlockComment = 43, 
+    LineComment = 44
   };
 
   CACTLexer(antlr4::CharStream *input);
