@@ -1,5 +1,0 @@
-const int a = 3;
-const bool e = false;
-int b = 4;
-int c;
-bool d = true;
