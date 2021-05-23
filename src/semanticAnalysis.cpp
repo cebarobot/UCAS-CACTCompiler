@@ -466,6 +466,12 @@ void SemanticAnalysis::exitUnaryExpFunc(CACTParser::UnaryExpFuncContext * ctx) {
     ctx->isArray = false;
     std::cerr << "check point asd7f" << std::endl;
     ctx->dataType = thisFunc->getDataType();
+    
+    if (ctx->funcRParams() == nullptr && thisFunc->getparamNum() > 0) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC 758\n");
+            return;
+    }
 }
 
 void SemanticAnalysis::enterUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext * ctx) {
