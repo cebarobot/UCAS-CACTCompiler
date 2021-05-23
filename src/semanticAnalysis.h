@@ -32,8 +32,15 @@ public:
     void enterConstDef(CACTParser::ConstDefContext * ctx) override ;
     void exitConstDef(CACTParser::ConstDefContext * ctx) override ;
 
-    void enterConstInitVal(CACTParser::ConstInitValContext * ctx) override ;
-    void exitConstInitVal(CACTParser::ConstInitValContext * ctx) override ;
+    // void enterConstInitVal(CACTParser::ConstInitValContext * ctx) override ;
+    // void exitConstInitVal(CACTParser::ConstInitValContext * ctx) override ;
+
+    void enterConstInitValBasic(CACTParser::ConstInitValBasicContext * ctx) override;
+    void exitConstInitValBasic(CACTParser::ConstInitValBasicContext * ctx) override;
+
+    void enterConstInitValArray(CACTParser::ConstInitValArrayContext * ctx) override;
+    void exitConstInitValArray(CACTParser::ConstInitValArrayContext * ctx) override;
+
 
     void enterVarDecl(CACTParser::VarDeclContext * ctx) override;
     void exitVarDecl(CACTParser::VarDeclContext * ctx) override;
@@ -107,8 +114,14 @@ public:
     void enterConstExpBoolConst(CACTParser::ConstExpBoolConstContext * ctx) override ;
     void exitConstExpBoolConst(CACTParser::ConstExpBoolConstContext * ctx) override ;
 
-    void enterNumber(CACTParser::NumberContext * ctx) override ;
-    void exitNumber(CACTParser::NumberContext * ctx) override ;
+    void enterNumberIntConst(CACTParser::NumberIntConstContext * ctx) override;
+    void exitNumberIntConst(CACTParser::NumberIntConstContext * ctx) override;
+
+    void enterNumberDoubleConst(CACTParser::NumberDoubleConstContext * ctx) override;
+    void exitNumberDoubleConst(CACTParser::NumberDoubleConstContext * ctx) override;
+
+    void enterNumberFloatConst(CACTParser::NumberFloatConstContext * ctx) override;
+    void exitNumberFloatConst(CACTParser::NumberFloatConstContext * ctx) override;
 
 
     void enterEveryRule(antlr4::ParserRuleContext * ctx) override ;

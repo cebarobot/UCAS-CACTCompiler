@@ -1,6 +1,7 @@
 
     #include <vector>
     #include <string>
+    #include "../src/symbolTable.h"
 
 
 // Generated from CACT.g4 by ANTLR 4.8
@@ -35,8 +36,11 @@ public:
   virtual void enterConstDef(CACTParser::ConstDefContext * /*ctx*/) override { }
   virtual void exitConstDef(CACTParser::ConstDefContext * /*ctx*/) override { }
 
-  virtual void enterConstInitVal(CACTParser::ConstInitValContext * /*ctx*/) override { }
-  virtual void exitConstInitVal(CACTParser::ConstInitValContext * /*ctx*/) override { }
+  virtual void enterConstInitValBasic(CACTParser::ConstInitValBasicContext * /*ctx*/) override { }
+  virtual void exitConstInitValBasic(CACTParser::ConstInitValBasicContext * /*ctx*/) override { }
+
+  virtual void enterConstInitValArray(CACTParser::ConstInitValArrayContext * /*ctx*/) override { }
+  virtual void exitConstInitValArray(CACTParser::ConstInitValArrayContext * /*ctx*/) override { }
 
   virtual void enterVarDecl(CACTParser::VarDeclContext * /*ctx*/) override { }
   virtual void exitVarDecl(CACTParser::VarDeclContext * /*ctx*/) override { }
@@ -110,8 +114,14 @@ public:
   virtual void enterConstExpBoolConst(CACTParser::ConstExpBoolConstContext * /*ctx*/) override { }
   virtual void exitConstExpBoolConst(CACTParser::ConstExpBoolConstContext * /*ctx*/) override { }
 
-  virtual void enterNumber(CACTParser::NumberContext * /*ctx*/) override { }
-  virtual void exitNumber(CACTParser::NumberContext * /*ctx*/) override { }
+  virtual void enterNumberIntConst(CACTParser::NumberIntConstContext * /*ctx*/) override { }
+  virtual void exitNumberIntConst(CACTParser::NumberIntConstContext * /*ctx*/) override { }
+
+  virtual void enterNumberDoubleConst(CACTParser::NumberDoubleConstContext * /*ctx*/) override { }
+  virtual void exitNumberDoubleConst(CACTParser::NumberDoubleConstContext * /*ctx*/) override { }
+
+  virtual void enterNumberFloatConst(CACTParser::NumberFloatConstContext * /*ctx*/) override { }
+  virtual void exitNumberFloatConst(CACTParser::NumberFloatConstContext * /*ctx*/) override { }
 
 
   virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }

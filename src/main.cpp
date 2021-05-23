@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #include "antlr4-runtime.h"
 #include "../grammar/CACTLexer.h"
@@ -6,6 +7,7 @@
 #include "../grammar/CACTBaseListener.h"
 
 #include "semanticAnalysis.h"
+#include "symbolTable.h"
 
 using namespace antlr4;
 
@@ -19,18 +21,17 @@ int main(int argc, const char* argv[]) {
 
     tree::ParseTree *tree = parser.compUnit();
 
-    if (lexer.getNumberOfSyntaxErrors() > 0)
-    {
+    if (lexer.getNumberOfSyntaxErrors() > 0) {
         std::cout << "Error: There is " << lexer.getNumberOfSyntaxErrors() << " syntax errors reported by lexer." << std::endl;
         return 1;
     }
-    if (parser.getNumberOfSyntaxErrors() > 0)
-    {
+    if (parser.getNumberOfSyntaxErrors() > 0) {
         std::cout << "Error: There is " << parser.getNumberOfSyntaxErrors() << " syntax errors reported by parser." << std::endl;
         return 1;
     }
 
-    SemanticAnalysis listener;
+    BlockInfo globalBlockInfo(nullptr);
+    SemanticAnalysis listener(&globalBlockInfo);
     tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
     
     std::cout << "debug: hello" << std::endl;

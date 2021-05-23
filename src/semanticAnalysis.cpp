@@ -45,8 +45,12 @@ void SemanticAnalysis::exitDecl(CACTParser::DeclContext * ctx) {
     // nothing to do
 }
 
-void SemanticAnalysis::enterConstDecl(CACTParser::ConstDeclContext * ctx) {}
+void SemanticAnalysis::enterConstDecl(CACTParser::ConstDeclContext * ctx) {
+    // nothing to do 
+}
 void SemanticAnalysis::exitConstDecl(CACTParser::ConstDeclContext * ctx) {
+
+    // for debug
     std::cout << "const variable define: " << std::endl;
     for(const auto & const_def : ctx->constDef())
     {
@@ -55,14 +59,55 @@ void SemanticAnalysis::exitConstDecl(CACTParser::ConstDeclContext * ctx) {
     }
 }
 
-void SemanticAnalysis::enterBType(CACTParser::BTypeContext * ctx) {}
-void SemanticAnalysis::exitBType(CACTParser::BTypeContext * ctx) {}
+void SemanticAnalysis::enterBType(CACTParser::BTypeContext * ctx) {
+    // nothing to do 
+}
+void SemanticAnalysis::exitBType(CACTParser::BTypeContext * ctx) {
+    std::string dataTypeText = ctx->getText();
+    if (dataTypeText == "bool") {
+        currentDataType = DataType::BOOL;
+    } else if (dataTypeText == "int") {
+        currentDataType = DataType::INT;
+    } else if (dataTypeText == "float") {
+        currentDataType = DataType::FLOAT;
+    } else if (dataTypeText == "double") {
+        currentDataType = DataType::DOUBLE;
+    } else {
+        // TODO: throw exception
+        return;
+    }
+}
 
-void SemanticAnalysis::enterConstDef(CACTParser::ConstDefContext * ctx) {}
-void SemanticAnalysis::exitConstDef(CACTParser::ConstDefContext * ctx) {}
+void SemanticAnalysis::enterConstDef(CACTParser::ConstDefContext * ctx) {
+    // check whether it is array & add new symbol
+    if (ctx->IntConst() != nullptr) { // array
+        size_t arraySize = std::stoi(ctx->IntConst()->getText());
+        ctx->thisSymbolInfo = currentBlock->addNewConstArray(ctx->Ident()->getText(), currentDataType, arraySize);
+        ctx->constInitVal()->thisSymbolInfo = ctx->thisSymbolInfo;
+    } else { // basic
+        ctx->thisSymbolInfo = currentBlock->addNewConst(ctx->Ident()->getText(), currentDataType);
+        ctx->constInitVal()->thisSymbolInfo = ctx->thisSymbolInfo;
+    }
+}
+void SemanticAnalysis::exitConstDef(CACTParser::ConstDefContext * ctx) {
+    ctx->thisSymbolInfo->checkValue();
+}
 
-void SemanticAnalysis::enterConstInitVal(CACTParser::ConstInitValContext * ctx) {}
-void SemanticAnalysis::exitConstInitVal(CACTParser::ConstInitValContext * ctx) {}
+void SemanticAnalysis::enterConstInitValBasic(CACTParser::ConstInitValBasicContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitConstInitValBasic(CACTParser::ConstInitValBasicContext * ctx) {
+    ctx->thisSymbolInfo->addValue(ctx->constExp()->dataType, ctx->constExp()->getText());
+}
+
+void SemanticAnalysis::enterConstInitValArray(CACTParser::ConstInitValArrayContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitConstInitValArray(CACTParser::ConstInitValArrayContext * ctx) {
+    for (const auto & oneConstExp : ctx->constExp()) {
+        ctx->thisSymbolInfo->addValue(oneConstExp->dataType, oneConstExp->getText());
+    }
+}
 
 void SemanticAnalysis::enterVarDecl(CACTParser::VarDeclContext * ctx) {}
 void SemanticAnalysis::exitVarDecl(CACTParser::VarDeclContext * ctx) {
@@ -137,16 +182,40 @@ void SemanticAnalysis::exitLAndExp(CACTParser::LAndExpContext * ctx) {}
 void SemanticAnalysis::enterLOrExp(CACTParser::LOrExpContext * ctx) {}
 void SemanticAnalysis::exitLOrExp(CACTParser::LOrExpContext * ctx) {}
 
-void SemanticAnalysis::enterConstExpNumber(CACTParser::ConstExpNumberContext * ctx) {}
+void SemanticAnalysis::enterConstExpNumber(CACTParser::ConstExpNumberContext * ctx) {
+    // nothing to do
+}
 void SemanticAnalysis::exitConstExpNumber(CACTParser::ConstExpNumberContext * ctx) {
-    ctx->basic_or_array_and_type = ctx->number()->basic_or_array_and_type;
+    ctx->dataType = ctx->number()->dataType;
 }
 
-void SemanticAnalysis::enterConstExpBoolConst(CACTParser::ConstExpBoolConstContext * ctx) {}
-void SemanticAnalysis::exitConstExpBoolConst(CACTParser::ConstExpBoolConstContext * ctx) {}
+void SemanticAnalysis::enterConstExpBoolConst(CACTParser::ConstExpBoolConstContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitConstExpBoolConst(CACTParser::ConstExpBoolConstContext * ctx) {
+    ctx->dataType = DataType::BOOL;
+}
 
-void SemanticAnalysis::enterNumber(CACTParser::NumberContext * ctx) {}
-void SemanticAnalysis::exitNumber(CACTParser::NumberContext * ctx) {}
+void SemanticAnalysis::enterNumberIntConst(CACTParser::NumberIntConstContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitNumberIntConst(CACTParser::NumberIntConstContext * ctx) {
+    ctx->dataType = DataType::INT;
+}
+
+void SemanticAnalysis::enterNumberDoubleConst(CACTParser::NumberDoubleConstContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitNumberDoubleConst(CACTParser::NumberDoubleConstContext * ctx) {
+    ctx->dataType = DataType::DOUBLE;
+}
+
+void SemanticAnalysis::enterNumberFloatConst(CACTParser::NumberFloatConstContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitNumberFloatConst(CACTParser::NumberFloatConstContext * ctx) {
+    ctx->dataType = DataType::FLOAT;
+}
 
 void SemanticAnalysis::enterEveryRule(antlr4::ParserRuleContext * ctx) {}
 void SemanticAnalysis::exitEveryRule(antlr4::ParserRuleContext * ctx) {}

@@ -1,6 +1,7 @@
 
     #include <vector>
     #include <string>
+    #include "../src/symbolTable.h"
 
 
 // Generated from /home/compiler13/compiler/grammar/CACT.g4 by ANTLR 4.8

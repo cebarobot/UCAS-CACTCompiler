@@ -27,6 +27,8 @@ private:
 public:
     std::string getName() { return name; }
     virtual SymbolType getSymbolType() = 0;
+    virtual void addValue(DataType DataType, const std::string & value) = 0;
+    virtual void checkValue() = 0;
 
     SymbolInfo(const std::string & name): name(name) { }
 };
@@ -42,10 +44,14 @@ private:
         float valueFloat;
         double valueDouble;
     };
+    
+    bool isInitialized;
 
 public:
     DataType getDataType() { return dataType; }
     virtual SymbolType getSymbolType() { return SymbolType::CONST; }
+    virtual void addValue(DataType DataType, const std::string & value);
+    virtual void checkValue();
 
     // ConstSymbolInfo(const std::string & name, DataType dataType, const std::string & value);
     ConstSymbolInfo(const std::string & name, DataType dataType);
@@ -62,9 +68,13 @@ class VarSymbolInfo : public SymbolInfo {
         double valueDouble;
     };
 
+    bool isInitialized;
+
 public:
     DataType getDataType() { return dataType; }
     virtual SymbolType getSymbolType() { return SymbolType::VAR; }
+    virtual void addValue(DataType DataType, const std::string & value);
+    virtual void checkValue();
 
     // VarSymbolInfo(const std::string & name, DataType dataType, const std::string & value);
     VarSymbolInfo(const std::string & name, DataType dataType);
@@ -83,10 +93,13 @@ private:
     };
 
     size_t arraySize;
+    bool isInitialized;
 
 public:
     DataType getDataType() { return dataType; }
     virtual SymbolType getSymbolType() { return SymbolType::CONST_ARRAY; }
+    virtual void addValue(DataType DataType, const std::string & value);
+    virtual void checkValue();
 
     // ConstArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize, const std::vector <std::string> & value);
     ConstArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize);
@@ -105,10 +118,13 @@ private:
     };
 
     size_t arraySize;
+    bool isInitialized;
 
 public:
     DataType getDataType() { return dataType; }
     virtual SymbolType getSymbolType() { return SymbolType::VAR_ARRAY; }
+    virtual void addValue(DataType DataType, const std::string & value);
+    virtual void checkValue();
 
     // VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize, const std::vector <std::string> & value);
     VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize);
@@ -128,6 +144,8 @@ public:
 
     SymbolInfo * addParamVar(const std::string & name, DataType dataType);
     SymbolInfo * addParamArray(const std::string & name, DataType dataType);
+    virtual void addValue(DataType DataType, const std::string & value) { }
+    virtual void checkValue() { }
 
     size_t calcParamNum();
 

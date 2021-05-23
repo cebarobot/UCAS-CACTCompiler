@@ -1,6 +1,7 @@
 
     #include <vector>
     #include <string>
+    #include "../src/symbolTable.h"
 
 
 // Generated from CACT.g4 by ANTLR 4.8
@@ -33,8 +34,11 @@ public:
   virtual void enterConstDef(CACTParser::ConstDefContext *ctx) = 0;
   virtual void exitConstDef(CACTParser::ConstDefContext *ctx) = 0;
 
-  virtual void enterConstInitVal(CACTParser::ConstInitValContext *ctx) = 0;
-  virtual void exitConstInitVal(CACTParser::ConstInitValContext *ctx) = 0;
+  virtual void enterConstInitValBasic(CACTParser::ConstInitValBasicContext *ctx) = 0;
+  virtual void exitConstInitValBasic(CACTParser::ConstInitValBasicContext *ctx) = 0;
+
+  virtual void enterConstInitValArray(CACTParser::ConstInitValArrayContext *ctx) = 0;
+  virtual void exitConstInitValArray(CACTParser::ConstInitValArrayContext *ctx) = 0;
 
   virtual void enterVarDecl(CACTParser::VarDeclContext *ctx) = 0;
   virtual void exitVarDecl(CACTParser::VarDeclContext *ctx) = 0;
@@ -108,8 +112,14 @@ public:
   virtual void enterConstExpBoolConst(CACTParser::ConstExpBoolConstContext *ctx) = 0;
   virtual void exitConstExpBoolConst(CACTParser::ConstExpBoolConstContext *ctx) = 0;
 
-  virtual void enterNumber(CACTParser::NumberContext *ctx) = 0;
-  virtual void exitNumber(CACTParser::NumberContext *ctx) = 0;
+  virtual void enterNumberIntConst(CACTParser::NumberIntConstContext *ctx) = 0;
+  virtual void exitNumberIntConst(CACTParser::NumberIntConstContext *ctx) = 0;
+
+  virtual void enterNumberDoubleConst(CACTParser::NumberDoubleConstContext *ctx) = 0;
+  virtual void exitNumberDoubleConst(CACTParser::NumberDoubleConstContext *ctx) = 0;
+
+  virtual void enterNumberFloatConst(CACTParser::NumberFloatConstContext *ctx) = 0;
+  virtual void exitNumberFloatConst(CACTParser::NumberFloatConstContext *ctx) = 0;
 
 
 };

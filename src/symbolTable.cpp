@@ -64,14 +64,82 @@ FuncSymbolInfo::FuncSymbolInfo(const std::string & name, DataType returnType, si
 ConstSymbolInfo::ConstSymbolInfo(const std::string & name, DataType dataType)
 : SymbolInfo(name), dataType(dataType) { }
 
+void ConstSymbolInfo::addValue(DataType valueDataType, const std::string & value) {
+    if (valueDataType != dataType) {
+        // TODO: throw exception
+        return;
+    } else if (!valueText.empty()) {
+        // TODO: throw exception
+        return;
+    }
+    valueText = value;
+    isInitialized = true;
+}
+void ConstSymbolInfo::checkValue() {
+    if (!isInitialized) {
+        // TODO: throw exception
+    }
+}
+
 VarSymbolInfo::VarSymbolInfo(const std::string & name, DataType dataType)
-: SymbolInfo(name), dataType(dataType) { }
+: SymbolInfo(name), dataType(dataType), isInitialized(false) { }
+
+void VarSymbolInfo::addValue(DataType valueDataType, const std::string & value) {
+    if (valueDataType != dataType) {
+        // TODO: throw exception
+        return;
+    } else if (isInitialized || !valueText.empty()) {
+        // TODO: throw exception
+        return;
+    }
+    valueText = value;
+    isInitialized = true;
+}
+void VarSymbolInfo::checkValue() {
+    // nothing to check
+}
 
 ConstArraySymbolInfo::ConstArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize)
 : SymbolInfo(name), dataType(dataType), arraySize(arraySize) { }
 
+void ConstArraySymbolInfo::addValue(DataType valueDataType, const std::string & value) {
+    if (valueDataType != dataType) {
+        // TODO: throw exception
+        return;
+    } else if (valueTextArray.size() >= arraySize) {
+        // TODO: throw exception
+        return;
+    }
+    valueTextArray.push_back(value);
+    isInitialized = true;
+}
+void ConstArraySymbolInfo::checkValue() {
+    if (!isInitialized) {
+        // TODO: throw exception
+    } else if (valueTextArray.size() != arraySize) {
+        // TODO: throw exception
+    }
+}
+
 VarArraySymbolInfo::VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize)
-: SymbolInfo(name), dataType(dataType), arraySize(arraySize) { }
+: SymbolInfo(name), dataType(dataType), arraySize(arraySize), isInitialized(false) { }
+
+void VarArraySymbolInfo::addValue(DataType valueDataType, const std::string & value) {
+    if (valueDataType != dataType) {
+        // TODO: throw exception
+        return;
+    } else if (valueTextArray.size() >= arraySize) {
+        // TODO: throw exception
+        return;
+    }
+    valueTextArray.push_back(value);
+    isInitialized = true;
+}
+void VarArraySymbolInfo::checkValue() {
+    if (isInitialized && valueTextArray.size() != arraySize) {
+        // TODO: throw exception
+    }
+}
 
 FuncSymbolInfo::FuncSymbolInfo(const std::string & name, DataType returnType)
 : SymbolInfo(name), returnType(returnType), blockInfo(nullptr) { }

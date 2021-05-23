@@ -8,6 +8,7 @@ options {
 @header {
     #include <vector>
     #include <string>
+    #include "../src/symbolTable.h"
 }
 
 /********** Parser **********/
@@ -25,6 +26,9 @@ constDecl
     ;
 
 bType
+    // locals [
+    //     DataType bDataType
+    // ]
     : 'int'
     | 'bool'
     | 'double'
@@ -32,15 +36,20 @@ bType
     ;
 
 constDef
+    locals[
+        // int basic_or_array_and_type
+        SymbolInfo * thisSymbolInfo
+    ]
     : Ident ('[' IntConst ']')? '=' constInitVal
     ;
 
 constInitVal
     locals[
-        int basic_or_array_and_type
+        // int basic_or_array_and_type
+        SymbolInfo * thisSymbolInfo
     ]
-    : constExp
-    | '{' (constExp (',' constExp)*)? '}'                                             
+    : constExp                                  #constInitValBasic
+    | '{' (constExp (',' constExp)*)? '}'       #constInitValArray
     ;
 
 varDecl
@@ -160,7 +169,7 @@ lOrExp
 
 constExp
     locals[
-        int basic_or_array_and_type,
+        DataType dataType,
     ]
     : number            #constExpNumber
     | BoolConst         #constExpBoolConst
@@ -168,11 +177,11 @@ constExp
 
 number
     locals[
-        int basic_or_array_and_type,
+        DataType dataType,
     ]
-    : IntConst
-    | DoubleConst
-    | FloatConst
+    : IntConst          #numberIntConst
+    | DoubleConst       #numberDoubleConst
+    | FloatConst        #numberFloatConst
     ;
 
 /********** Lexer **********/

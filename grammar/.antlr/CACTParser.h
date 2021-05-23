@@ -1,6 +1,7 @@
 
     #include <vector>
     #include <string>
+    #include "../src/symbolTable.h"
 
 
 // Generated from /home/compiler13/compiler/grammar/CACT.g4 by ANTLR 4.8
@@ -129,6 +130,7 @@ public:
 
   class  ConstDefContext : public antlr4::ParserRuleContext {
   public:
+    SymbolInfo * thisSymbolInfo;
     ConstDefContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Ident();
@@ -142,13 +144,31 @@ public:
 
   class  ConstInitValContext : public antlr4::ParserRuleContext {
   public:
-    int basic_or_array_and_type;
+    SymbolInfo * thisSymbolInfo;
     ConstInitValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    ConstInitValContext() = default;
+    void copyFrom(ConstInitValContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
     virtual size_t getRuleIndex() const override;
-    std::vector<ConstExpContext *> constExp();
-    ConstExpContext* constExp(size_t i);
 
    
+  };
+
+  class  ConstInitValBasicContext : public ConstInitValContext {
+  public:
+    ConstInitValBasicContext(ConstInitValContext *ctx);
+
+    ConstExpContext *constExp();
+  };
+
+  class  ConstInitValArrayContext : public ConstInitValContext {
+  public:
+    ConstInitValArrayContext(ConstInitValContext *ctx);
+
+    std::vector<ConstExpContext *> constExp();
+    ConstExpContext* constExp(size_t i);
   };
 
   ConstInitValContext* constInitVal();
@@ -427,7 +447,7 @@ public:
   LOrExpContext* lOrExp(int precedence);
   class  ConstExpContext : public antlr4::ParserRuleContext {
   public:
-    int basic_or_array_and_type;
+    DataType dataType;
     ConstExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     ConstExpContext() = default;
@@ -457,14 +477,37 @@ public:
 
   class  NumberContext : public antlr4::ParserRuleContext {
   public:
-    int basic_or_array_and_type;
+    DataType dataType;
     NumberContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    NumberContext() = default;
+    void copyFrom(NumberContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *IntConst();
-    antlr4::tree::TerminalNode *DoubleConst();
-    antlr4::tree::TerminalNode *FloatConst();
 
    
+  };
+
+  class  NumberDoubleConstContext : public NumberContext {
+  public:
+    NumberDoubleConstContext(NumberContext *ctx);
+
+    antlr4::tree::TerminalNode *DoubleConst();
+  };
+
+  class  NumberFloatConstContext : public NumberContext {
+  public:
+    NumberFloatConstContext(NumberContext *ctx);
+
+    antlr4::tree::TerminalNode *FloatConst();
+  };
+
+  class  NumberIntConstContext : public NumberContext {
+  public:
+    NumberIntConstContext(NumberContext *ctx);
+
+    antlr4::tree::TerminalNode *IntConst();
   };
 
   NumberContext* number();
