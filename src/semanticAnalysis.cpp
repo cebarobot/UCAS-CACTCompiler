@@ -97,14 +97,24 @@ void SemanticAnalysis::exitConstDef(CACTParser::ConstDefContext * ctx) {
 }
 
 void SemanticAnalysis::enterConstInitValBasic(CACTParser::ConstInitValBasicContext * ctx) {
-    // nothing to do
+    SymbolType thisSymbolType = ctx->thisSymbolInfo->getSymbolType();
+    if (thisSymbolType != SymbolType::CONST && thisSymbolType != SymbolType::VAR) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return ;
+    }
 }
 void SemanticAnalysis::exitConstInitValBasic(CACTParser::ConstInitValBasicContext * ctx) {
     ctx->thisSymbolInfo->addValue(ctx->constExp()->dataType, ctx->constExp()->getText());
 }
 
 void SemanticAnalysis::enterConstInitValArray(CACTParser::ConstInitValArrayContext * ctx) {
-    // nothing to do
+    SymbolType thisSymbolType = ctx->thisSymbolInfo->getSymbolType();
+    if (thisSymbolType != SymbolType::CONST_ARRAY && thisSymbolType != SymbolType::VAR_ARRAY) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return ;
+    }
 }
 void SemanticAnalysis::exitConstInitValArray(CACTParser::ConstInitValArrayContext * ctx) {
     for (const auto & oneConstExp : ctx->constExp()) {
