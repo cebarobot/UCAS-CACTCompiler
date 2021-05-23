@@ -34,8 +34,9 @@ int main(int argc, const char* argv[]) {
     SemanticAnalysis listener(&globalBlockInfo);
     try {
         tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
-    } catch (...) {
-        return 1;
+    } catch(const std::exception& excp) {
+        std::cerr << excp.what() << std::endl;
+		return 1;
     }
     
     std::cout << "debug: hello" << std::endl;

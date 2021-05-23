@@ -13,7 +13,7 @@ options {
 
 /********** Parser **********/
 compUnit
-    : (decl | funcDef) (compUnit)* EOF
+    : (decl | funcDef)* EOF
     ;
 
 decl

@@ -1,12 +1,12 @@
 0 	 ./00_true_main.cact
 0 	 ./01_true_float_bool_double.cact
-1 	 ./02_true_global_array.cact
-1 	 ./03_false_array_scalar_init.cact
+0 	 ./02_true_global_array.cact
+0 	 ./03_false_array_scalar_init.cact
 1 	 ./04_false_val_init.cact
 1 	 ./05_false_type_conv.cact
-1 	 ./06_true_int_float_init.cact
+0 	 ./06_true_int_float_init.cact
 1 	 ./07_false_float_int_op.cact
-1 	 ./08_true_int_init.cact
+0 	 ./08_true_int_init.cact
 1 	 ./09_true_same_name.cact
 1 	 ./10_false_same_name.cact
 0 	 ./11_true_array_op.cact
@@ -18,7 +18,7 @@
 1 	 ./17_false_no_main.cact
 1 	 ./18_false_more_main.cact
 1 	 ./19_false_main_return_type.cact
-1 	 ./20_false_main_argu.cact
+0 	 ./20_false_main_argu.cact
 1 	 ./21_false_val_add_type.cact
 0 	 ./22_true_simple_if_else.cact
 0 	 ./23_true_if_else_same_name.cact
@@ -31,7 +31,7 @@
 1 	 ./30_false_not_op.cact
 1 	 ./31_false_bool_assign_to_int.cact
 1 	 ./32_true_syntax_false_semantic.cact
-1 	 ./33_true_array_op.cact
+0 	 ./33_true_array_op.cact
 1 	 ./34_false_array_op.cact
 1 	 ./35_false_bool_array_op.cact
 1 	 ./36_true_sample.cact
@@ -43,6 +43,6 @@
 1 	 ./42_false_array_index.cact
 1 	 ./43_false_assign_to_const_var.cact
 1 	 ./44_false_assign_to_const_array.cact
-1 	 ./45_true_no_arg_func.cact
-1 	 ./46_false_use_no_arg.cact
+139 	 ./45_true_no_arg_func.cact
+139 	 ./46_false_use_no_arg.cact
 1 	 ./47_true_void_func_stmt.cact

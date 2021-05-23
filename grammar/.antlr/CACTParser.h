@@ -83,10 +83,10 @@ public:
     CompUnitContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *EOF();
-    DeclContext *decl();
-    FuncDefContext *funcDef();
-    std::vector<CompUnitContext *> compUnit();
-    CompUnitContext* compUnit(size_t i);
+    std::vector<DeclContext *> decl();
+    DeclContext* decl(size_t i);
+    std::vector<FuncDefContext *> funcDef();
+    FuncDefContext* funcDef(size_t i);
 
    
   };

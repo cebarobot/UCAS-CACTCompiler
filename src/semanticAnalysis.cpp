@@ -6,6 +6,7 @@ SemanticAnalysis::SemanticAnalysis(BlockInfo * globalBlock)
 
 void SemanticAnalysis::enterCompUnit(CACTParser::CompUnitContext * ctx) {
     // add build-in functions
+    std::cerr << "check point asdf" << std::endl;
     FuncSymbolInfo * printBoolFunc = globalBlock->addNewFunc("print_bool", DataType::VOID);
     printBoolFunc->addParamVar("value", DataType::BOOL);
     printBoolFunc->calcParamNum();
@@ -160,6 +161,7 @@ throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     }
 
+    std::cerr << ctx->Ident()->getText() << std::endl;
     ctx->thisFuncInfo = currentBlock->addNewFunc(ctx->Ident()->getText(), returnType);
     if (ctx->funcFParams() != nullptr) {
         ctx->funcFParams()->thisFuncInfo = ctx->thisFuncInfo;
