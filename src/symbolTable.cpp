@@ -1,4 +1,5 @@
 #include "symbolTable.h"
+#include <iostream>
 
 /* we decided not to assign value when constructing symbols
 ConstSymbolInfo::ConstSymbolInfo(const std::string & name, DataType dataType, const std::string & value)

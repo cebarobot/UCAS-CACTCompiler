@@ -201,9 +201,9 @@ void SemanticAnalysis::exitFuncFParam(CACTParser::FuncFParamContext * ctx) {
 
 void SemanticAnalysis::enterBlock(CACTParser::BlockContext * ctx) {
     if (ctx->thisFuncInfo != nullptr) {
-        currentBlock = currentBlock->addNewBlock();
-    } else {
         currentBlock = currentBlock->addNewBlock(ctx->thisFuncInfo);
+    } else {
+        currentBlock = currentBlock->addNewBlock();
     }
 }
 void SemanticAnalysis::exitBlock(CACTParser::BlockContext * ctx) {
