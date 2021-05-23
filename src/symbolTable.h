@@ -47,7 +47,8 @@ public:
     DataType getDataType() { return dataType; }
     virtual SymbolType getSymbolType() { return SymbolType::CONST; }
 
-    ConstSymbolInfo(const std::string & name, DataType dataType, const std::string & value);
+    // ConstSymbolInfo(const std::string & name, DataType dataType, const std::string & value);
+    ConstSymbolInfo(const std::string & name, DataType dataType);
 };
 
 class VarSymbolInfo : public SymbolInfo {
@@ -65,7 +66,7 @@ public:
     DataType getDataType() { return dataType; }
     virtual SymbolType getSymbolType() { return SymbolType::VAR; }
 
-    VarSymbolInfo(const std::string & name, DataType dataType, const std::string & value);
+    // VarSymbolInfo(const std::string & name, DataType dataType, const std::string & value);
     VarSymbolInfo(const std::string & name, DataType dataType);
 };
 
@@ -87,7 +88,8 @@ public:
     DataType getDataType() { return dataType; }
     virtual SymbolType getSymbolType() { return SymbolType::CONST_ARRAY; }
 
-    ConstArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize, const std::vector <std::string> & value);
+    // ConstArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize, const std::vector <std::string> & value);
+    ConstArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize);
 };
 
 class VarArraySymbolInfo : public SymbolInfo {
@@ -108,7 +110,7 @@ public:
     DataType getDataType() { return dataType; }
     virtual SymbolType getSymbolType() { return SymbolType::VAR_ARRAY; }
 
-    VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize, const std::vector <std::string> & value);
+    // VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize, const std::vector <std::string> & value);
     VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize);
 };
 
@@ -123,11 +125,29 @@ private:
 
 public:
     virtual SymbolType getSymbolType()  { return SymbolType::FUNC; }
-    FuncSymbolInfo(const std::string & name, DataType returnType, size_t paramNum);
+    // FuncSymbolInfo(const std::string & name, DataType returnType, size_t paramNum);
+    FuncSymbolInfo(const std::string & name, DataType returnType);
 };
 
 class BlockInfo {
+private:
+    BlockInfo * parentBlock;
     FuncSymbolInfo * belongTo;
     std::map < std::string, SymbolInfo * > symbolTable;
     std::vector < BlockInfo * > blockTable;
+
+public:
+    SymbolInfo * lookUpSymbol(std::string);
+    
+    ConstSymbolInfo * addNewConst(const std::string & name, DataType dataType);
+    VarSymbolInfo * addNewVar(const std::string & name, DataType dataType);
+    ConstArraySymbolInfo * addNewConstArray(const std::string & name, DataType dataType, size_t arraySize);
+    VarArraySymbolInfo * addNewVarArray(const std::string & name, DataType dataType, size_t arraySize);
+    FuncSymbolInfo * addNewFunc(const std::string & name, DataType returnType);
+
+    BlockInfo * addNewBlock(FuncSymbolInfo * belongTo, std::vector < SymbolInfo * > paramList);
+    BlockInfo * addNewBlock();
+
+    BlockInfo(BlockInfo * parentBlock);
+    BlockInfo(BlockInfo * parentBlock, FuncSymbolInfo * belongTo, const std::vector < SymbolInfo * > & paramList);
 };
