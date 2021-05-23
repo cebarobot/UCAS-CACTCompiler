@@ -66,11 +66,26 @@ public:
     void enterBlockItem(CACTParser::BlockItemContext * ctx) override ;
     void exitBlockItem(CACTParser::BlockItemContext * ctx) override ;
 
-    void enterStmt(CACTParser::StmtContext * ctx) override ;
-    void exitStmt(CACTParser::StmtContext * ctx) override ;
+    void enterStmtAssign(CACTParser::StmtAssignContext * ctx) override;
+    void exitStmtAssign(CACTParser::StmtAssignContext * ctx) override;
 
-    void enterExp(CACTParser::ExpContext * ctx) override ;
-    void exitExp(CACTParser::ExpContext * ctx) override ;
+    void enterStmtExp(CACTParser::StmtExpContext * ctx) override;
+    void exitStmtExp(CACTParser::StmtExpContext * ctx) override;
+
+    void enterStmtBlock(CACTParser::StmtBlockContext * ctx) override;
+    void exitStmtBlock(CACTParser::StmtBlockContext * ctx) override;
+
+    void enterStmtCtrl(CACTParser::StmtCtrlContext * ctx) override;
+    void exitStmtCtrl(CACTParser::StmtCtrlContext * ctx) override;
+
+    void enterStmtReturn(CACTParser::StmtReturnContext * ctx) override;
+    void exitStmtReturn(CACTParser::StmtReturnContext * ctx) override;
+
+    void enterExpAddExp(CACTParser::ExpAddExpContext * ctx) override;
+    void exitExpAddExp(CACTParser::ExpAddExpContext * ctx) override;
+
+    void enterExpBoolConst(CACTParser::ExpBoolConstContext * ctx) override;
+    void exitExpBoolConst(CACTParser::ExpBoolConstContext * ctx) override;
 
     void enterCond(CACTParser::CondContext * ctx) override ;
     void exitCond(CACTParser::CondContext * ctx) override ;
@@ -78,11 +93,23 @@ public:
     void enterLVal(CACTParser::LValContext * ctx) override ;
     void exitLVal(CACTParser::LValContext * ctx) override ;
 
-    void enterPrimaryExp(CACTParser::PrimaryExpContext * ctx) override ;
-    void exitPrimaryExp(CACTParser::PrimaryExpContext * ctx) override ;
+    void enterPrimaryExpExp(CACTParser::PrimaryExpExpContext * ctx) override;
+    void exitPrimaryExpExp(CACTParser::PrimaryExpExpContext * ctx) override;
 
-    void enterUnaryExp(CACTParser::UnaryExpContext * ctx) override ;
-    void exitUnaryExp(CACTParser::UnaryExpContext * ctx) override ;
+    void enterPrimaryExpLVal(CACTParser::PrimaryExpLValContext * ctx) override;
+    void exitPrimaryExpLVal(CACTParser::PrimaryExpLValContext * ctx) override;
+
+    void enterPrimaryNumber(CACTParser::PrimaryNumberContext * ctx) override;
+    void exitPrimaryNumber(CACTParser::PrimaryNumberContext * ctx) override;
+
+    void enterUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext * ctx) override;
+    void exitUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext * ctx) override;
+
+    void enterUnaryExpFunc(CACTParser::UnaryExpFuncContext * ctx) override;
+    void exitUnaryExpFunc(CACTParser::UnaryExpFuncContext * ctx) override;
+
+    void enterUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext * ctx) override;
+    void exitUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext * ctx) override;
 
     void enterUnaryOp(CACTParser::UnaryOpContext * ctx) override ;
     void exitUnaryOp(CACTParser::UnaryOpContext * ctx) override ;
@@ -90,23 +117,44 @@ public:
     void enterFuncRParams(CACTParser::FuncRParamsContext * ctx) override ;
     void exitFuncRParams(CACTParser::FuncRParamsContext * ctx) override ;
 
-    void enterMulExp(CACTParser::MulExpContext * ctx) override ;
-    void exitMulExp(CACTParser::MulExpContext * ctx) override ;
+    void enterMulExpMulExp(CACTParser::MulExpMulExpContext * ctx) override;
+    void exitMulExpMulExp(CACTParser::MulExpMulExpContext * ctx) override;
 
-    void enterAddExp(CACTParser::AddExpContext * ctx) override ;
-    void exitAddExp(CACTParser::AddExpContext * ctx) override ;
+    void enterMulExpUnaryExp(CACTParser::MulExpUnaryExpContext * ctx) override;
+    void exitMulExpUnaryExp(CACTParser::MulExpUnaryExpContext * ctx) override;
 
-    void enterRelExp(CACTParser::RelExpContext * ctx) override ;
-    void exitRelExp(CACTParser::RelExpContext * ctx) override ;
+    void enterAddExpAddExp(CACTParser::AddExpAddExpContext * ctx) override;
+    void exitAddExpAddExp(CACTParser::AddExpAddExpContext * ctx) override;
 
-    void enterEqExp(CACTParser::EqExpContext * ctx) override ;
-    void exitEqExp(CACTParser::EqExpContext * ctx) override ;
+    void enterAddExpMulExp(CACTParser::AddExpMulExpContext * ctx) override;
+    void exitAddExpMulExp(CACTParser::AddExpMulExpContext * ctx) override;
 
-    void enterLAndExp(CACTParser::LAndExpContext * ctx) override ;
-    void exitLAndExp(CACTParser::LAndExpContext * ctx) override ;
+    void enterRelExpRelExp(CACTParser::RelExpRelExpContext * ctx) override;
+    void exitRelExpRelExp(CACTParser::RelExpRelExpContext * ctx) override;
 
-    void enterLOrExp(CACTParser::LOrExpContext * ctx) override ;
-    void exitLOrExp(CACTParser::LOrExpContext * ctx) override ;
+    void enterRelExpAddExp(CACTParser::RelExpAddExpContext * ctx) override;
+    void exitRelExpAddExp(CACTParser::RelExpAddExpContext * ctx) override;
+
+    void enterRelExpBoolConst(CACTParser::RelExpBoolConstContext * ctx) override;
+    void exitRelExpBoolConst(CACTParser::RelExpBoolConstContext * ctx) override;
+
+    void enterEqExpRelExp(CACTParser::EqExpRelExpContext * ctx) override;
+    void exitEqExpRelExp(CACTParser::EqExpRelExpContext * ctx) override;
+
+    void enterEqExpEqExp(CACTParser::EqExpEqExpContext * ctx) override;
+    void exitEqExpEqExp(CACTParser::EqExpEqExpContext * ctx) override;
+
+    void enterLAndExpLAndExp(CACTParser::LAndExpLAndExpContext * ctx) override;
+    void exitLAndExpLAndExp(CACTParser::LAndExpLAndExpContext * ctx) override;
+
+    void enterLAndExpEqExp(CACTParser::LAndExpEqExpContext * ctx) override;
+    void exitLAndExpEqExp(CACTParser::LAndExpEqExpContext * ctx) override;
+
+    void enterLOrExpLAndExp(CACTParser::LOrExpLAndExpContext * ctx) override;
+    void exitLOrExpLAndExp(CACTParser::LOrExpLAndExpContext * ctx) override;
+
+    void enterLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * ctx) override;
+    void exitLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * ctx) override;
 
     void enterConstExpNumber(CACTParser::ConstExpNumberContext * ctx) override ;
     void exitConstExpNumber(CACTParser::ConstExpNumberContext * ctx) override ;

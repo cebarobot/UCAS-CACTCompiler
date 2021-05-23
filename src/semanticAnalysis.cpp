@@ -2,7 +2,7 @@
 
 SemanticAnalysis::SemanticAnalysis(BlockInfo * globalBlock)
 : globalBlock(globalBlock), currentBlock(globalBlock), currentSymbol(nullptr), 
-    currentFunc(nullptr), currentDataType(DataType::VOID) { }
+    currentFunc(nullptr), currentDataType(DataType::VOID) {}
 
 void SemanticAnalysis::enterCompUnit(CACTParser::CompUnitContext * ctx) {
     // add build-in functions
@@ -34,6 +34,7 @@ void SemanticAnalysis::exitCompUnit(CACTParser::CompUnitContext * ctx) {
     SymbolInfo * mainSymbolInfo = globalBlock->lookUpSymbol("main");
     if (mainSymbolInfo == nullptr || mainSymbolInfo->getSymbolType() != SymbolType::FUNC) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     }
 }
@@ -74,6 +75,7 @@ void SemanticAnalysis::exitBType(CACTParser::BTypeContext * ctx) {
         ctx->bDataType = DataType::DOUBLE;
     } else {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     }
     currentDataType = ctx->bDataType;
@@ -154,15 +156,18 @@ void SemanticAnalysis::enterFuncDef(CACTParser::FuncDefContext * ctx) {
         returnType = DataType::VOID;
     } else {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     }
 
     ctx->thisFuncInfo = currentBlock->addNewFunc(ctx->Ident()->getText(), returnType);
     ctx->funcFParams()->thisFuncInfo = ctx->thisFuncInfo;
     ctx->block()->thisFuncInfo = ctx->thisFuncInfo;
+    currentFunc = ctx->thisFuncInfo;
 }
 void SemanticAnalysis::exitFuncDef(CACTParser::FuncDefContext * ctx) {
     ctx->thisFuncInfo->calcParamNum();
+    currentFunc = nullptr;
 }
 
 void SemanticAnalysis::enterFuncType(CACTParser::FuncTypeContext * ctx) {
@@ -210,47 +215,518 @@ void SemanticAnalysis::exitBlockItem(CACTParser::BlockItemContext * ctx) {
     // nothing to do
 }
 
-void SemanticAnalysis::enterStmt(CACTParser::StmtContext * ctx) {}
-void SemanticAnalysis::exitStmt(CACTParser::StmtContext * ctx) {}
+void SemanticAnalysis::enterStmtAssign(CACTParser::StmtAssignContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitStmtAssign(CACTParser::StmtAssignContext * ctx) {
+    if (!ctx->lVal()->isVar) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
 
-void SemanticAnalysis::enterExp(CACTParser::ExpContext * ctx) {}
-void SemanticAnalysis::exitExp(CACTParser::ExpContext * ctx) {}
+    if (ctx->lVal()->dataType != ctx->exp()->dataType) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
 
-void SemanticAnalysis::enterCond(CACTParser::CondContext * ctx) {}
-void SemanticAnalysis::exitCond(CACTParser::CondContext * ctx) {}
+    if (ctx->lVal()->isArray) {
+        if (!ctx->exp()->isArray) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        } else if (ctx->lVal()->arraySize != ctx->exp()->arraySize) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        }
+    } else {
+        if (ctx->exp()->isArray) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        }
+    }
+}
 
-void SemanticAnalysis::enterLVal(CACTParser::LValContext * ctx) {}
-void SemanticAnalysis::exitLVal(CACTParser::LValContext * ctx) {}
+void SemanticAnalysis::enterStmtExp(CACTParser::StmtExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitStmtExp(CACTParser::StmtExpContext * ctx) {
+    // nothing to do
+}
 
-void SemanticAnalysis::enterPrimaryExp(CACTParser::PrimaryExpContext * ctx) {}
-void SemanticAnalysis::exitPrimaryExp(CACTParser::PrimaryExpContext * ctx) {}
+void SemanticAnalysis::enterStmtBlock(CACTParser::StmtBlockContext * ctx) {
+    ctx->block()->thisFuncInfo = nullptr;
+}
+void SemanticAnalysis::exitStmtBlock(CACTParser::StmtBlockContext * ctx) {
+    // nothing to do
+}
 
-void SemanticAnalysis::enterUnaryExp(CACTParser::UnaryExpContext * ctx) {}
-void SemanticAnalysis::exitUnaryExp(CACTParser::UnaryExpContext * ctx) {}
+void SemanticAnalysis::enterStmtCtrl(CACTParser::StmtCtrlContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitStmtCtrl(CACTParser::StmtCtrlContext * ctx) {
+    // nothing to do
+}
 
-void SemanticAnalysis::enterUnaryOp(CACTParser::UnaryOpContext * ctx) {}
-void SemanticAnalysis::exitUnaryOp(CACTParser::UnaryOpContext * ctx) {}
+void SemanticAnalysis::enterStmtReturn(CACTParser::StmtReturnContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitStmtReturn(CACTParser::StmtReturnContext * ctx) {
+    if (currentFunc == nullptr) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
 
-void SemanticAnalysis::enterFuncRParams(CACTParser::FuncRParamsContext * ctx) {}
-void SemanticAnalysis::exitFuncRParams(CACTParser::FuncRParamsContext * ctx) {}
+    if (ctx->exp() != nullptr) {
+        if (currentFunc->getDataType() != ctx->exp()->dataType) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        }
+    } else {
+        if (currentFunc->getDataType() != DataType::VOID) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        }
+    }
+}
 
-void SemanticAnalysis::enterMulExp(CACTParser::MulExpContext * ctx) {}
-void SemanticAnalysis::exitMulExp(CACTParser::MulExpContext * ctx) {}
+void SemanticAnalysis::enterExpAddExp(CACTParser::ExpAddExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitExpAddExp(CACTParser::ExpAddExpContext * ctx) {
+    ctx->isArray = ctx->addExp()->isArray;
+    ctx->arraySize = ctx->addExp()->arraySize;
+    ctx->dataType = ctx->addExp()->dataType;
+}
 
-void SemanticAnalysis::enterAddExp(CACTParser::AddExpContext * ctx) {}
-void SemanticAnalysis::exitAddExp(CACTParser::AddExpContext * ctx) {}
+void SemanticAnalysis::enterExpBoolConst(CACTParser::ExpBoolConstContext * ctx) {
+    // nothing to do
+}
 
-void SemanticAnalysis::enterRelExp(CACTParser::RelExpContext * ctx) {}
-void SemanticAnalysis::exitRelExp(CACTParser::RelExpContext * ctx) {}
+void SemanticAnalysis::exitExpBoolConst(CACTParser::ExpBoolConstContext * ctx) {
+    ctx->isArray = false;
+    ctx->dataType = DataType::BOOL;
+}
 
-void SemanticAnalysis::enterEqExp(CACTParser::EqExpContext * ctx) {}
-void SemanticAnalysis::exitEqExp(CACTParser::EqExpContext * ctx) {}
+void SemanticAnalysis::enterCond(CACTParser::CondContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitCond(CACTParser::CondContext * ctx) {
+    if (ctx->lOrExp()->isArray) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
 
-void SemanticAnalysis::enterLAndExp(CACTParser::LAndExpContext * ctx) {}
-void SemanticAnalysis::exitLAndExp(CACTParser::LAndExpContext * ctx) {}
+    if (ctx->lOrExp()->dataType != DataType::BOOL) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+}
 
-void SemanticAnalysis::enterLOrExp(CACTParser::LOrExpContext * ctx) {}
-void SemanticAnalysis::exitLOrExp(CACTParser::LOrExpContext * ctx) {}
+void SemanticAnalysis::enterLVal(CACTParser::LValContext * ctx) {
+    SymbolInfo * thisSymbol = currentBlock->lookUpSymbol(ctx->Ident()->getText());
+    if (thisSymbol == nullptr) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+    ctx->thisSymbol = thisSymbol;
+}
+void SemanticAnalysis::exitLVal(CACTParser::LValContext * ctx) {
+    SymbolInfo * thisSymbol = ctx->thisSymbol;
+    SymbolType thisSymbolType = thisSymbol->getSymbolType();
+    ctx->dataType = thisSymbol->getDataType();
+    if (ctx->exp() != nullptr) {    // with "[exp]""
+        if (!ctx->exp()->isArray && ctx->exp()->dataType == DataType::INT) {
+            if (thisSymbolType == SymbolType::CONST_ARRAY) {
+                ctx->isVar = false;
+                ctx->isArray = false;
+            } else if (thisSymbolType == SymbolType::VAR_ARRAY) {
+                ctx->isVar = true;
+                ctx->isArray = false;
+            } else {
+                // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+                return;
+            }
+        } else {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        }
+    } else {    // without "xxx"
+        if (thisSymbolType == SymbolType::CONST) {
+            ctx->isArray = false;
+            ctx->isVar = false;
+        } else if (thisSymbolType == SymbolType::CONST_ARRAY) {
+            ctx->isArray = true;
+            ctx->arraySize = thisSymbol->getArraySize();
+            ctx->isVar = false;
+        } else if (thisSymbolType == SymbolType::VAR) {
+            ctx->isArray = false;
+            ctx->isVar = true;
+        } else if (thisSymbolType == SymbolType::VAR_ARRAY) {
+            ctx->isArray = true;
+            ctx->arraySize = thisSymbol->getArraySize();
+            ctx->isVar = true;
+        } else {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        }
+    }
+}
+
+void SemanticAnalysis::enterPrimaryExpExp(CACTParser::PrimaryExpExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitPrimaryExpExp(CACTParser::PrimaryExpExpContext * ctx) {
+    ctx->isArray = ctx->exp()->isArray;
+    ctx->arraySize = ctx->exp()->arraySize;
+    ctx->dataType = ctx->exp()->dataType;
+}
+
+void SemanticAnalysis::enterPrimaryExpLVal(CACTParser::PrimaryExpLValContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitPrimaryExpLVal(CACTParser::PrimaryExpLValContext * ctx) {
+    ctx->isArray = ctx->lVal()->isArray;
+    ctx->arraySize = ctx->lVal()->arraySize;
+    ctx->dataType = ctx->lVal()->dataType;
+}
+
+void SemanticAnalysis::enterPrimaryNumber(CACTParser::PrimaryNumberContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitPrimaryNumber(CACTParser::PrimaryNumberContext * ctx) {
+    ctx->isArray = false;
+    ctx->dataType = ctx->number()->dataType;
+}
+
+void SemanticAnalysis::enterUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext * ctx) {
+    ctx->isArray = ctx->primaryExp()->isArray;
+    ctx->arraySize = ctx->primaryExp()->arraySize;
+    ctx->dataType = ctx->primaryExp()->dataType;
+}
+
+void SemanticAnalysis::enterUnaryExpFunc(CACTParser::UnaryExpFuncContext * ctx) {
+    FuncSymbolInfo * thisFunc = globalBlock->lookUpFunc(ctx->Ident()->getText());
+    if (thisFunc == nullptr) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+    ctx->thisFunc = thisFunc;
+    ctx->funcRParams()->thisFunc = thisFunc;
+}
+void SemanticAnalysis::exitUnaryExpFunc(CACTParser::UnaryExpFuncContext * ctx) {
+    FuncSymbolInfo * thisFunc = ctx->thisFunc;
+    ctx->isArray = false;
+    ctx->dataType = thisFunc->getDataType();
+}
+
+void SemanticAnalysis::enterUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext * ctx) {
+    std::string unaryOp = ctx->unaryOp()->getText();
+    if (unaryOp == "+" || unaryOp == "-") {
+        if (ctx->unaryExp()->dataType == DataType::BOOL || ctx->unaryExp()->dataType == DataType::VOID) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        } else {
+            ctx->isArray = ctx->unaryExp()->isArray;
+            ctx->arraySize = ctx->unaryExp()->arraySize;
+            ctx->dataType = ctx->unaryExp()->dataType;
+        }
+    } else if (unaryOp == "!") {
+        if (ctx->unaryExp()->dataType != DataType::BOOL) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        } else if (ctx->unaryExp()->isArray) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        } else {
+            ctx->isArray = false;
+            ctx->dataType = DataType::BOOL;
+        }
+    }
+}
+
+void SemanticAnalysis::enterUnaryOp(CACTParser::UnaryOpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitUnaryOp(CACTParser::UnaryOpContext * ctx) {
+    // nothing to do
+}
+
+void SemanticAnalysis::enterFuncRParams(CACTParser::FuncRParamsContext * ctx) {
+    FuncSymbolInfo * thisFunc = ctx->thisFunc;
+    size_t paramNum = thisFunc->getparamNum();
+    if (ctx->exp().size() != paramNum) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+    std::vector < SymbolInfo * > paramList = thisFunc->getparamList();
+    for (size_t i = 0; i < paramNum; i++) {
+        bool paramIsArray = paramList[i]->getSymbolType() == SymbolType::CONST_ARRAY || paramList[i]->getSymbolType() == SymbolType::VAR_ARRAY;
+        if (ctx->exp(i)->dataType != paramList[i]->getDataType()) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        } else if (ctx->exp(i)->isArray != paramIsArray) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        }
+    }
+}
+void SemanticAnalysis::exitFuncRParams(CACTParser::FuncRParamsContext * ctx) {
+    // nothing to do
+}
+
+
+void SemanticAnalysis::enterMulExpUnaryExp(CACTParser::MulExpUnaryExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitMulExpUnaryExp(CACTParser::MulExpUnaryExpContext * ctx) {
+    ctx->isArray = ctx->unaryExp()->isArray;
+    ctx->arraySize = ctx->unaryExp()->arraySize;
+    ctx->dataType = ctx->unaryExp()->dataType;
+}
+
+void SemanticAnalysis::enterMulExpMulExp(CACTParser::MulExpMulExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitMulExpMulExp(CACTParser::MulExpMulExpContext * ctx) {
+    ctx->isArray = ctx->mulExp()->isArray;
+    ctx->arraySize = ctx->mulExp()->arraySize;
+    ctx->dataType = ctx->mulExp()->dataType;
+    
+    if (ctx->dataType != ctx->unaryExp()->dataType) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    } else if (ctx->dataType == DataType::BOOL) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+
+    if (ctx->isArray) {
+        if (!ctx->unaryExp()->isArray) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        } else if (ctx->arraySize != ctx->unaryExp()->arraySize) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        }
+    } else {
+        if (ctx->unaryExp()->isArray) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        }
+    }
+}
+
+void SemanticAnalysis::enterAddExpMulExp(CACTParser::AddExpMulExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitAddExpMulExp(CACTParser::AddExpMulExpContext * ctx) {
+    ctx->isArray = ctx->mulExp()->isArray;
+    ctx->arraySize = ctx->mulExp()->arraySize;
+    ctx->dataType = ctx->mulExp()->dataType;
+}
+
+void SemanticAnalysis::enterAddExpAddExp(CACTParser::AddExpAddExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitAddExpAddExp(CACTParser::AddExpAddExpContext * ctx) {
+    ctx->isArray = ctx->addExp()->isArray;
+    ctx->arraySize = ctx->addExp()->arraySize;
+    ctx->dataType = ctx->addExp()->dataType;
+    
+    if (ctx->dataType != ctx->mulExp()->dataType) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    } else if (ctx->dataType == DataType::BOOL) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+
+    if (ctx->isArray) {
+        if (!ctx->mulExp()->isArray) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        } else if (ctx->arraySize != ctx->mulExp()->arraySize) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        }
+    } else {
+        if (ctx->mulExp()->isArray) {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return;
+        }
+    }
+}
+
+void SemanticAnalysis::enterRelExpAddExp(CACTParser::RelExpAddExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitRelExpAddExp(CACTParser::RelExpAddExpContext * ctx) {
+    ctx->isArray = ctx->addExp()->isArray;
+    ctx->arraySize = ctx->addExp()->arraySize;
+    ctx->dataType = ctx->addExp()->dataType;
+}
+
+void SemanticAnalysis::enterRelExpRelExp(CACTParser::RelExpRelExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitRelExpRelExp(CACTParser::RelExpRelExpContext * ctx) {
+    ctx->isArray = false;
+    ctx->dataType = DataType::BOOL;
+
+    if (ctx->relExp()->dataType != ctx->addExp()->dataType) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    } else if (ctx->relExp()->dataType == DataType::BOOL) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+
+    if (ctx->relExp()->isArray || ctx->addExp()->isArray) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+}
+
+void SemanticAnalysis::enterRelExpBoolConst(CACTParser::RelExpBoolConstContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitRelExpBoolConst(CACTParser::RelExpBoolConstContext * ctx) {
+    ctx->isArray = false;
+    ctx->dataType = DataType::BOOL;
+}
+
+void SemanticAnalysis::enterEqExpRelExp(CACTParser::EqExpRelExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitEqExpRelExp(CACTParser::EqExpRelExpContext * ctx) {
+    ctx->isArray = ctx->relExp()->isArray;
+    ctx->arraySize = ctx->relExp()->arraySize;
+    ctx->dataType = ctx->relExp()->dataType;
+}
+
+void SemanticAnalysis::enterEqExpEqExp(CACTParser::EqExpEqExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitEqExpEqExp(CACTParser::EqExpEqExpContext * ctx) {
+    ctx->isArray = false;
+    ctx->dataType = DataType::BOOL;
+
+    if (ctx->eqExp()->dataType != ctx->relExp()->dataType) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+
+    if (ctx->eqExp()->isArray || ctx->relExp()->isArray) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+}
+
+void SemanticAnalysis::enterLAndExpEqExp(CACTParser::LAndExpEqExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitLAndExpEqExp(CACTParser::LAndExpEqExpContext * ctx) {
+    ctx->isArray = ctx->eqExp()->isArray;
+    ctx->arraySize = ctx->eqExp()->arraySize;
+    ctx->dataType = ctx->eqExp()->dataType;
+}
+
+void SemanticAnalysis::enterLAndExpLAndExp(CACTParser::LAndExpLAndExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitLAndExpLAndExp(CACTParser::LAndExpLAndExpContext * ctx) {
+    ctx->isArray = false;
+    ctx->dataType = DataType::BOOL;
+
+    if (ctx->lAndExp()->dataType != ctx->eqExp()->dataType) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    } else if (ctx->lAndExp()->dataType != DataType::BOOL) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+
+    if (ctx->lAndExp()->isArray || ctx->eqExp()->isArray) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+}
+
+void SemanticAnalysis::enterLOrExpLAndExp(CACTParser::LOrExpLAndExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitLOrExpLAndExp(CACTParser::LOrExpLAndExpContext * ctx) {
+    ctx->isArray = ctx->lAndExp()->isArray;
+    ctx->arraySize = ctx->lAndExp()->arraySize;
+    ctx->dataType = ctx->lAndExp()->dataType;
+}
+
+void SemanticAnalysis::enterLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * ctx) {
+    ctx->isArray = false;
+    ctx->dataType = DataType::BOOL;
+
+    if (ctx->lOrExp()->dataType != ctx->lAndExp()->dataType) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    } else if (ctx->lAndExp()->dataType != DataType::BOOL) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+
+    if (ctx->lOrExp()->isArray || ctx->lAndExp()->isArray) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return;
+    }
+}
 
 void SemanticAnalysis::enterConstExpNumber(CACTParser::ConstExpNumberContext * ctx) {
     // nothing to do

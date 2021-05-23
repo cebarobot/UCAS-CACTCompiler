@@ -32,7 +32,11 @@ int main(int argc, const char* argv[]) {
 
     BlockInfo globalBlockInfo(nullptr);
     SemanticAnalysis listener(&globalBlockInfo);
-    tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
+    try {
+        tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
+    } catch (...) {
+        return 1;
+    }
     
     std::cout << "debug: hello" << std::endl;
 

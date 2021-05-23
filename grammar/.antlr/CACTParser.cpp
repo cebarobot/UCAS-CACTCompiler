@@ -1010,34 +1010,70 @@ CACTParser::StmtContext::StmtContext(ParserRuleContext *parent, size_t invokingS
   : ParserRuleContext(parent, invokingState) {
 }
 
-CACTParser::LValContext* CACTParser::StmtContext::lVal() {
-  return getRuleContext<CACTParser::LValContext>(0);
-}
-
-CACTParser::ExpContext* CACTParser::StmtContext::exp() {
-  return getRuleContext<CACTParser::ExpContext>(0);
-}
-
-CACTParser::BlockContext* CACTParser::StmtContext::block() {
-  return getRuleContext<CACTParser::BlockContext>(0);
-}
-
-CACTParser::CondContext* CACTParser::StmtContext::cond() {
-  return getRuleContext<CACTParser::CondContext>(0);
-}
-
-std::vector<CACTParser::StmtContext *> CACTParser::StmtContext::stmt() {
-  return getRuleContexts<CACTParser::StmtContext>();
-}
-
-CACTParser::StmtContext* CACTParser::StmtContext::stmt(size_t i) {
-  return getRuleContext<CACTParser::StmtContext>(i);
-}
-
 
 size_t CACTParser::StmtContext::getRuleIndex() const {
   return CACTParser::RuleStmt;
 }
+
+void CACTParser::StmtContext::copyFrom(StmtContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+}
+
+//----------------- StmtExpContext ------------------------------------------------------------------
+
+CACTParser::ExpContext* CACTParser::StmtExpContext::exp() {
+  return getRuleContext<CACTParser::ExpContext>(0);
+}
+
+CACTParser::StmtExpContext::StmtExpContext(StmtContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- StmtBlockContext ------------------------------------------------------------------
+
+CACTParser::BlockContext* CACTParser::StmtBlockContext::block() {
+  return getRuleContext<CACTParser::BlockContext>(0);
+}
+
+CACTParser::StmtBlockContext::StmtBlockContext(StmtContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- StmtCtrlContext ------------------------------------------------------------------
+
+CACTParser::CondContext* CACTParser::StmtCtrlContext::cond() {
+  return getRuleContext<CACTParser::CondContext>(0);
+}
+
+std::vector<CACTParser::StmtContext *> CACTParser::StmtCtrlContext::stmt() {
+  return getRuleContexts<CACTParser::StmtContext>();
+}
+
+CACTParser::StmtContext* CACTParser::StmtCtrlContext::stmt(size_t i) {
+  return getRuleContext<CACTParser::StmtContext>(i);
+}
+
+CACTParser::StmtCtrlContext::StmtCtrlContext(StmtContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- StmtReturnContext ------------------------------------------------------------------
+
+CACTParser::ExpContext* CACTParser::StmtReturnContext::exp() {
+  return getRuleContext<CACTParser::ExpContext>(0);
+}
+
+CACTParser::StmtReturnContext::StmtReturnContext(StmtContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- StmtAssignContext ------------------------------------------------------------------
+
+CACTParser::LValContext* CACTParser::StmtAssignContext::lVal() {
+  return getRuleContext<CACTParser::LValContext>(0);
+}
+
+CACTParser::ExpContext* CACTParser::StmtAssignContext::exp() {
+  return getRuleContext<CACTParser::ExpContext>(0);
+}
+
+CACTParser::StmtAssignContext::StmtAssignContext(StmtContext *ctx) { copyFrom(ctx); }
 
 
 CACTParser::StmtContext* CACTParser::stmt() {
@@ -1053,6 +1089,7 @@ CACTParser::StmtContext* CACTParser::stmt() {
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 20, _ctx)) {
     case 1: {
+      _localctx = dynamic_cast<StmtContext *>(_tracker.createInstance<CACTParser::StmtAssignContext>(_localctx));
       enterOuterAlt(_localctx, 1);
       setState(178);
       lVal();
@@ -1066,6 +1103,7 @@ CACTParser::StmtContext* CACTParser::stmt() {
     }
 
     case 2: {
+      _localctx = dynamic_cast<StmtContext *>(_tracker.createInstance<CACTParser::StmtExpContext>(_localctx));
       enterOuterAlt(_localctx, 2);
       setState(184);
       _errHandler->sync(this);
@@ -1090,6 +1128,7 @@ CACTParser::StmtContext* CACTParser::stmt() {
     }
 
     case 3: {
+      _localctx = dynamic_cast<StmtContext *>(_tracker.createInstance<CACTParser::StmtBlockContext>(_localctx));
       enterOuterAlt(_localctx, 3);
       setState(187);
       block();
@@ -1097,6 +1136,7 @@ CACTParser::StmtContext* CACTParser::stmt() {
     }
 
     case 4: {
+      _localctx = dynamic_cast<StmtContext *>(_tracker.createInstance<CACTParser::StmtCtrlContext>(_localctx));
       enterOuterAlt(_localctx, 4);
       setState(188);
       match(CACTParser::T__15);
@@ -1125,6 +1165,7 @@ CACTParser::StmtContext* CACTParser::stmt() {
     }
 
     case 5: {
+      _localctx = dynamic_cast<StmtContext *>(_tracker.createInstance<CACTParser::StmtCtrlContext>(_localctx));
       enterOuterAlt(_localctx, 5);
       setState(197);
       match(CACTParser::T__17);
@@ -1140,6 +1181,7 @@ CACTParser::StmtContext* CACTParser::stmt() {
     }
 
     case 6: {
+      _localctx = dynamic_cast<StmtContext *>(_tracker.createInstance<CACTParser::StmtCtrlContext>(_localctx));
       enterOuterAlt(_localctx, 6);
       setState(203);
       match(CACTParser::T__18);
@@ -1149,6 +1191,7 @@ CACTParser::StmtContext* CACTParser::stmt() {
     }
 
     case 7: {
+      _localctx = dynamic_cast<StmtContext *>(_tracker.createInstance<CACTParser::StmtCtrlContext>(_localctx));
       enterOuterAlt(_localctx, 7);
       setState(205);
       match(CACTParser::T__19);
@@ -1158,6 +1201,7 @@ CACTParser::StmtContext* CACTParser::stmt() {
     }
 
     case 8: {
+      _localctx = dynamic_cast<StmtContext *>(_tracker.createInstance<CACTParser::StmtReturnContext>(_localctx));
       enterOuterAlt(_localctx, 8);
       setState(207);
       match(CACTParser::T__20);
@@ -1201,18 +1245,34 @@ CACTParser::ExpContext::ExpContext(ParserRuleContext *parent, size_t invokingSta
   : ParserRuleContext(parent, invokingState) {
 }
 
-CACTParser::AddExpContext* CACTParser::ExpContext::addExp() {
-  return getRuleContext<CACTParser::AddExpContext>(0);
-}
-
-tree::TerminalNode* CACTParser::ExpContext::BoolConst() {
-  return getToken(CACTParser::BoolConst, 0);
-}
-
 
 size_t CACTParser::ExpContext::getRuleIndex() const {
   return CACTParser::RuleExp;
 }
+
+void CACTParser::ExpContext::copyFrom(ExpContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+  this->isArray = ctx->isArray;
+  this->arraySize = ctx->arraySize;
+  this->dataType = ctx->dataType;
+}
+
+//----------------- ExpAddExpContext ------------------------------------------------------------------
+
+CACTParser::AddExpContext* CACTParser::ExpAddExpContext::addExp() {
+  return getRuleContext<CACTParser::AddExpContext>(0);
+}
+
+CACTParser::ExpAddExpContext::ExpAddExpContext(ExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- ExpBoolConstContext ------------------------------------------------------------------
+
+tree::TerminalNode* CACTParser::ExpBoolConstContext::BoolConst() {
+  return getToken(CACTParser::BoolConst, 0);
+}
+
+CACTParser::ExpBoolConstContext::ExpBoolConstContext(ExpContext *ctx) { copyFrom(ctx); }
 
 
 CACTParser::ExpContext* CACTParser::exp() {
@@ -1234,6 +1294,7 @@ CACTParser::ExpContext* CACTParser::exp() {
       case CACTParser::IntConst:
       case CACTParser::FloatConst:
       case CACTParser::DoubleConst: {
+        _localctx = dynamic_cast<ExpContext *>(_tracker.createInstance<CACTParser::ExpAddExpContext>(_localctx));
         enterOuterAlt(_localctx, 1);
         setState(214);
         addExp(0);
@@ -1241,6 +1302,7 @@ CACTParser::ExpContext* CACTParser::exp() {
       }
 
       case CACTParser::BoolConst: {
+        _localctx = dynamic_cast<ExpContext *>(_tracker.createInstance<CACTParser::ExpBoolConstContext>(_localctx));
         enterOuterAlt(_localctx, 2);
         setState(215);
         match(CACTParser::BoolConst);
@@ -1362,22 +1424,43 @@ CACTParser::PrimaryExpContext::PrimaryExpContext(ParserRuleContext *parent, size
   : ParserRuleContext(parent, invokingState) {
 }
 
-CACTParser::ExpContext* CACTParser::PrimaryExpContext::exp() {
-  return getRuleContext<CACTParser::ExpContext>(0);
-}
-
-CACTParser::LValContext* CACTParser::PrimaryExpContext::lVal() {
-  return getRuleContext<CACTParser::LValContext>(0);
-}
-
-CACTParser::NumberContext* CACTParser::PrimaryExpContext::number() {
-  return getRuleContext<CACTParser::NumberContext>(0);
-}
-
 
 size_t CACTParser::PrimaryExpContext::getRuleIndex() const {
   return CACTParser::RulePrimaryExp;
 }
+
+void CACTParser::PrimaryExpContext::copyFrom(PrimaryExpContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+  this->isArray = ctx->isArray;
+  this->arraySize = ctx->arraySize;
+  this->dataType = ctx->dataType;
+}
+
+//----------------- PrimaryExpExpContext ------------------------------------------------------------------
+
+CACTParser::ExpContext* CACTParser::PrimaryExpExpContext::exp() {
+  return getRuleContext<CACTParser::ExpContext>(0);
+}
+
+CACTParser::PrimaryExpExpContext::PrimaryExpExpContext(PrimaryExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- PrimaryExpLValContext ------------------------------------------------------------------
+
+CACTParser::LValContext* CACTParser::PrimaryExpLValContext::lVal() {
+  return getRuleContext<CACTParser::LValContext>(0);
+}
+
+CACTParser::PrimaryExpLValContext::PrimaryExpLValContext(PrimaryExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- PrimaryNumberContext ------------------------------------------------------------------
+
+CACTParser::NumberContext* CACTParser::PrimaryNumberContext::number() {
+  return getRuleContext<CACTParser::NumberContext>(0);
+}
+
+CACTParser::PrimaryNumberContext::PrimaryNumberContext(PrimaryExpContext *ctx) { copyFrom(ctx); }
 
 
 CACTParser::PrimaryExpContext* CACTParser::primaryExp() {
@@ -1392,6 +1475,7 @@ CACTParser::PrimaryExpContext* CACTParser::primaryExp() {
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case CACTParser::T__12: {
+        _localctx = dynamic_cast<PrimaryExpContext *>(_tracker.createInstance<CACTParser::PrimaryExpExpContext>(_localctx));
         enterOuterAlt(_localctx, 1);
         setState(227);
         match(CACTParser::T__12);
@@ -1403,6 +1487,7 @@ CACTParser::PrimaryExpContext* CACTParser::primaryExp() {
       }
 
       case CACTParser::Ident: {
+        _localctx = dynamic_cast<PrimaryExpContext *>(_tracker.createInstance<CACTParser::PrimaryExpLValContext>(_localctx));
         enterOuterAlt(_localctx, 2);
         setState(231);
         lVal();
@@ -1412,6 +1497,7 @@ CACTParser::PrimaryExpContext* CACTParser::primaryExp() {
       case CACTParser::IntConst:
       case CACTParser::FloatConst:
       case CACTParser::DoubleConst: {
+        _localctx = dynamic_cast<PrimaryExpContext *>(_tracker.createInstance<CACTParser::PrimaryNumberContext>(_localctx));
         enterOuterAlt(_localctx, 3);
         setState(232);
         number();
@@ -1438,30 +1524,52 @@ CACTParser::UnaryExpContext::UnaryExpContext(ParserRuleContext *parent, size_t i
   : ParserRuleContext(parent, invokingState) {
 }
 
-CACTParser::PrimaryExpContext* CACTParser::UnaryExpContext::primaryExp() {
-  return getRuleContext<CACTParser::PrimaryExpContext>(0);
-}
-
-tree::TerminalNode* CACTParser::UnaryExpContext::Ident() {
-  return getToken(CACTParser::Ident, 0);
-}
-
-CACTParser::FuncRParamsContext* CACTParser::UnaryExpContext::funcRParams() {
-  return getRuleContext<CACTParser::FuncRParamsContext>(0);
-}
-
-CACTParser::UnaryOpContext* CACTParser::UnaryExpContext::unaryOp() {
-  return getRuleContext<CACTParser::UnaryOpContext>(0);
-}
-
-CACTParser::UnaryExpContext* CACTParser::UnaryExpContext::unaryExp() {
-  return getRuleContext<CACTParser::UnaryExpContext>(0);
-}
-
 
 size_t CACTParser::UnaryExpContext::getRuleIndex() const {
   return CACTParser::RuleUnaryExp;
 }
+
+void CACTParser::UnaryExpContext::copyFrom(UnaryExpContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+  this->isArray = ctx->isArray;
+  this->arraySize = ctx->arraySize;
+  this->dataType = ctx->dataType;
+  this->thisFunc = ctx->thisFunc;
+}
+
+//----------------- UnaryExpFuncContext ------------------------------------------------------------------
+
+tree::TerminalNode* CACTParser::UnaryExpFuncContext::Ident() {
+  return getToken(CACTParser::Ident, 0);
+}
+
+CACTParser::FuncRParamsContext* CACTParser::UnaryExpFuncContext::funcRParams() {
+  return getRuleContext<CACTParser::FuncRParamsContext>(0);
+}
+
+CACTParser::UnaryExpFuncContext::UnaryExpFuncContext(UnaryExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- UnaryExpUnaryOpContext ------------------------------------------------------------------
+
+CACTParser::UnaryOpContext* CACTParser::UnaryExpUnaryOpContext::unaryOp() {
+  return getRuleContext<CACTParser::UnaryOpContext>(0);
+}
+
+CACTParser::UnaryExpContext* CACTParser::UnaryExpUnaryOpContext::unaryExp() {
+  return getRuleContext<CACTParser::UnaryExpContext>(0);
+}
+
+CACTParser::UnaryExpUnaryOpContext::UnaryExpUnaryOpContext(UnaryExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- UnaryExpPrimaryExpContext ------------------------------------------------------------------
+
+CACTParser::PrimaryExpContext* CACTParser::UnaryExpPrimaryExpContext::primaryExp() {
+  return getRuleContext<CACTParser::PrimaryExpContext>(0);
+}
+
+CACTParser::UnaryExpPrimaryExpContext::UnaryExpPrimaryExpContext(UnaryExpContext *ctx) { copyFrom(ctx); }
 
 
 CACTParser::UnaryExpContext* CACTParser::unaryExp() {
@@ -1477,6 +1585,7 @@ CACTParser::UnaryExpContext* CACTParser::unaryExp() {
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 25, _ctx)) {
     case 1: {
+      _localctx = dynamic_cast<UnaryExpContext *>(_tracker.createInstance<CACTParser::UnaryExpPrimaryExpContext>(_localctx));
       enterOuterAlt(_localctx, 1);
       setState(235);
       primaryExp();
@@ -1484,6 +1593,7 @@ CACTParser::UnaryExpContext* CACTParser::unaryExp() {
     }
 
     case 2: {
+      _localctx = dynamic_cast<UnaryExpContext *>(_tracker.createInstance<CACTParser::UnaryExpFuncContext>(_localctx));
       enterOuterAlt(_localctx, 2);
       setState(236);
       match(CACTParser::Ident);
@@ -1512,6 +1622,7 @@ CACTParser::UnaryExpContext* CACTParser::unaryExp() {
     }
 
     case 3: {
+      _localctx = dynamic_cast<UnaryExpContext *>(_tracker.createInstance<CACTParser::UnaryExpUnaryOpContext>(_localctx));
       enterOuterAlt(_localctx, 3);
       setState(242);
       unaryOp();
@@ -1638,18 +1749,38 @@ CACTParser::MulExpContext::MulExpContext(ParserRuleContext *parent, size_t invok
   : ParserRuleContext(parent, invokingState) {
 }
 
-CACTParser::UnaryExpContext* CACTParser::MulExpContext::unaryExp() {
-  return getRuleContext<CACTParser::UnaryExpContext>(0);
-}
-
-CACTParser::MulExpContext* CACTParser::MulExpContext::mulExp() {
-  return getRuleContext<CACTParser::MulExpContext>(0);
-}
-
 
 size_t CACTParser::MulExpContext::getRuleIndex() const {
   return CACTParser::RuleMulExp;
 }
+
+void CACTParser::MulExpContext::copyFrom(MulExpContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+  this->isArray = ctx->isArray;
+  this->arraySize = ctx->arraySize;
+  this->dataType = ctx->dataType;
+}
+
+//----------------- MulExpMulExpContext ------------------------------------------------------------------
+
+CACTParser::MulExpContext* CACTParser::MulExpMulExpContext::mulExp() {
+  return getRuleContext<CACTParser::MulExpContext>(0);
+}
+
+CACTParser::UnaryExpContext* CACTParser::MulExpMulExpContext::unaryExp() {
+  return getRuleContext<CACTParser::UnaryExpContext>(0);
+}
+
+CACTParser::MulExpMulExpContext::MulExpMulExpContext(MulExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- MulExpUnaryExpContext ------------------------------------------------------------------
+
+CACTParser::UnaryExpContext* CACTParser::MulExpUnaryExpContext::unaryExp() {
+  return getRuleContext<CACTParser::UnaryExpContext>(0);
+}
+
+CACTParser::MulExpUnaryExpContext::MulExpUnaryExpContext(MulExpContext *ctx) { copyFrom(ctx); }
 
 
 
@@ -1674,6 +1805,10 @@ CACTParser::MulExpContext* CACTParser::mulExp(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
+    _localctx = _tracker.createInstance<MulExpUnaryExpContext>(_localctx);
+    _ctx = _localctx;
+    previousContext = _localctx;
+
     setState(258);
     unaryExp();
     _ctx->stop = _input->LT(-1);
@@ -1685,8 +1820,9 @@ CACTParser::MulExpContext* CACTParser::mulExp(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        _localctx = _tracker.createInstance<MulExpContext>(parentContext, parentState);
-        pushNewRecursionContext(_localctx, startState, RuleMulExp);
+        auto newContext = _tracker.createInstance<MulExpMulExpContext>(_tracker.createInstance<MulExpContext>(parentContext, parentState));
+        _localctx = newContext;
+        pushNewRecursionContext(newContext, startState, RuleMulExp);
         setState(260);
 
         if (!(precpred(_ctx, 1))) throw FailedPredicateException(this, "precpred(_ctx, 1)");
@@ -1724,18 +1860,38 @@ CACTParser::AddExpContext::AddExpContext(ParserRuleContext *parent, size_t invok
   : ParserRuleContext(parent, invokingState) {
 }
 
-CACTParser::MulExpContext* CACTParser::AddExpContext::mulExp() {
-  return getRuleContext<CACTParser::MulExpContext>(0);
-}
-
-CACTParser::AddExpContext* CACTParser::AddExpContext::addExp() {
-  return getRuleContext<CACTParser::AddExpContext>(0);
-}
-
 
 size_t CACTParser::AddExpContext::getRuleIndex() const {
   return CACTParser::RuleAddExp;
 }
+
+void CACTParser::AddExpContext::copyFrom(AddExpContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+  this->isArray = ctx->isArray;
+  this->arraySize = ctx->arraySize;
+  this->dataType = ctx->dataType;
+}
+
+//----------------- AddExpAddExpContext ------------------------------------------------------------------
+
+CACTParser::AddExpContext* CACTParser::AddExpAddExpContext::addExp() {
+  return getRuleContext<CACTParser::AddExpContext>(0);
+}
+
+CACTParser::MulExpContext* CACTParser::AddExpAddExpContext::mulExp() {
+  return getRuleContext<CACTParser::MulExpContext>(0);
+}
+
+CACTParser::AddExpAddExpContext::AddExpAddExpContext(AddExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- AddExpMulExpContext ------------------------------------------------------------------
+
+CACTParser::MulExpContext* CACTParser::AddExpMulExpContext::mulExp() {
+  return getRuleContext<CACTParser::MulExpContext>(0);
+}
+
+CACTParser::AddExpMulExpContext::AddExpMulExpContext(AddExpContext *ctx) { copyFrom(ctx); }
 
 
 
@@ -1760,6 +1916,10 @@ CACTParser::AddExpContext* CACTParser::addExp(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
+    _localctx = _tracker.createInstance<AddExpMulExpContext>(_localctx);
+    _ctx = _localctx;
+    previousContext = _localctx;
+
     setState(269);
     mulExp(0);
     _ctx->stop = _input->LT(-1);
@@ -1771,8 +1931,9 @@ CACTParser::AddExpContext* CACTParser::addExp(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        _localctx = _tracker.createInstance<AddExpContext>(parentContext, parentState);
-        pushNewRecursionContext(_localctx, startState, RuleAddExp);
+        auto newContext = _tracker.createInstance<AddExpAddExpContext>(_tracker.createInstance<AddExpContext>(parentContext, parentState));
+        _localctx = newContext;
+        pushNewRecursionContext(newContext, startState, RuleAddExp);
         setState(271);
 
         if (!(precpred(_ctx, 1))) throw FailedPredicateException(this, "precpred(_ctx, 1)");
@@ -1809,22 +1970,47 @@ CACTParser::RelExpContext::RelExpContext(ParserRuleContext *parent, size_t invok
   : ParserRuleContext(parent, invokingState) {
 }
 
-CACTParser::AddExpContext* CACTParser::RelExpContext::addExp() {
-  return getRuleContext<CACTParser::AddExpContext>(0);
-}
-
-tree::TerminalNode* CACTParser::RelExpContext::BoolConst() {
-  return getToken(CACTParser::BoolConst, 0);
-}
-
-CACTParser::RelExpContext* CACTParser::RelExpContext::relExp() {
-  return getRuleContext<CACTParser::RelExpContext>(0);
-}
-
 
 size_t CACTParser::RelExpContext::getRuleIndex() const {
   return CACTParser::RuleRelExp;
 }
+
+void CACTParser::RelExpContext::copyFrom(RelExpContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+  this->isArray = ctx->isArray;
+  this->arraySize = ctx->arraySize;
+  this->dataType = ctx->dataType;
+}
+
+//----------------- RelExpRelExpContext ------------------------------------------------------------------
+
+CACTParser::RelExpContext* CACTParser::RelExpRelExpContext::relExp() {
+  return getRuleContext<CACTParser::RelExpContext>(0);
+}
+
+CACTParser::AddExpContext* CACTParser::RelExpRelExpContext::addExp() {
+  return getRuleContext<CACTParser::AddExpContext>(0);
+}
+
+CACTParser::RelExpRelExpContext::RelExpRelExpContext(RelExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- RelExpAddExpContext ------------------------------------------------------------------
+
+CACTParser::AddExpContext* CACTParser::RelExpAddExpContext::addExp() {
+  return getRuleContext<CACTParser::AddExpContext>(0);
+}
+
+CACTParser::RelExpAddExpContext::RelExpAddExpContext(RelExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- RelExpBoolConstContext ------------------------------------------------------------------
+
+tree::TerminalNode* CACTParser::RelExpBoolConstContext::BoolConst() {
+  return getToken(CACTParser::BoolConst, 0);
+}
+
+CACTParser::RelExpBoolConstContext::RelExpBoolConstContext(RelExpContext *ctx) { copyFrom(ctx); }
 
 
 
@@ -1860,12 +2046,19 @@ CACTParser::RelExpContext* CACTParser::relExp(int precedence) {
       case CACTParser::IntConst:
       case CACTParser::FloatConst:
       case CACTParser::DoubleConst: {
+        _localctx = _tracker.createInstance<RelExpAddExpContext>(_localctx);
+        _ctx = _localctx;
+        previousContext = _localctx;
+
         setState(280);
         addExp(0);
         break;
       }
 
       case CACTParser::BoolConst: {
+        _localctx = _tracker.createInstance<RelExpBoolConstContext>(_localctx);
+        _ctx = _localctx;
+        previousContext = _localctx;
         setState(281);
         match(CACTParser::BoolConst);
         break;
@@ -1883,8 +2076,9 @@ CACTParser::RelExpContext* CACTParser::relExp(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        _localctx = _tracker.createInstance<RelExpContext>(parentContext, parentState);
-        pushNewRecursionContext(_localctx, startState, RuleRelExp);
+        auto newContext = _tracker.createInstance<RelExpRelExpContext>(_tracker.createInstance<RelExpContext>(parentContext, parentState));
+        _localctx = newContext;
+        pushNewRecursionContext(newContext, startState, RuleRelExp);
         setState(284);
 
         if (!(precpred(_ctx, 2))) throw FailedPredicateException(this, "precpred(_ctx, 2)");
@@ -1923,18 +2117,38 @@ CACTParser::EqExpContext::EqExpContext(ParserRuleContext *parent, size_t invokin
   : ParserRuleContext(parent, invokingState) {
 }
 
-CACTParser::RelExpContext* CACTParser::EqExpContext::relExp() {
-  return getRuleContext<CACTParser::RelExpContext>(0);
-}
-
-CACTParser::EqExpContext* CACTParser::EqExpContext::eqExp() {
-  return getRuleContext<CACTParser::EqExpContext>(0);
-}
-
 
 size_t CACTParser::EqExpContext::getRuleIndex() const {
   return CACTParser::RuleEqExp;
 }
+
+void CACTParser::EqExpContext::copyFrom(EqExpContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+  this->isArray = ctx->isArray;
+  this->arraySize = ctx->arraySize;
+  this->dataType = ctx->dataType;
+}
+
+//----------------- EqExpRelExpContext ------------------------------------------------------------------
+
+CACTParser::RelExpContext* CACTParser::EqExpRelExpContext::relExp() {
+  return getRuleContext<CACTParser::RelExpContext>(0);
+}
+
+CACTParser::EqExpRelExpContext::EqExpRelExpContext(EqExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- EqExpEqExpContext ------------------------------------------------------------------
+
+CACTParser::EqExpContext* CACTParser::EqExpEqExpContext::eqExp() {
+  return getRuleContext<CACTParser::EqExpContext>(0);
+}
+
+CACTParser::RelExpContext* CACTParser::EqExpEqExpContext::relExp() {
+  return getRuleContext<CACTParser::RelExpContext>(0);
+}
+
+CACTParser::EqExpEqExpContext::EqExpEqExpContext(EqExpContext *ctx) { copyFrom(ctx); }
 
 
 
@@ -1959,6 +2173,10 @@ CACTParser::EqExpContext* CACTParser::eqExp(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
+    _localctx = _tracker.createInstance<EqExpRelExpContext>(_localctx);
+    _ctx = _localctx;
+    previousContext = _localctx;
+
     setState(293);
     relExp(0);
     _ctx->stop = _input->LT(-1);
@@ -1970,8 +2188,9 @@ CACTParser::EqExpContext* CACTParser::eqExp(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        _localctx = _tracker.createInstance<EqExpContext>(parentContext, parentState);
-        pushNewRecursionContext(_localctx, startState, RuleEqExp);
+        auto newContext = _tracker.createInstance<EqExpEqExpContext>(_tracker.createInstance<EqExpContext>(parentContext, parentState));
+        _localctx = newContext;
+        pushNewRecursionContext(newContext, startState, RuleEqExp);
         setState(295);
 
         if (!(precpred(_ctx, 1))) throw FailedPredicateException(this, "precpred(_ctx, 1)");
@@ -2008,18 +2227,38 @@ CACTParser::LAndExpContext::LAndExpContext(ParserRuleContext *parent, size_t inv
   : ParserRuleContext(parent, invokingState) {
 }
 
-CACTParser::EqExpContext* CACTParser::LAndExpContext::eqExp() {
-  return getRuleContext<CACTParser::EqExpContext>(0);
-}
-
-CACTParser::LAndExpContext* CACTParser::LAndExpContext::lAndExp() {
-  return getRuleContext<CACTParser::LAndExpContext>(0);
-}
-
 
 size_t CACTParser::LAndExpContext::getRuleIndex() const {
   return CACTParser::RuleLAndExp;
 }
+
+void CACTParser::LAndExpContext::copyFrom(LAndExpContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+  this->isArray = ctx->isArray;
+  this->arraySize = ctx->arraySize;
+  this->dataType = ctx->dataType;
+}
+
+//----------------- LAndExpLAndExpContext ------------------------------------------------------------------
+
+CACTParser::LAndExpContext* CACTParser::LAndExpLAndExpContext::lAndExp() {
+  return getRuleContext<CACTParser::LAndExpContext>(0);
+}
+
+CACTParser::EqExpContext* CACTParser::LAndExpLAndExpContext::eqExp() {
+  return getRuleContext<CACTParser::EqExpContext>(0);
+}
+
+CACTParser::LAndExpLAndExpContext::LAndExpLAndExpContext(LAndExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- LAndExpEqExpContext ------------------------------------------------------------------
+
+CACTParser::EqExpContext* CACTParser::LAndExpEqExpContext::eqExp() {
+  return getRuleContext<CACTParser::EqExpContext>(0);
+}
+
+CACTParser::LAndExpEqExpContext::LAndExpEqExpContext(LAndExpContext *ctx) { copyFrom(ctx); }
 
 
 
@@ -2044,6 +2283,10 @@ CACTParser::LAndExpContext* CACTParser::lAndExp(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
+    _localctx = _tracker.createInstance<LAndExpEqExpContext>(_localctx);
+    _ctx = _localctx;
+    previousContext = _localctx;
+
     setState(304);
     eqExp(0);
     _ctx->stop = _input->LT(-1);
@@ -2055,8 +2298,9 @@ CACTParser::LAndExpContext* CACTParser::lAndExp(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        _localctx = _tracker.createInstance<LAndExpContext>(parentContext, parentState);
-        pushNewRecursionContext(_localctx, startState, RuleLAndExp);
+        auto newContext = _tracker.createInstance<LAndExpLAndExpContext>(_tracker.createInstance<LAndExpContext>(parentContext, parentState));
+        _localctx = newContext;
+        pushNewRecursionContext(newContext, startState, RuleLAndExp);
         setState(306);
 
         if (!(precpred(_ctx, 1))) throw FailedPredicateException(this, "precpred(_ctx, 1)");
@@ -2085,18 +2329,38 @@ CACTParser::LOrExpContext::LOrExpContext(ParserRuleContext *parent, size_t invok
   : ParserRuleContext(parent, invokingState) {
 }
 
-CACTParser::LAndExpContext* CACTParser::LOrExpContext::lAndExp() {
-  return getRuleContext<CACTParser::LAndExpContext>(0);
-}
-
-CACTParser::LOrExpContext* CACTParser::LOrExpContext::lOrExp() {
-  return getRuleContext<CACTParser::LOrExpContext>(0);
-}
-
 
 size_t CACTParser::LOrExpContext::getRuleIndex() const {
   return CACTParser::RuleLOrExp;
 }
+
+void CACTParser::LOrExpContext::copyFrom(LOrExpContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+  this->isArray = ctx->isArray;
+  this->arraySize = ctx->arraySize;
+  this->dataType = ctx->dataType;
+}
+
+//----------------- LOrExpLAndExpContext ------------------------------------------------------------------
+
+CACTParser::LAndExpContext* CACTParser::LOrExpLAndExpContext::lAndExp() {
+  return getRuleContext<CACTParser::LAndExpContext>(0);
+}
+
+CACTParser::LOrExpLAndExpContext::LOrExpLAndExpContext(LOrExpContext *ctx) { copyFrom(ctx); }
+
+
+//----------------- LOrExpLOrExpContext ------------------------------------------------------------------
+
+CACTParser::LOrExpContext* CACTParser::LOrExpLOrExpContext::lOrExp() {
+  return getRuleContext<CACTParser::LOrExpContext>(0);
+}
+
+CACTParser::LAndExpContext* CACTParser::LOrExpLOrExpContext::lAndExp() {
+  return getRuleContext<CACTParser::LAndExpContext>(0);
+}
+
+CACTParser::LOrExpLOrExpContext::LOrExpLOrExpContext(LOrExpContext *ctx) { copyFrom(ctx); }
 
 
 
@@ -2121,6 +2385,10 @@ CACTParser::LOrExpContext* CACTParser::lOrExp(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
+    _localctx = _tracker.createInstance<LOrExpLAndExpContext>(_localctx);
+    _ctx = _localctx;
+    previousContext = _localctx;
+
     setState(315);
     lAndExp(0);
     _ctx->stop = _input->LT(-1);
@@ -2132,8 +2400,9 @@ CACTParser::LOrExpContext* CACTParser::lOrExp(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        _localctx = _tracker.createInstance<LOrExpContext>(parentContext, parentState);
-        pushNewRecursionContext(_localctx, startState, RuleLOrExp);
+        auto newContext = _tracker.createInstance<LOrExpLOrExpContext>(_tracker.createInstance<LOrExpContext>(parentContext, parentState));
+        _localctx = newContext;
+        pushNewRecursionContext(newContext, startState, RuleLOrExp);
         setState(317);
 
         if (!(precpred(_ctx, 1))) throw FailedPredicateException(this, "precpred(_ctx, 1)");

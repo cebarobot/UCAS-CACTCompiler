@@ -104,39 +104,65 @@ blockItem
     ;
 
 stmt
-    : lVal '=' exp ';'
-    | (exp)? ';'
-    | block
-    | 'if' '(' cond ')' stmt ('else' stmt)?
-    | 'while' '(' cond ')' stmt
-    | 'break' ';' 
-    | 'contine' ';'
-    | 'return' (exp)? ';'
+    : lVal '=' exp ';'                          #stmtAssign
+    | (exp)? ';'                                #stmtExp
+    | block                                     #stmtBlock
+    | 'if' '(' cond ')' stmt ('else' stmt)?     #stmtCtrl
+    | 'while' '(' cond ')' stmt                 #stmtCtrl
+    | 'break' ';'                               #stmtCtrl
+    | 'contine' ';'                             #stmtCtrl
+    | 'return' (exp)? ';'                       #stmtReturn
     ;
 
 exp
-    : addExp
-    | BoolConst
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+    ]
+    : addExp        #expAddExp
+    | BoolConst     #expBoolConst
     ;
 
 cond
+    locals[
+        DataType dataType,
+    ]
     : lOrExp
     ;
 
 lVal
+    locals[
+        bool isVar,
+        bool isArray,
+        size_t arraySize,
+        DataType dataType, 
+        SymbolInfo * thisSymbol
+    ]
     : Ident ('[' exp ']')?
     ;
 
 primaryExp
-    : '(' exp ')' 
-    | lVal 
-    | number 
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+    ]
+    : '(' exp ')'       #primaryExpExp
+    | lVal              #primaryExpLVal
+    | number            #primaryNumber
     ;
 
 unaryExp
-    : primaryExp
-    | Ident '(' (funcRParams)? ')'
-    | unaryOp unaryExp
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+        FuncSymbolInfo * thisFunc
+    ]
+    : primaryExp                    #unaryExpPrimaryExp
+    | Ident '(' (funcRParams)? ')'  #unaryExpFunc
+    | unaryOp unaryExp              #unaryExpUnaryOp
     ;
 
 unaryOp
@@ -146,38 +172,71 @@ unaryOp
     ;
 
 funcRParams
+    locals[
+        FuncSymbolInfo * thisFunc
+    ]
     : exp (',' exp)*
     ;
 
 mulExp
-    : unaryExp 
-    | mulExp ('*' | '/' | '%') unaryExp
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+    ]
+    : unaryExp                              #mulExpUnaryExp
+    | mulExp ('*' | '/' | '%') unaryExp     #mulExpMulExp
     ;
 
 addExp
-    : mulExp
-    | addExp ('+' | '-') mulExp
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+    ]
+    : mulExp                        #addExpMulExp
+    | addExp ('+' | '-') mulExp     #addExpAddExp
     ;
 
 relExp
-    : addExp
-    | relExp ('<' | '>' | '<=' | '>=') addExp
-    | BoolConst
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+    ]
+    : addExp                                    #relExpAddExp
+    | relExp ('<' | '>' | '<=' | '>=') addExp   #relExpRelExp
+    | BoolConst                                 #relExpBoolConst
     ;
 
 eqExp
-    : relExp
-    | eqExp ('==' | '!=') relExp
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+    ]
+    : relExp                        #eqExpRelExp
+    | eqExp ('==' | '!=') relExp    #eqExpEqExp
     ;
 
 lAndExp
-    : eqExp
-    | lAndExp ('&&') eqExp
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+    ]
+    : eqExp                 #lAndExpEqExp
+    | lAndExp ('&&') eqExp  #lAndExpLAndExp
     ;
 
 lOrExp
-    : lAndExp
-    | lOrExp ('||') lAndExp
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+    ]
+    : lAndExp               #lOrExpLAndExp
+    | lOrExp ('||') lAndExp #lOrExpLOrExp
     ;
 
 constExp

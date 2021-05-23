@@ -64,11 +64,26 @@ public:
   virtual void enterBlockItem(CACTParser::BlockItemContext *ctx) = 0;
   virtual void exitBlockItem(CACTParser::BlockItemContext *ctx) = 0;
 
-  virtual void enterStmt(CACTParser::StmtContext *ctx) = 0;
-  virtual void exitStmt(CACTParser::StmtContext *ctx) = 0;
+  virtual void enterStmtAssign(CACTParser::StmtAssignContext *ctx) = 0;
+  virtual void exitStmtAssign(CACTParser::StmtAssignContext *ctx) = 0;
 
-  virtual void enterExp(CACTParser::ExpContext *ctx) = 0;
-  virtual void exitExp(CACTParser::ExpContext *ctx) = 0;
+  virtual void enterStmtExp(CACTParser::StmtExpContext *ctx) = 0;
+  virtual void exitStmtExp(CACTParser::StmtExpContext *ctx) = 0;
+
+  virtual void enterStmtBlock(CACTParser::StmtBlockContext *ctx) = 0;
+  virtual void exitStmtBlock(CACTParser::StmtBlockContext *ctx) = 0;
+
+  virtual void enterStmtCtrl(CACTParser::StmtCtrlContext *ctx) = 0;
+  virtual void exitStmtCtrl(CACTParser::StmtCtrlContext *ctx) = 0;
+
+  virtual void enterStmtReturn(CACTParser::StmtReturnContext *ctx) = 0;
+  virtual void exitStmtReturn(CACTParser::StmtReturnContext *ctx) = 0;
+
+  virtual void enterExpAddExp(CACTParser::ExpAddExpContext *ctx) = 0;
+  virtual void exitExpAddExp(CACTParser::ExpAddExpContext *ctx) = 0;
+
+  virtual void enterExpBoolConst(CACTParser::ExpBoolConstContext *ctx) = 0;
+  virtual void exitExpBoolConst(CACTParser::ExpBoolConstContext *ctx) = 0;
 
   virtual void enterCond(CACTParser::CondContext *ctx) = 0;
   virtual void exitCond(CACTParser::CondContext *ctx) = 0;
@@ -76,11 +91,23 @@ public:
   virtual void enterLVal(CACTParser::LValContext *ctx) = 0;
   virtual void exitLVal(CACTParser::LValContext *ctx) = 0;
 
-  virtual void enterPrimaryExp(CACTParser::PrimaryExpContext *ctx) = 0;
-  virtual void exitPrimaryExp(CACTParser::PrimaryExpContext *ctx) = 0;
+  virtual void enterPrimaryExpExp(CACTParser::PrimaryExpExpContext *ctx) = 0;
+  virtual void exitPrimaryExpExp(CACTParser::PrimaryExpExpContext *ctx) = 0;
 
-  virtual void enterUnaryExp(CACTParser::UnaryExpContext *ctx) = 0;
-  virtual void exitUnaryExp(CACTParser::UnaryExpContext *ctx) = 0;
+  virtual void enterPrimaryExpLVal(CACTParser::PrimaryExpLValContext *ctx) = 0;
+  virtual void exitPrimaryExpLVal(CACTParser::PrimaryExpLValContext *ctx) = 0;
+
+  virtual void enterPrimaryNumber(CACTParser::PrimaryNumberContext *ctx) = 0;
+  virtual void exitPrimaryNumber(CACTParser::PrimaryNumberContext *ctx) = 0;
+
+  virtual void enterUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext *ctx) = 0;
+  virtual void exitUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext *ctx) = 0;
+
+  virtual void enterUnaryExpFunc(CACTParser::UnaryExpFuncContext *ctx) = 0;
+  virtual void exitUnaryExpFunc(CACTParser::UnaryExpFuncContext *ctx) = 0;
+
+  virtual void enterUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext *ctx) = 0;
+  virtual void exitUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext *ctx) = 0;
 
   virtual void enterUnaryOp(CACTParser::UnaryOpContext *ctx) = 0;
   virtual void exitUnaryOp(CACTParser::UnaryOpContext *ctx) = 0;
@@ -88,23 +115,44 @@ public:
   virtual void enterFuncRParams(CACTParser::FuncRParamsContext *ctx) = 0;
   virtual void exitFuncRParams(CACTParser::FuncRParamsContext *ctx) = 0;
 
-  virtual void enterMulExp(CACTParser::MulExpContext *ctx) = 0;
-  virtual void exitMulExp(CACTParser::MulExpContext *ctx) = 0;
+  virtual void enterMulExpMulExp(CACTParser::MulExpMulExpContext *ctx) = 0;
+  virtual void exitMulExpMulExp(CACTParser::MulExpMulExpContext *ctx) = 0;
 
-  virtual void enterAddExp(CACTParser::AddExpContext *ctx) = 0;
-  virtual void exitAddExp(CACTParser::AddExpContext *ctx) = 0;
+  virtual void enterMulExpUnaryExp(CACTParser::MulExpUnaryExpContext *ctx) = 0;
+  virtual void exitMulExpUnaryExp(CACTParser::MulExpUnaryExpContext *ctx) = 0;
 
-  virtual void enterRelExp(CACTParser::RelExpContext *ctx) = 0;
-  virtual void exitRelExp(CACTParser::RelExpContext *ctx) = 0;
+  virtual void enterAddExpAddExp(CACTParser::AddExpAddExpContext *ctx) = 0;
+  virtual void exitAddExpAddExp(CACTParser::AddExpAddExpContext *ctx) = 0;
 
-  virtual void enterEqExp(CACTParser::EqExpContext *ctx) = 0;
-  virtual void exitEqExp(CACTParser::EqExpContext *ctx) = 0;
+  virtual void enterAddExpMulExp(CACTParser::AddExpMulExpContext *ctx) = 0;
+  virtual void exitAddExpMulExp(CACTParser::AddExpMulExpContext *ctx) = 0;
 
-  virtual void enterLAndExp(CACTParser::LAndExpContext *ctx) = 0;
-  virtual void exitLAndExp(CACTParser::LAndExpContext *ctx) = 0;
+  virtual void enterRelExpRelExp(CACTParser::RelExpRelExpContext *ctx) = 0;
+  virtual void exitRelExpRelExp(CACTParser::RelExpRelExpContext *ctx) = 0;
 
-  virtual void enterLOrExp(CACTParser::LOrExpContext *ctx) = 0;
-  virtual void exitLOrExp(CACTParser::LOrExpContext *ctx) = 0;
+  virtual void enterRelExpAddExp(CACTParser::RelExpAddExpContext *ctx) = 0;
+  virtual void exitRelExpAddExp(CACTParser::RelExpAddExpContext *ctx) = 0;
+
+  virtual void enterRelExpBoolConst(CACTParser::RelExpBoolConstContext *ctx) = 0;
+  virtual void exitRelExpBoolConst(CACTParser::RelExpBoolConstContext *ctx) = 0;
+
+  virtual void enterEqExpRelExp(CACTParser::EqExpRelExpContext *ctx) = 0;
+  virtual void exitEqExpRelExp(CACTParser::EqExpRelExpContext *ctx) = 0;
+
+  virtual void enterEqExpEqExp(CACTParser::EqExpEqExpContext *ctx) = 0;
+  virtual void exitEqExpEqExp(CACTParser::EqExpEqExpContext *ctx) = 0;
+
+  virtual void enterLAndExpLAndExp(CACTParser::LAndExpLAndExpContext *ctx) = 0;
+  virtual void exitLAndExpLAndExp(CACTParser::LAndExpLAndExpContext *ctx) = 0;
+
+  virtual void enterLAndExpEqExp(CACTParser::LAndExpEqExpContext *ctx) = 0;
+  virtual void exitLAndExpEqExp(CACTParser::LAndExpEqExpContext *ctx) = 0;
+
+  virtual void enterLOrExpLAndExp(CACTParser::LOrExpLAndExpContext *ctx) = 0;
+  virtual void exitLOrExpLAndExp(CACTParser::LOrExpLAndExpContext *ctx) = 0;
+
+  virtual void enterLOrExpLOrExp(CACTParser::LOrExpLOrExpContext *ctx) = 0;
+  virtual void exitLOrExpLOrExp(CACTParser::LOrExpLOrExpContext *ctx) = 0;
 
   virtual void enterConstExpNumber(CACTParser::ConstExpNumberContext *ctx) = 0;
   virtual void exitConstExpNumber(CACTParser::ConstExpNumberContext *ctx) = 0;

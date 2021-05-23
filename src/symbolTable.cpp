@@ -28,6 +28,7 @@ ConstArraySymbolInfo::ConstArraySymbolInfo(const std::string & name, DataType da
 : SymbolInfo(name), dataType(dataType), arraySize(arraySize), valueTextArray(value) {
     if (arraySize != value.size()) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
     }
     if (dataType == DataType::FLOAT) {
         for (auto & valueText : valueTextArray) {
@@ -40,6 +41,7 @@ VarArraySymbolInfo::VarArraySymbolInfo(const std::string & name, DataType dataTy
 : SymbolInfo(name), dataType(dataType), arraySize(arraySize), valueTextArray(value) {
     if (arraySize != value.size()) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
     }
     if (dataType == DataType::FLOAT) {
         for (auto & valueText : valueTextArray) {
@@ -67,9 +69,11 @@ ConstSymbolInfo::ConstSymbolInfo(const std::string & name, DataType dataType)
 void ConstSymbolInfo::addValue(DataType valueDataType, const std::string & value) {
     if (valueDataType != dataType) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     } else if (!valueText.empty()) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     }
     valueText = value;
@@ -78,6 +82,7 @@ void ConstSymbolInfo::addValue(DataType valueDataType, const std::string & value
 void ConstSymbolInfo::checkValue() {
     if (!isInitialized) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
     }
 }
 
@@ -87,9 +92,11 @@ VarSymbolInfo::VarSymbolInfo(const std::string & name, DataType dataType)
 void VarSymbolInfo::addValue(DataType valueDataType, const std::string & value) {
     if (valueDataType != dataType) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     } else if (isInitialized || !valueText.empty()) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     }
     valueText = value;
@@ -105,9 +112,11 @@ ConstArraySymbolInfo::ConstArraySymbolInfo(const std::string & name, DataType da
 void ConstArraySymbolInfo::addValue(DataType valueDataType, const std::string & value) {
     if (valueDataType != dataType) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     } else if (valueTextArray.size() >= arraySize) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     }
     valueTextArray.push_back(value);
@@ -116,8 +125,10 @@ void ConstArraySymbolInfo::addValue(DataType valueDataType, const std::string & 
 void ConstArraySymbolInfo::checkValue() {
     if (!isInitialized) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
     } else if (valueTextArray.size() != arraySize) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
     }
 }
 
@@ -127,9 +138,11 @@ VarArraySymbolInfo::VarArraySymbolInfo(const std::string & name, DataType dataTy
 void VarArraySymbolInfo::addValue(DataType valueDataType, const std::string & value) {
     if (valueDataType != dataType) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     } else if (valueTextArray.size() >= arraySize) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return;
     }
     valueTextArray.push_back(value);
@@ -138,6 +151,7 @@ void VarArraySymbolInfo::addValue(DataType valueDataType, const std::string & va
 void VarArraySymbolInfo::checkValue() {
     if (isInitialized && valueTextArray.size() != arraySize) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
     }
 }
 
@@ -169,10 +183,28 @@ SymbolInfo * BlockInfo::lookUpSymbol(std::string symbolName) {
     }
     return nullptr;
 }
+
+FuncSymbolInfo * BlockInfo::lookUpFunc(std::string symbolName) {
+    if (parentBlock != nullptr || belongTo != nullptr) {
+        // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+        return nullptr;
+    } else if (symbolTable.count(symbolName) == 1) {
+        if (symbolTable[symbolName]->getSymbolType() == SymbolType::FUNC) {
+            return dynamic_cast<FuncSymbolInfo *>(symbolTable[symbolName]);
+        } else {
+            // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
+            return nullptr;
+        }
+    }
+    return nullptr;
+}
     
 ConstSymbolInfo * BlockInfo::addNewConst(const std::string & name, DataType dataType) {
     if (symbolTable.count(name) > 0) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return nullptr;
     }
     ConstSymbolInfo * newSymbol = new ConstSymbolInfo(name, dataType);
@@ -183,6 +215,7 @@ ConstSymbolInfo * BlockInfo::addNewConst(const std::string & name, DataType data
 VarSymbolInfo * BlockInfo::addNewVar(const std::string & name, DataType dataType) {
     if (symbolTable.count(name) > 0) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return nullptr;
     }
     VarSymbolInfo * newSymbol = new VarSymbolInfo(name, dataType);
@@ -193,6 +226,7 @@ VarSymbolInfo * BlockInfo::addNewVar(const std::string & name, DataType dataType
 ConstArraySymbolInfo * BlockInfo::addNewConstArray(const std::string & name, DataType dataType, size_t arraySize) {
     if (symbolTable.count(name) > 0) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return nullptr;
     }
     ConstArraySymbolInfo * newSymbol = new ConstArraySymbolInfo(name, dataType, arraySize);
@@ -203,6 +237,7 @@ ConstArraySymbolInfo * BlockInfo::addNewConstArray(const std::string & name, Dat
 VarArraySymbolInfo * BlockInfo::addNewVarArray(const std::string & name, DataType dataType, size_t arraySize) {
     if (symbolTable.count(name) > 0) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return nullptr;
     }
     VarArraySymbolInfo * newSymbol = new VarArraySymbolInfo(name, dataType, arraySize);
@@ -213,9 +248,11 @@ VarArraySymbolInfo * BlockInfo::addNewVarArray(const std::string & name, DataTyp
 FuncSymbolInfo * BlockInfo::addNewFunc(const std::string & name, DataType returnType) {
     if (parentBlock != nullptr || belongTo != nullptr) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return nullptr;
     } else if (symbolTable.count(name) > 0) {
         // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
         return nullptr;
     }
     FuncSymbolInfo * newFunc = new FuncSymbolInfo(name, returnType);
@@ -240,6 +277,7 @@ BlockInfo::BlockInfo(BlockInfo * parentBlock, FuncSymbolInfo * belongTo, const s
     for (SymbolInfo * one_param : paramList) {
         if (symbolTable.count(one_param->getName()) > 0) {
             // TODO: throw exception
+throw std::runtime_error("\nWRONG SENMANTIC\n");
             return;
         }
         symbolTable[one_param->getName()] = one_param;

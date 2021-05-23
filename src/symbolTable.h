@@ -26,6 +26,8 @@ private:
 
 public:
     std::string getName() { return name; }
+    virtual DataType getDataType() = 0;
+    virtual size_t getArraySize() = 0;
     virtual SymbolType getSymbolType() = 0;
     virtual void addValue(DataType DataType, const std::string & value) = 0;
     virtual void checkValue() = 0;
@@ -48,7 +50,8 @@ private:
     bool isInitialized;
 
 public:
-    DataType getDataType() { return dataType; }
+    virtual DataType getDataType() { return dataType; }
+    virtual size_t getArraySize() { return -1; };
     virtual SymbolType getSymbolType() { return SymbolType::CONST; }
     virtual void addValue(DataType DataType, const std::string & value);
     virtual void checkValue();
@@ -71,7 +74,8 @@ class VarSymbolInfo : public SymbolInfo {
     bool isInitialized;
 
 public:
-    DataType getDataType() { return dataType; }
+    virtual DataType getDataType() { return dataType; }
+    virtual size_t getArraySize() { return -1; };
     virtual SymbolType getSymbolType() { return SymbolType::VAR; }
     virtual void addValue(DataType DataType, const std::string & value);
     virtual void checkValue();
@@ -96,7 +100,8 @@ private:
     bool isInitialized;
 
 public:
-    DataType getDataType() { return dataType; }
+    virtual DataType getDataType() { return dataType; }
+    virtual size_t getArraySize() { return arraySize; };
     virtual SymbolType getSymbolType() { return SymbolType::CONST_ARRAY; }
     virtual void addValue(DataType DataType, const std::string & value);
     virtual void checkValue();
@@ -121,7 +126,8 @@ private:
     bool isInitialized;
 
 public:
-    DataType getDataType() { return dataType; }
+    virtual DataType getDataType() { return dataType; }
+    virtual size_t getArraySize() { return arraySize; };
     virtual SymbolType getSymbolType() { return SymbolType::VAR_ARRAY; }
     virtual void addValue(DataType DataType, const std::string & value);
     virtual void checkValue();
@@ -139,8 +145,11 @@ private:
     std::vector < SymbolInfo * > paramList;
     BlockInfo * blockInfo;
 public:
+    virtual DataType getDataType()  { return returnType; }
+    virtual size_t getArraySize() { return paramNum; };
     virtual SymbolType getSymbolType()  { return SymbolType::FUNC; }
     std::vector < SymbolInfo * > getparamList() { return paramList; }
+    size_t getparamNum() { return paramNum; }
 
     SymbolInfo * addParamVar(const std::string & name, DataType dataType);
     SymbolInfo * addParamArray(const std::string & name, DataType dataType);
@@ -162,7 +171,8 @@ private:
 
 public:
     BlockInfo * getParentBlock() { return parentBlock; }
-    SymbolInfo * lookUpSymbol(std::string);
+    SymbolInfo * lookUpSymbol(std::string symbolName);
+    FuncSymbolInfo * lookUpFunc(std::string symbolName);
     
     ConstSymbolInfo * addNewConst(const std::string & name, DataType dataType);
     VarSymbolInfo * addNewVar(const std::string & name, DataType dataType);
