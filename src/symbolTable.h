@@ -25,7 +25,7 @@ private:
     std::string name;
 
 public:
-    std::string getName();
+    std::string getName() { return name; }
     virtual SymbolType getSymbolType() = 0;
 
     SymbolInfo(const std::string & name): name(name) { }
