@@ -28,13 +28,14 @@ public:
     std::string getName();
     virtual SymbolType getSymbolType() = 0;
 
-    SymbolInfo(const std::string & name);
+    SymbolInfo(const std::string & name): name(name) { }
 };
 
 class ConstSymbolInfo : public SymbolInfo {
 private:
     DataType dataType;
 
+    std::string valueText;
     union {
         bool valueBool;
         int valueInt;
@@ -43,8 +44,8 @@ private:
     };
 
 public:
-    DataType getDataType();
-    virtual SymbolType getSymbolType();
+    DataType getDataType() { return dataType; }
+    virtual SymbolType getSymbolType() { return SymbolType::CONST; }
 
     ConstSymbolInfo(const std::string & name, DataType dataType, const std::string & value);
 };
@@ -52,6 +53,7 @@ public:
 class VarSymbolInfo : public SymbolInfo {
     DataType dataType;
 
+    std::string valueText;
     union {
         bool valueBool;
         int valueInt;
@@ -60,16 +62,18 @@ class VarSymbolInfo : public SymbolInfo {
     };
 
 public:
-    DataType getDataType();
-    virtual SymbolType getSymbolType();
+    DataType getDataType() { return dataType; }
+    virtual SymbolType getSymbolType() { return SymbolType::VAR; }
 
     VarSymbolInfo(const std::string & name, DataType dataType, const std::string & value);
     VarSymbolInfo(const std::string & name, DataType dataType);
 };
 
 class ConstArraySymbolInfo : public SymbolInfo {
+private:
     DataType dataType;
 
+    std::vector <std::string> valueTextArray;
     union {
         std::vector <bool> valueBoolArray;
         std::vector <int> valueIntArray;
@@ -80,15 +84,17 @@ class ConstArraySymbolInfo : public SymbolInfo {
     size_t arraySize;
 
 public:
-    DataType getDataType();
-    virtual SymbolType getSymbolType();
+    DataType getDataType() { return dataType; }
+    virtual SymbolType getSymbolType() { return SymbolType::CONST_ARRAY; }
 
     ConstArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize, const std::vector <std::string> & value);
 };
 
 class VarArraySymbolInfo : public SymbolInfo {
+private:
     DataType dataType;
 
+    std::vector <std::string> valueTextArray;
     union {
         std::vector <bool> valueBoolArray;
         std::vector <int> valueIntArray;
@@ -99,8 +105,8 @@ class VarArraySymbolInfo : public SymbolInfo {
     size_t arraySize;
 
 public:
-    DataType getDataType();
-    virtual SymbolType getSymbolType();
+    DataType getDataType() { return dataType; }
+    virtual SymbolType getSymbolType() { return SymbolType::VAR_ARRAY; }
 
     VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize, const std::vector <std::string> & value);
     VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize);
@@ -109,14 +115,15 @@ public:
 class BlockInfo;
 
 class FuncSymbolInfo : public SymbolInfo {
+private:
     DataType returnType;
     size_t paramNum;
     std::vector < SymbolInfo * > paramList;
     BlockInfo * blockInfo;
 
 public:
-    virtual SymbolType getSymbolType();
-    FuncSymbolInfo(const std::string & name, DataType returnType, size_t paramNum, const std::vector <SymbolInfo *> paramList);
+    virtual SymbolType getSymbolType()  { return SymbolType::FUNC; }
+    FuncSymbolInfo(const std::string & name, DataType returnType, size_t paramNum);
 };
 
 class BlockInfo {
