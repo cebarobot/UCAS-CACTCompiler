@@ -138,16 +138,16 @@ private:
     size_t paramNum;
     std::vector < SymbolInfo * > paramList;
     BlockInfo * blockInfo;
-
 public:
     virtual SymbolType getSymbolType()  { return SymbolType::FUNC; }
+    std::vector < SymbolInfo * > getparamList() { return paramList; }
 
     SymbolInfo * addParamVar(const std::string & name, DataType dataType);
     SymbolInfo * addParamArray(const std::string & name, DataType dataType);
+    size_t calcParamNum();
+
     virtual void addValue(DataType DataType, const std::string & value) { }
     virtual void checkValue() { }
-
-    size_t calcParamNum();
 
     // FuncSymbolInfo(const std::string & name, DataType returnType, size_t paramNum);
     FuncSymbolInfo(const std::string & name, DataType returnType);
@@ -161,6 +161,7 @@ private:
     std::vector < BlockInfo * > blockTable;
 
 public:
+    BlockInfo * getParentBlock() { return parentBlock; }
     SymbolInfo * lookUpSymbol(std::string);
     
     ConstSymbolInfo * addNewConst(const std::string & name, DataType dataType);
@@ -170,7 +171,7 @@ public:
     FuncSymbolInfo * addNewFunc(const std::string & name, DataType returnType);
 
     BlockInfo * addNewBlock();
-    BlockInfo * addNewBlock(FuncSymbolInfo * belongTo, std::vector < SymbolInfo * > paramList);
+    BlockInfo * addNewBlock(FuncSymbolInfo * belongTo);
 
     BlockInfo(BlockInfo * parentBlock);
     BlockInfo(BlockInfo * parentBlock, FuncSymbolInfo * belongTo, const std::vector < SymbolInfo * > & paramList);

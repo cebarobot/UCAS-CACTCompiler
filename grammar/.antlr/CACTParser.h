@@ -23,8 +23,8 @@ public:
     T__20 = 21, T__21 = 22, T__22 = 23, T__23 = 24, T__24 = 25, T__25 = 26, 
     T__26 = 27, T__27 = 28, T__28 = 29, T__29 = 30, T__30 = 31, T__31 = 32, 
     T__32 = 33, T__33 = 34, T__34 = 35, BoolConst = 36, Ident = 37, IntConst = 38, 
-    FloatConst = 39, DoubleConst = 40, NewLine = 41, WhiteSpace = 42, BlockComment = 43, 
-    LineComment = 44
+    FloatConst = 39, DoubleConst = 40, ArraySymbol = 41, NewLine = 42, WhiteSpace = 43, 
+    BlockComment = 44, LineComment = 45
   };
 
   enum {
@@ -120,6 +120,7 @@ public:
 
   class  BTypeContext : public antlr4::ParserRuleContext {
   public:
+    DataType bDataType;
     BTypeContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
 
@@ -202,6 +203,7 @@ public:
 
   class  FuncDefContext : public antlr4::ParserRuleContext {
   public:
+    FuncSymbolInfo * thisFuncInfo;
     FuncDefContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     FuncTypeContext *funcType();
@@ -226,6 +228,7 @@ public:
 
   class  FuncFParamsContext : public antlr4::ParserRuleContext {
   public:
+    FuncSymbolInfo * thisFuncInfo;
     FuncFParamsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<FuncFParamContext *> funcFParam();
@@ -238,10 +241,12 @@ public:
 
   class  FuncFParamContext : public antlr4::ParserRuleContext {
   public:
+    DataType bDataType;
     FuncFParamContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     BTypeContext *bType();
     antlr4::tree::TerminalNode *Ident();
+    antlr4::tree::TerminalNode *ArraySymbol();
 
    
   };
@@ -250,6 +255,7 @@ public:
 
   class  BlockContext : public antlr4::ParserRuleContext {
   public:
+    FuncSymbolInfo * thisFuncInfo;
     BlockContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<BlockItemContext *> blockItem();

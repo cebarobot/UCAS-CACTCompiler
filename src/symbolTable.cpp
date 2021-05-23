@@ -223,8 +223,8 @@ FuncSymbolInfo * BlockInfo::addNewFunc(const std::string & name, DataType return
     return newFunc;
 }
 
-BlockInfo * BlockInfo::addNewBlock(FuncSymbolInfo * belongTo, std::vector < SymbolInfo * > paramList) {
-    BlockInfo * newBlock = new BlockInfo(this, belongTo, paramList);
+BlockInfo * BlockInfo::addNewBlock(FuncSymbolInfo * belongTo) {
+    BlockInfo * newBlock = new BlockInfo(this, belongTo, belongTo->getparamList());
     blockTable.push_back(newBlock);
     return newBlock;
 }

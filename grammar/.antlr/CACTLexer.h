@@ -23,8 +23,8 @@ public:
     T__20 = 21, T__21 = 22, T__22 = 23, T__23 = 24, T__24 = 25, T__25 = 26, 
     T__26 = 27, T__27 = 28, T__28 = 29, T__29 = 30, T__30 = 31, T__31 = 32, 
     T__32 = 33, T__33 = 34, T__34 = 35, BoolConst = 36, Ident = 37, IntConst = 38, 
-    FloatConst = 39, DoubleConst = 40, NewLine = 41, WhiteSpace = 42, BlockComment = 43, 
-    LineComment = 44
+    FloatConst = 39, DoubleConst = 40, ArraySymbol = 41, NewLine = 42, WhiteSpace = 43, 
+    BlockComment = 44, LineComment = 45
   };
 
   CACTLexer(antlr4::CharStream *input);

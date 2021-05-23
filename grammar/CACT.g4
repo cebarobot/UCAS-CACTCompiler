@@ -26,9 +26,9 @@ constDecl
     ;
 
 bType
-    // locals [
-    //     DataType bDataType
-    // ]
+    locals [
+        DataType bDataType
+    ]
     : 'int'
     | 'bool'
     | 'double'
@@ -63,6 +63,9 @@ varDef
     ;
 
 funcDef
+    locals[
+        FuncSymbolInfo * thisFuncInfo
+    ]
     : funcType Ident '(' (funcFParams)? ')' block
     ;
 
@@ -75,14 +78,23 @@ funcType
     ;
 
 funcFParams
+    locals[
+        FuncSymbolInfo * thisFuncInfo
+    ]
     : funcFParam (',' funcFParam)*
     ;
 
 funcFParam
-    : bType Ident ('[' ']')?
+    locals[
+        DataType bDataType
+    ]
+    : bType Ident (ArraySymbol)?
     ;
 
 block
+    locals[
+        FuncSymbolInfo * thisFuncInfo
+    ]
     : '{' (blockItem)* '}'
     ;
 
@@ -294,6 +306,10 @@ NonExpNum
     : '.' (Digit)+
     | (Digit)+ '.'
     | (Digit)+ '.' (Digit)+
+    ;
+
+ArraySymbol
+    : '[' ']'
     ;
 
 NewLine

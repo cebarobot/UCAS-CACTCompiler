@@ -57,8 +57,8 @@ public:
     void enterFuncFParams(CACTParser::FuncFParamsContext * ctx) override ;
     void exitFuncFParams(CACTParser::FuncFParamsContext * ctx) override ;
 
-    void enterFuncFParam(CACTParser::FuncFParamContext * ctx) override ;
-    void exitFuncFParam(CACTParser::FuncFParamContext * ctx) override ;
+    void enterFuncFParam(CACTParser::FuncFParamContext * ctx) override;
+    void exitFuncFParam(CACTParser::FuncFParamContext * ctx) override;
 
     void enterBlock(CACTParser::BlockContext * ctx) override ;
     void exitBlock(CACTParser::BlockContext * ctx) override ;

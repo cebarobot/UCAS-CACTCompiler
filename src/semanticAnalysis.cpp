@@ -65,17 +65,18 @@ void SemanticAnalysis::enterBType(CACTParser::BTypeContext * ctx) {
 void SemanticAnalysis::exitBType(CACTParser::BTypeContext * ctx) {
     std::string dataTypeText = ctx->getText();
     if (dataTypeText == "bool") {
-        currentDataType = DataType::BOOL;
+        ctx->bDataType = DataType::BOOL;
     } else if (dataTypeText == "int") {
-        currentDataType = DataType::INT;
+        ctx->bDataType = DataType::INT;
     } else if (dataTypeText == "float") {
-        currentDataType = DataType::FLOAT;
+        ctx->bDataType = DataType::FLOAT;
     } else if (dataTypeText == "double") {
-        currentDataType = DataType::DOUBLE;
+        ctx->bDataType = DataType::DOUBLE;
     } else {
         // TODO: throw exception
         return;
     }
+    currentDataType = ctx->bDataType;
 }
 
 void SemanticAnalysis::enterConstDef(CACTParser::ConstDefContext * ctx) {
@@ -138,23 +139,76 @@ void SemanticAnalysis::exitVarDef(CACTParser::VarDefContext * ctx) {
     ctx->thisSymbolInfo->checkValue();
 }
 
-void SemanticAnalysis::enterFuncDef(CACTParser::FuncDefContext * ctx) {}
-void SemanticAnalysis::exitFuncDef(CACTParser::FuncDefContext * ctx) {}
+void SemanticAnalysis::enterFuncDef(CACTParser::FuncDefContext * ctx) {
+    std::string returnTypeText = ctx->funcType()->getText();
+    DataType returnType;
+    if (returnTypeText == "bool") {
+        returnType = DataType::BOOL;
+    } else if (returnTypeText == "int") {
+        returnType = DataType::INT;
+    } else if (returnTypeText == "float") {
+        returnType = DataType::FLOAT;
+    } else if (returnTypeText == "double") {
+        returnType = DataType::DOUBLE;
+    } else if (returnTypeText == "void") {
+        returnType = DataType::VOID;
+    } else {
+        // TODO: throw exception
+        return;
+    }
 
-void SemanticAnalysis::enterFuncType(CACTParser::FuncTypeContext * ctx) {}
-void SemanticAnalysis::exitFuncType(CACTParser::FuncTypeContext * ctx) {}
+    ctx->thisFuncInfo = currentBlock->addNewFunc(ctx->Ident()->getText(), returnType);
+    ctx->funcFParams()->thisFuncInfo = ctx->thisFuncInfo;
+    ctx->block()->thisFuncInfo = ctx->thisFuncInfo;
+}
+void SemanticAnalysis::exitFuncDef(CACTParser::FuncDefContext * ctx) {
+    ctx->thisFuncInfo->calcParamNum();
+}
 
-void SemanticAnalysis::enterFuncFParams(CACTParser::FuncFParamsContext * ctx) {}
-void SemanticAnalysis::exitFuncFParams(CACTParser::FuncFParamsContext * ctx) {}
+void SemanticAnalysis::enterFuncType(CACTParser::FuncTypeContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitFuncType(CACTParser::FuncTypeContext * ctx) {
+    // nothing to do
+}
 
-void SemanticAnalysis::enterFuncFParam(CACTParser::FuncFParamContext * ctx) {}
-void SemanticAnalysis::exitFuncFParam(CACTParser::FuncFParamContext * ctx) {}
+void SemanticAnalysis::enterFuncFParams(CACTParser::FuncFParamsContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitFuncFParams(CACTParser::FuncFParamsContext * ctx) {
+    for (const auto & oneParam : ctx->funcFParam()) {
+        if (oneParam->ArraySymbol() != nullptr) {
+            ctx->thisFuncInfo->addParamArray(oneParam->Ident()->getText(), oneParam->bDataType);
+        } else {
+            ctx->thisFuncInfo->addParamVar(oneParam->Ident()->getText(), oneParam->bDataType);
+        }
+    }
+}
 
-void SemanticAnalysis::enterBlock(CACTParser::BlockContext * ctx) {}
-void SemanticAnalysis::exitBlock(CACTParser::BlockContext * ctx) {}
+void SemanticAnalysis::enterFuncFParam(CACTParser::FuncFParamContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitFuncFParam(CACTParser::FuncFParamContext * ctx) {
+    ctx->bDataType = ctx->bType()->bDataType;
+}
 
-void SemanticAnalysis::enterBlockItem(CACTParser::BlockItemContext * ctx) {}
-void SemanticAnalysis::exitBlockItem(CACTParser::BlockItemContext * ctx) {}
+void SemanticAnalysis::enterBlock(CACTParser::BlockContext * ctx) {
+    if (ctx->thisFuncInfo != nullptr) {
+        currentBlock = currentBlock->addNewBlock();
+    } else {
+        currentBlock = currentBlock->addNewBlock(ctx->thisFuncInfo);
+    }
+}
+void SemanticAnalysis::exitBlock(CACTParser::BlockContext * ctx) {
+    currentBlock = currentBlock->getParentBlock();
+}
+
+void SemanticAnalysis::enterBlockItem(CACTParser::BlockItemContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitBlockItem(CACTParser::BlockItemContext * ctx) {
+    // nothing to do
+}
 
 void SemanticAnalysis::enterStmt(CACTParser::StmtContext * ctx) {}
 void SemanticAnalysis::exitStmt(CACTParser::StmtContext * ctx) {}
