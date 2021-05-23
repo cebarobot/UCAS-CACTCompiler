@@ -83,11 +83,10 @@ void SemanticAnalysis::enterConstDef(CACTParser::ConstDefContext * ctx) {
     if (ctx->IntConst() != nullptr) { // array
         size_t arraySize = std::stoi(ctx->IntConst()->getText());
         ctx->thisSymbolInfo = currentBlock->addNewConstArray(ctx->Ident()->getText(), currentDataType, arraySize);
-        ctx->constInitVal()->thisSymbolInfo = ctx->thisSymbolInfo;
     } else { // basic
         ctx->thisSymbolInfo = currentBlock->addNewConst(ctx->Ident()->getText(), currentDataType);
-        ctx->constInitVal()->thisSymbolInfo = ctx->thisSymbolInfo;
     }
+    ctx->constInitVal()->thisSymbolInfo = ctx->thisSymbolInfo;
 }
 void SemanticAnalysis::exitConstDef(CACTParser::ConstDefContext * ctx) {
     ctx->thisSymbolInfo->checkValue();
@@ -109,8 +108,12 @@ void SemanticAnalysis::exitConstInitValArray(CACTParser::ConstInitValArrayContex
     }
 }
 
-void SemanticAnalysis::enterVarDecl(CACTParser::VarDeclContext * ctx) {}
+void SemanticAnalysis::enterVarDecl(CACTParser::VarDeclContext * ctx) {
+    // nothing to do
+}
 void SemanticAnalysis::exitVarDecl(CACTParser::VarDeclContext * ctx) {
+
+    // for debug
     std::cout << "variable define: " << std::endl;
     for(const auto & var_def : ctx->varDef())
     {
@@ -119,8 +122,21 @@ void SemanticAnalysis::exitVarDecl(CACTParser::VarDeclContext * ctx) {
     }
 }
 
-void SemanticAnalysis::enterVarDef(CACTParser::VarDefContext * ctx) {}
-void SemanticAnalysis::exitVarDef(CACTParser::VarDefContext * ctx) {}
+void SemanticAnalysis::enterVarDef(CACTParser::VarDefContext * ctx) {
+    // check whether it is array & add new symbol
+    if (ctx->IntConst() != nullptr) { // array
+        size_t arraySize = std::stoi(ctx->IntConst()->getText());
+        ctx->thisSymbolInfo = currentBlock->addNewVarArray(ctx->Ident()->getText(), currentDataType, arraySize);
+    } else { // basic
+        ctx->thisSymbolInfo = currentBlock->addNewVar(ctx->Ident()->getText(), currentDataType);
+    }
+    if (ctx->constInitVal() != nullptr) {
+        ctx->constInitVal()->thisSymbolInfo = ctx->thisSymbolInfo;
+    }
+}
+void SemanticAnalysis::exitVarDef(CACTParser::VarDefContext * ctx) {
+    ctx->thisSymbolInfo->checkValue();
+}
 
 void SemanticAnalysis::enterFuncDef(CACTParser::FuncDefContext * ctx) {}
 void SemanticAnalysis::exitFuncDef(CACTParser::FuncDefContext * ctx) {}

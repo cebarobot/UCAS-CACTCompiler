@@ -37,7 +37,6 @@ bType
 
 constDef
     locals[
-        // int basic_or_array_and_type
         SymbolInfo * thisSymbolInfo
     ]
     : Ident ('[' IntConst ']')? '=' constInitVal
@@ -45,7 +44,6 @@ constDef
 
 constInitVal
     locals[
-        // int basic_or_array_and_type
         SymbolInfo * thisSymbolInfo
     ]
     : constExp                                  #constInitValBasic
@@ -57,6 +55,9 @@ varDecl
     ;
 
 varDef
+    locals[
+        SymbolInfo * thisSymbolInfo
+    ]
     : Ident ('[' IntConst ']')?
     | Ident ('[' IntConst ']')? '=' constInitVal
     ;
