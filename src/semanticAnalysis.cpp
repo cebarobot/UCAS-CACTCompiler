@@ -161,7 +161,9 @@ throw std::runtime_error("\nWRONG SENMANTIC\n");
     }
 
     ctx->thisFuncInfo = currentBlock->addNewFunc(ctx->Ident()->getText(), returnType);
-    ctx->funcFParams()->thisFuncInfo = ctx->thisFuncInfo;
+    if (ctx->funcFParams() != nullptr) {
+        ctx->funcFParams()->thisFuncInfo = ctx->thisFuncInfo;
+    }
     ctx->block()->thisFuncInfo = ctx->thisFuncInfo;
     currentFunc = ctx->thisFuncInfo;
 }
