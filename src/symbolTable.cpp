@@ -74,19 +74,37 @@ VarArraySymbolInfo::VarArraySymbolInfo(const std::string & name, DataType dataTy
 : SymbolInfo(name), dataType(dataType), arraySize(arraySize) { }
 
 FuncSymbolInfo::FuncSymbolInfo(const std::string & name, DataType returnType)
-: SymbolInfo(name), returnType(returnType) { }
+: SymbolInfo(name), returnType(returnType), blockInfo(nullptr) { }
+
+SymbolInfo * FuncSymbolInfo::addParamVar(const std::string & name, DataType dataType) {
+    VarSymbolInfo * newParam = new VarSymbolInfo(name, dataType);
+    paramList.push_back(newParam);
+    return newParam;
+}
+
+SymbolInfo * FuncSymbolInfo::addParamArray(const std::string & name, DataType dataType) {
+    VarArraySymbolInfo * newParam = new VarArraySymbolInfo(name, dataType, 0);
+    paramList.push_back(newParam);
+    return newParam;
+}
+
+size_t FuncSymbolInfo::calcParamNum() {
+    paramNum = paramList.size();
+    return paramNum;
+}
 
 SymbolInfo * BlockInfo::lookUpSymbol(std::string symbolName) {
     if (symbolTable.count(symbolName) == 1) {
         return symbolTable[symbolName];
     } else if (parentBlock != nullptr) {
-        parentBlock->lookUpSymbol(symbolName);
+        return parentBlock->lookUpSymbol(symbolName);
     }
     return nullptr;
 }
     
 ConstSymbolInfo * BlockInfo::addNewConst(const std::string & name, DataType dataType) {
     if (symbolTable.count(name) > 0) {
+        // TODO: throw exception
         return nullptr;
     }
     ConstSymbolInfo * newSymbol = new ConstSymbolInfo(name, dataType);
@@ -96,6 +114,7 @@ ConstSymbolInfo * BlockInfo::addNewConst(const std::string & name, DataType data
 
 VarSymbolInfo * BlockInfo::addNewVar(const std::string & name, DataType dataType) {
     if (symbolTable.count(name) > 0) {
+        // TODO: throw exception
         return nullptr;
     }
     VarSymbolInfo * newSymbol = new VarSymbolInfo(name, dataType);
@@ -105,6 +124,7 @@ VarSymbolInfo * BlockInfo::addNewVar(const std::string & name, DataType dataType
 
 ConstArraySymbolInfo * BlockInfo::addNewConstArray(const std::string & name, DataType dataType, size_t arraySize) {
     if (symbolTable.count(name) > 0) {
+        // TODO: throw exception
         return nullptr;
     }
     ConstArraySymbolInfo * newSymbol = new ConstArraySymbolInfo(name, dataType, arraySize);
@@ -146,10 +166,14 @@ BlockInfo * BlockInfo::addNewBlock() {
     return newBlock;
 }
 
-BlockInfo::BlockInfo(BlockInfo * parentBlock): parentBlock(parentBlock) { }
+BlockInfo::BlockInfo(BlockInfo * parentBlock): parentBlock(parentBlock), belongTo(nullptr) { }
 BlockInfo::BlockInfo(BlockInfo * parentBlock, FuncSymbolInfo * belongTo, const std::vector < SymbolInfo * > & paramList)
 : parentBlock(parentBlock), belongTo(belongTo) {
     for (SymbolInfo * one_param : paramList) {
+        if (symbolTable.count(one_param->getName()) > 0) {
+            // TODO: throw exception
+            return;
+        }
         symbolTable[one_param->getName()] = one_param;
     }
 }

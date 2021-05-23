@@ -1,14 +1,49 @@
 #include "semanticAnalysis.h"
 
+SemanticAnalysis::SemanticAnalysis(BlockInfo * globalBlock)
+: globalBlock(globalBlock), currentBlock(globalBlock), currentSymbol(nullptr), 
+    currentFunc(nullptr), currentDataType(DataType::VOID) { }
+
 void SemanticAnalysis::enterCompUnit(CACTParser::CompUnitContext * ctx) {
-    
-}
-void SemanticAnalysis::exitCompUnit(CACTParser::CompUnitContext * ctx) {
-    
+    // add build-in functions
+    FuncSymbolInfo * printBoolFunc = globalBlock->addNewFunc("print_bool", DataType::VOID);
+    printBoolFunc->addParamVar("value", DataType::BOOL);
+    printBoolFunc->calcParamNum();
+    FuncSymbolInfo * printIntFunc = globalBlock->addNewFunc("print_int", DataType::VOID);
+    printIntFunc->addParamVar("value", DataType::INT);
+    printIntFunc->calcParamNum();
+    FuncSymbolInfo * printFloatFunc = globalBlock->addNewFunc("print_float", DataType::VOID);
+    printFloatFunc->addParamVar("value", DataType::FLOAT);
+    printFloatFunc->calcParamNum();
+    FuncSymbolInfo * printDoubleFunc = globalBlock->addNewFunc("print_double", DataType::VOID);
+    printDoubleFunc->addParamVar("value", DataType::DOUBLE);
+    printDoubleFunc->calcParamNum();
+
+    FuncSymbolInfo * getBoolFunc = globalBlock->addNewFunc("get_bool", DataType::BOOL);
+    getBoolFunc->calcParamNum();
+    FuncSymbolInfo * getIntFunc = globalBlock->addNewFunc("get_int", DataType::INT);
+    getIntFunc->calcParamNum();
+    FuncSymbolInfo * getFloatFunc = globalBlock->addNewFunc("get_float", DataType::FLOAT);
+    getFloatFunc->calcParamNum();
+    FuncSymbolInfo * getDoubleFunc = globalBlock->addNewFunc("get_double", DataType::DOUBLE);
+    getDoubleFunc->calcParamNum();
 }
 
-void SemanticAnalysis::enterDecl(CACTParser::DeclContext * ctx) {}
-void SemanticAnalysis::exitDecl(CACTParser::DeclContext * ctx) {}
+void SemanticAnalysis::exitCompUnit(CACTParser::CompUnitContext * ctx) {
+    // check there is a "main" function
+    SymbolInfo * mainSymbolInfo = globalBlock->lookUpSymbol("main");
+    if (mainSymbolInfo == nullptr || mainSymbolInfo->getSymbolType() != SymbolType::FUNC) {
+        // TODO: throw exception
+        return;
+    }
+}
+
+void SemanticAnalysis::enterDecl(CACTParser::DeclContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitDecl(CACTParser::DeclContext * ctx) {
+    // nothing to do
+}
 
 void SemanticAnalysis::enterConstDecl(CACTParser::ConstDeclContext * ctx) {}
 void SemanticAnalysis::exitConstDecl(CACTParser::ConstDeclContext * ctx) {

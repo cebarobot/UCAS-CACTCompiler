@@ -125,6 +125,12 @@ private:
 
 public:
     virtual SymbolType getSymbolType()  { return SymbolType::FUNC; }
+
+    SymbolInfo * addParamVar(const std::string & name, DataType dataType);
+    SymbolInfo * addParamArray(const std::string & name, DataType dataType);
+
+    size_t calcParamNum();
+
     // FuncSymbolInfo(const std::string & name, DataType returnType, size_t paramNum);
     FuncSymbolInfo(const std::string & name, DataType returnType);
 };
@@ -145,8 +151,8 @@ public:
     VarArraySymbolInfo * addNewVarArray(const std::string & name, DataType dataType, size_t arraySize);
     FuncSymbolInfo * addNewFunc(const std::string & name, DataType returnType);
 
-    BlockInfo * addNewBlock(FuncSymbolInfo * belongTo, std::vector < SymbolInfo * > paramList);
     BlockInfo * addNewBlock();
+    BlockInfo * addNewBlock(FuncSymbolInfo * belongTo, std::vector < SymbolInfo * > paramList);
 
     BlockInfo(BlockInfo * parentBlock);
     BlockInfo(BlockInfo * parentBlock, FuncSymbolInfo * belongTo, const std::vector < SymbolInfo * > & paramList);

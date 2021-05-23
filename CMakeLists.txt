@@ -22,6 +22,6 @@ link_libraries(antlr4-runtime)
 
 FILE(GLOB SOURCE_FILES "src/*.cpp" "grammar/*.cpp")
 
-add_definitions(-w -g)
+add_definitions(-Wall -g)
 
 add_executable(compiler ${SOURCE_FILES})

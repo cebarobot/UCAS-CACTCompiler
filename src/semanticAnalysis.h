@@ -1,13 +1,19 @@
 #pragma once
 
 #include "../grammar/CACTBaseListener.h"
+#include "symbolTable.h"
 
-class SemanticAnalysis : public CACTBaseListener
-{
+class SemanticAnalysis : public CACTBaseListener {
 private:
-    /* data */
+    BlockInfo * globalBlock;
+
+    BlockInfo * currentBlock;
+    SymbolInfo * currentSymbol;
+    FuncSymbolInfo * currentFunc;
+    DataType currentDataType;
+
 public:
-    SemanticAnalysis(/* args */){}
+    SemanticAnalysis(BlockInfo * globalBlock);
     ~SemanticAnalysis(){}
 
 
