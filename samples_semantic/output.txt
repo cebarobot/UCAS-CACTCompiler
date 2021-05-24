@@ -7,7 +7,7 @@
 0 	 ./06_true_int_float_init.cact
 1 	 ./07_false_float_int_op.cact
 0 	 ./08_true_int_init.cact
-1 	 ./09_true_same_name.cact
+0 	 ./09_true_same_name.cact
 1 	 ./10_false_same_name.cact
 0 	 ./11_true_array_op.cact
 1 	 ./12_false_array_add_size.cact

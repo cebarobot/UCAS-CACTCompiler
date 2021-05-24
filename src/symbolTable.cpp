@@ -191,9 +191,9 @@ FuncSymbolInfo * BlockInfo::lookUpFunc(std::string symbolName) {
         // TODO: throw exception
 throw std::runtime_error("\nWRONG SENMANTIC 555\n");
         return nullptr;
-    } else if (symbolTable.count(symbolName) == 1) {
-        if (symbolTable[symbolName]->getSymbolType() == SymbolType::FUNC) {
-            return dynamic_cast<FuncSymbolInfo *>(symbolTable[symbolName]);
+    } else if (funcTable.count(symbolName) == 1) {
+        if (funcTable[symbolName]->getSymbolType() == SymbolType::FUNC) {
+            return funcTable[symbolName];
         } else {
             // TODO: throw exception
 throw std::runtime_error("\nWRONG SENMANTIC 666\n");
@@ -252,14 +252,14 @@ FuncSymbolInfo * BlockInfo::addNewFunc(const std::string & name, DataType return
         // TODO: throw exception
 throw std::runtime_error("\nWRONG SENMANTIC 789\n");
         return nullptr;
-    } else if (symbolTable.count(name) > 0) {
+    } else if (funcTable.count(name) > 0) {
         std::cerr << name << std::endl;
         // TODO: throw exception
 throw std::runtime_error("\nWRONG SENMANTIC 102\n");
         return nullptr;
     }
     FuncSymbolInfo * newFunc = new FuncSymbolInfo(name, returnType);
-    symbolTable[name] = newFunc;
+    funcTable[name] = newFunc;
     return newFunc;
 }
 

@@ -168,6 +168,7 @@ private:
     BlockInfo * parentBlock;
     FuncSymbolInfo * belongTo;
     std::map < std::string, SymbolInfo * > symbolTable;
+    std::map < std::string, FuncSymbolInfo * > funcTable;
     std::vector < BlockInfo * > blockTable;
 
 public:
