@@ -373,9 +373,9 @@ public:
 
   class  ExpContext : public antlr4::ParserRuleContext {
   public:
+    DataType dataType;
     bool isArray;
     size_t arraySize;
-    DataType dataType;
     ExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     ExpContext() = default;

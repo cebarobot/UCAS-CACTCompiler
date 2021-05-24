@@ -34,7 +34,7 @@
 0 	 ./33_true_array_op.cact
 1 	 ./34_false_array_op.cact
 1 	 ./35_false_bool_array_op.cact
-1 	 ./36_true_sample.cact
+0 	 ./36_true_sample.cact
 1 	 ./37_false_wrong_ret_type.cact
 1 	 ./38_false_wrong_ret_type.cact
 1 	 ./39_false_wrong_void_ret_type.cact
@@ -44,5 +44,5 @@
 1 	 ./43_false_assign_to_const_var.cact
 1 	 ./44_false_assign_to_const_array.cact
 0 	 ./45_true_no_arg_func.cact
-0 	 ./46_false_use_no_arg.cact
-1 	 ./47_true_void_func_stmt.cact
+1 	 ./46_false_use_no_arg.cact
+0 	 ./47_true_void_func_stmt.cact

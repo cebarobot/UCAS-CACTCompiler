@@ -1457,9 +1457,9 @@ size_t CACTParser::ExpContext::getRuleIndex() const {
 
 void CACTParser::ExpContext::copyFrom(ExpContext *ctx) {
   ParserRuleContext::copyFrom(ctx);
+  this->dataType = ctx->dataType;
   this->isArray = ctx->isArray;
   this->arraySize = ctx->arraySize;
-  this->dataType = ctx->dataType;
 }
 
 //----------------- ExpAddExpContext ------------------------------------------------------------------

@@ -318,6 +318,7 @@ throw std::runtime_error("\nWRONG SENMANTIC 4679\n");
 
 void SemanticAnalysis::enterExpAddExp(CACTParser::ExpAddExpContext * ctx) {
     // nothing to do
+    std::cerr << "@@@@@@@@@@@22" << std::endl;
 }
 void SemanticAnalysis::exitExpAddExp(CACTParser::ExpAddExpContext * ctx) {
     ctx->isArray = ctx->addExp()->isArray;
@@ -325,16 +326,20 @@ void SemanticAnalysis::exitExpAddExp(CACTParser::ExpAddExpContext * ctx) {
     ctx->dataType = ctx->addExp()->dataType;
     std::cerr << int(ctx->dataType) << std::endl;
     std::cerr << ctx->getText() << std::endl;
+    std::cerr << "++++" << ctx << std::endl;
 }
 
 void SemanticAnalysis::enterExpBoolConst(CACTParser::ExpBoolConstContext * ctx) {
     // nothing to do
+    std::cerr << "!!!!!!!!!11" << std::endl;
 }
 
 void SemanticAnalysis::exitExpBoolConst(CACTParser::ExpBoolConstContext * ctx) {
     ctx->isArray = false;
     ctx->dataType = DataType::BOOL;
     std::cerr << int(ctx->dataType) << std::endl;
+    std::cerr << ctx->getText() << std::endl;
+    std::cerr << "++++" << ctx << std::endl;
 }
 
 void SemanticAnalysis::enterCond(CACTParser::CondContext * ctx) {
@@ -513,6 +518,9 @@ void SemanticAnalysis::exitUnaryOp(CACTParser::UnaryOpContext * ctx) {
 }
 
 void SemanticAnalysis::enterFuncRParams(CACTParser::FuncRParamsContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitFuncRParams(CACTParser::FuncRParamsContext * ctx) {
     FuncSymbolInfo * thisFunc = ctx->thisFunc;
     size_t paramNum = thisFunc->getparamNum();
     if (ctx->exp().size() != paramNum) {
@@ -525,9 +533,6 @@ throw std::runtime_error("\nWRONG SENMANTIC sfad\n");
         bool paramIsArray = paramList[i]->getSymbolType() == SymbolType::CONST_ARRAY || paramList[i]->getSymbolType() == SymbolType::VAR_ARRAY;
 
         if (ctx->exp(i)->dataType != paramList[i]->getDataType()) {
-            std::cerr << "a" <<int(ctx->exp()[i]->dataType);
-            std::cerr << "a" <<ctx->exp()[i]->getText() << std::endl;
-            std::cerr << "b" <<int(paramList[i]->getDataType()) << std::endl;
             // TODO: throw exception
 throw std::runtime_error("\nWRONG SENMANTIC 4ei75\n");
             return;
@@ -537,9 +542,6 @@ throw std::runtime_error("\nWRONG SENMANTIC zryu\n");
             return;
         }
     }
-}
-void SemanticAnalysis::exitFuncRParams(CACTParser::FuncRParamsContext * ctx) {
-    // nothing to do
 }
 
 

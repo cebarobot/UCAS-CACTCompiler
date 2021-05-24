@@ -118,7 +118,7 @@ exp
     locals[
         bool isArray,
         size_t arraySize,
-        DataType dataType,
+        DataType dataType
     ]
     : addExp        #expAddExp
     | BoolConst     #expBoolConst
@@ -146,7 +146,7 @@ primaryExp
     locals[
         bool isArray,
         size_t arraySize,
-        DataType dataType,
+        DataType dataType
     ]
     : '(' exp ')'       #primaryExpExp
     | lVal              #primaryExpLVal
