@@ -2,9 +2,10 @@
     #include <vector>
     #include <string>
     #include "../src/symbolTable.h"
+    #include "../src/IR.h"
 
 
-// Generated from /home/compiler13/compiler/grammar/CACT.g4 by ANTLR 4.8
+// Generated from /home/ceba/compiler/grammar/CACT.g4 by ANTLR 4.8
 
 #pragma once
 
@@ -336,6 +337,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
+    IRArgument * result;
     ExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     ExpContext() = default;
@@ -534,6 +536,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
+    IRArgument * result;
     AddExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     AddExpContext() = default;
@@ -567,6 +570,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
+    IRArgument * result;
     RelExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     RelExpContext() = default;
@@ -607,6 +611,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
+    IRArgument * result;
     EqExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     EqExpContext() = default;
@@ -640,6 +645,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
+    IRArgument * result;
     LAndExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     LAndExpContext() = default;
@@ -673,6 +679,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
+    IRArgument * result;
     LOrExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     LOrExpContext() = default;
@@ -704,6 +711,7 @@ public:
   class  ConstExpContext : public antlr4::ParserRuleContext {
   public:
     DataType dataType;
+    IRArgument * result;
     ConstExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     ConstExpContext() = default;
@@ -734,6 +742,7 @@ public:
   class  NumberContext : public antlr4::ParserRuleContext {
   public:
     DataType dataType;
+    IRArgument * result;
     NumberContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     NumberContext() = default;

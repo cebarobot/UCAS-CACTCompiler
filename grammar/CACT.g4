@@ -9,6 +9,7 @@ options {
     #include <vector>
     #include <string>
     #include "../src/symbolTable.h"
+    #include "../src/IR.h"
 }
 
 /********** Parser **********/
@@ -118,7 +119,8 @@ exp
     locals[
         bool isArray,
         size_t arraySize,
-        DataType dataType
+        DataType dataType,
+        IRArgument * result
     ]
     : addExp        #expAddExp
     | BoolConst     #expBoolConst
@@ -193,6 +195,7 @@ addExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
+        IRArgument * result
     ]
     : mulExp                        #addExpMulExp
     | addExp ('+' | '-') mulExp     #addExpAddExp
@@ -203,6 +206,7 @@ relExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
+        IRArgument * result
     ]
     : addExp                                    #relExpAddExp
     | relExp ('<' | '>' | '<=' | '>=') addExp   #relExpRelExp
@@ -214,6 +218,7 @@ eqExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
+        IRArgument * result
     ]
     : relExp                        #eqExpRelExp
     | eqExp ('==' | '!=') relExp    #eqExpEqExp
@@ -224,6 +229,7 @@ lAndExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
+        IRArgument * result
     ]
     : eqExp                 #lAndExpEqExp
     | lAndExp ('&&') eqExp  #lAndExpLAndExp
@@ -234,6 +240,7 @@ lOrExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
+        IRArgument * result
     ]
     : lAndExp               #lOrExpLAndExp
     | lOrExp ('||') lAndExp #lOrExpLOrExp
@@ -242,6 +249,7 @@ lOrExp
 constExp
     locals[
         DataType dataType,
+        IRArgument * result
     ]
     : number            #constExpNumber
     | BoolConst         #constExpBoolConst
@@ -250,6 +258,7 @@ constExp
 number
     locals[
         DataType dataType,
+        IRArgument * result
     ]
     : IntConst          #numberIntConst
     | DoubleConst       #numberDoubleConst

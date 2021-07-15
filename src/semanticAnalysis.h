@@ -2,6 +2,7 @@
 
 #include "../grammar/CACTBaseListener.h"
 #include "symbolTable.h"
+#include "IR.h"
 
 class SemanticAnalysis : public CACTBaseListener {
 private:
@@ -12,8 +13,11 @@ private:
     FuncSymbolInfo * currentFunc;
     DataType currentDataType;
 
+    IRProgram * ir;
+    IRFunction * currentIRFunc;
+
 public:
-    SemanticAnalysis(BlockInfo * globalBlock);
+    SemanticAnalysis(BlockInfo * globalBlock, IRProgram * new_ir);
     ~SemanticAnalysis(){}
 
 

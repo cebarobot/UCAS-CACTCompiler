@@ -1,9 +1,10 @@
 #include "semanticAnalysis.h"
 #include <iostream>
 
-SemanticAnalysis::SemanticAnalysis(BlockInfo * globalBlock)
+SemanticAnalysis::SemanticAnalysis(BlockInfo * globalBlock, IRProgram * new_ir)
 : globalBlock(globalBlock), currentBlock(globalBlock), currentSymbol(nullptr), 
-    currentFunc(nullptr), currentDataType(DataType::VOID) {}
+    currentFunc(nullptr), currentDataType(DataType::VOID),
+    ir(new_ir), currentIRFunc(nullptr) {}
 
 void SemanticAnalysis::enterCompUnit(CACTParser::CompUnitContext * ctx) {
     // add build-in functions
@@ -184,10 +185,16 @@ throw std::runtime_error("\nWRONG SENMANTIC\n");
     }
     ctx->block()->thisFuncInfo = ctx->thisFuncInfo;
     currentFunc = ctx->thisFuncInfo;
+
+    currentIRFunc = new IRFunction(ctx->Ident()->getText());
+    ir->functions.push_back(currentIRFunc);
+
 }
 void SemanticAnalysis::exitFuncDef(CACTParser::FuncDefContext * ctx) {
     ctx->thisFuncInfo->calcParamNum();
     currentFunc = nullptr;
+
+    currentIRFunc = nullptr;
 }
 
 void SemanticAnalysis::enterFuncType(CACTParser::FuncTypeContext * ctx) {
@@ -204,8 +211,10 @@ void SemanticAnalysis::exitFuncFParams(CACTParser::FuncFParamsContext * ctx) {
     for (const auto & oneParam : ctx->funcFParam()) {
         if (oneParam->ArraySymbol() != nullptr) {
             ctx->thisFuncInfo->addParamArray(oneParam->Ident()->getText(), oneParam->bDataType);
+            // TODO: add to ir variable
         } else {
             ctx->thisFuncInfo->addParamVar(oneParam->Ident()->getText(), oneParam->bDataType);
+            // TODO: add to ir variable
         }
     }
 }
@@ -226,6 +235,8 @@ void SemanticAnalysis::enterBlock(CACTParser::BlockContext * ctx) {
 }
 void SemanticAnalysis::exitBlock(CACTParser::BlockContext * ctx) {
     currentBlock = currentBlock->getParentBlock();
+
+    // TODO: insert a goto next code
 }
 
 void SemanticAnalysis::enterBlockItem(CACTParser::BlockItemContext * ctx) {
@@ -324,6 +335,9 @@ void SemanticAnalysis::exitExpAddExp(CACTParser::ExpAddExpContext * ctx) {
     ctx->isArray = ctx->addExp()->isArray;
     ctx->arraySize = ctx->addExp()->arraySize;
     ctx->dataType = ctx->addExp()->dataType;
+
+    ctx->result = ctx->addExp()->result;
+
     std::cerr << int(ctx->dataType) << std::endl;
     std::cerr << ctx->getText() << std::endl;
     std::cerr << "++++" << ctx << std::endl;
@@ -778,6 +792,7 @@ void SemanticAnalysis::enterConstExpNumber(CACTParser::ConstExpNumberContext * c
 }
 void SemanticAnalysis::exitConstExpNumber(CACTParser::ConstExpNumberContext * ctx) {
     ctx->dataType = ctx->number()->dataType;
+    ctx->result = ctx->number()->result;
 }
 
 void SemanticAnalysis::enterConstExpBoolConst(CACTParser::ConstExpBoolConstContext * ctx) {
@@ -792,6 +807,7 @@ void SemanticAnalysis::enterNumberIntConst(CACTParser::NumberIntConstContext * c
 }
 void SemanticAnalysis::exitNumberIntConst(CACTParser::NumberIntConstContext * ctx) {
     ctx->dataType = DataType::INT;
+    ctx->result = new IRIntConst(ctx->IntConst()->getText());
 }
 
 void SemanticAnalysis::enterNumberDoubleConst(CACTParser::NumberDoubleConstContext * ctx) {

@@ -2,6 +2,7 @@
     #include <vector>
     #include <string>
     #include "../src/symbolTable.h"
+    #include "../src/IR.h"
 
 
 // Generated from CACT.g4 by ANTLR 4.8
@@ -1457,9 +1458,10 @@ size_t CACTParser::ExpContext::getRuleIndex() const {
 
 void CACTParser::ExpContext::copyFrom(ExpContext *ctx) {
   ParserRuleContext::copyFrom(ctx);
-  this->dataType = ctx->dataType;
   this->isArray = ctx->isArray;
   this->arraySize = ctx->arraySize;
+  this->dataType = ctx->dataType;
+  this->result = ctx->result;
 }
 
 //----------------- ExpAddExpContext ------------------------------------------------------------------
@@ -2209,6 +2211,7 @@ void CACTParser::AddExpContext::copyFrom(AddExpContext *ctx) {
   this->isArray = ctx->isArray;
   this->arraySize = ctx->arraySize;
   this->dataType = ctx->dataType;
+  this->result = ctx->result;
 }
 
 //----------------- AddExpAddExpContext ------------------------------------------------------------------
@@ -2337,6 +2340,7 @@ void CACTParser::RelExpContext::copyFrom(RelExpContext *ctx) {
   this->isArray = ctx->isArray;
   this->arraySize = ctx->arraySize;
   this->dataType = ctx->dataType;
+  this->result = ctx->result;
 }
 
 //----------------- RelExpRelExpContext ------------------------------------------------------------------
@@ -2511,6 +2515,7 @@ void CACTParser::EqExpContext::copyFrom(EqExpContext *ctx) {
   this->isArray = ctx->isArray;
   this->arraySize = ctx->arraySize;
   this->dataType = ctx->dataType;
+  this->result = ctx->result;
 }
 
 //----------------- EqExpRelExpContext ------------------------------------------------------------------
@@ -2639,6 +2644,7 @@ void CACTParser::LAndExpContext::copyFrom(LAndExpContext *ctx) {
   this->isArray = ctx->isArray;
   this->arraySize = ctx->arraySize;
   this->dataType = ctx->dataType;
+  this->result = ctx->result;
 }
 
 //----------------- LAndExpLAndExpContext ------------------------------------------------------------------
@@ -2759,6 +2765,7 @@ void CACTParser::LOrExpContext::copyFrom(LOrExpContext *ctx) {
   this->isArray = ctx->isArray;
   this->arraySize = ctx->arraySize;
   this->dataType = ctx->dataType;
+  this->result = ctx->result;
 }
 
 //----------------- LOrExpLAndExpContext ------------------------------------------------------------------
@@ -2877,6 +2884,7 @@ size_t CACTParser::ConstExpContext::getRuleIndex() const {
 void CACTParser::ConstExpContext::copyFrom(ConstExpContext *ctx) {
   ParserRuleContext::copyFrom(ctx);
   this->dataType = ctx->dataType;
+  this->result = ctx->result;
 }
 
 //----------------- ConstExpBoolConstContext ------------------------------------------------------------------
@@ -2972,6 +2980,7 @@ size_t CACTParser::NumberContext::getRuleIndex() const {
 void CACTParser::NumberContext::copyFrom(NumberContext *ctx) {
   ParserRuleContext::copyFrom(ctx);
   this->dataType = ctx->dataType;
+  this->result = ctx->result;
 }
 
 //----------------- NumberDoubleConstContext ------------------------------------------------------------------

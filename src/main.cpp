@@ -31,19 +31,24 @@ int main(int argc, const char* argv[]) {
     }
 
     BlockInfo globalBlockInfo(nullptr);
-    SemanticAnalysis listener(&globalBlockInfo);
+    IRProgram ir;
+    SemanticAnalysis listener(&globalBlockInfo, &ir);
     try {
         tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
     } catch(const std::exception& excp) {
         std::cerr << excp.what() << std::endl;
 		return 1;
     }
+
+    
     
     std::cout << "debug: hello" << std::endl;
 
-
-    std::cout << "-------------------------Print AST:--------------------------" << std::endl;
+    std::cout << "------------------------- AST ------------------------" << std::endl;
     std::cout << tree->toStringTree(&parser) << std::endl;
+    std::cout << "========================= AST ========================" << std::endl;
+
+    ir.print();
 
     return 0;
 }
