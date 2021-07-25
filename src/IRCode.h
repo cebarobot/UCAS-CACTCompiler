@@ -4,7 +4,7 @@
 #include <vector>
 #include <map>
 
-#include "IRArgument.h"
+#include "IROperand.h"
 
 enum IROperation {
     PARAM,
@@ -16,17 +16,17 @@ enum IROperation {
 class IRCode {
 private:
     IROperation operation;
-    IRArgument * arg1;
-    IRArgument * arg2;
-    IRArgument * result;
+    IROperand * arg1;
+    IROperand * arg2;
+    IROperand * result;
 
 public:
-    IRCode(IROperation new_op, IRArgument * new_arg1, IRArgument * new_arg2, IRArgument * new_result);
+    IRCode(IROperation new_op, IROperand * new_arg1, IROperand * new_arg2, IROperand * new_result);
 
     IROperation getOperation();
-    IRArgument * getArg1();
-    IRArgument * getArg2();
-    IRArgument * getResult();
+    IROperand * getArg1();
+    IROperand * getArg2();
+    IROperand * getResult();
 
     virtual void print() = 0;
     // virtual void genTargetCode() = 0;
@@ -34,22 +34,22 @@ public:
 
 class IRParam : public IRCode {
 public:
-    IRParam(IRArgument * new_arg1);
+    IRParam(IROperand * new_arg1);
 
     virtual void print();
 };
 
 class IRCall : public IRCode {
 public:
-    IRCall(IRArgument * new_arg1, IRArgument * new_arg2, IRArgument * new_result);
-    IRCall(IRArgument * new_arg1, IRArgument * new_arg2);
+    IRCall(IROperand * new_arg1, IROperand * new_arg2, IROperand * new_result);
+    IRCall(IROperand * new_arg1, IROperand * new_arg2);
 
     virtual void print();
 };
 
 class IRReturn : public IRCode {
 public:
-    IRReturn(IRArgument * new_arg1);
+    IRReturn(IROperand * new_arg1);
 
     virtual void print();
 };
@@ -60,7 +60,7 @@ public:
 
 class IRAssignInt : public IRCode {
 public:
-    IRAssignInt(IRArgument * new_arg1, IRArgument * new_result);
+    IRAssignInt(IROperand * new_arg1, IROperand * new_result);
 
     virtual void print();
 };

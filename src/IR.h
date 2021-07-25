@@ -5,7 +5,7 @@
 #include <map>
 
 #include "IRCode.h"
-#include "IRArgument.h"
+#include "IROperand.h"
 
 class IRFunction {
 public:
