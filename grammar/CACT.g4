@@ -108,10 +108,10 @@ stmt
     : lVal '=' exp ';'                          #stmtAssign
     | (exp)? ';'                                #stmtExp
     | block                                     #stmtBlock
-    | 'if' '(' cond ')' stmt ('else' stmt)?     #stmtCtrl
-    | 'while' '(' cond ')' stmt                 #stmtCtrl
-    | 'break' ';'                               #stmtCtrl
-    | 'contine' ';'                             #stmtCtrl
+    | 'if' '(' cond ')' stmt ('else' stmt)?     #stmtCtrlIf
+    | 'while' '(' cond ')' stmt                 #stmtCtrlWhile
+    | 'break' ';'                               #stmtCtrlBreak
+    | 'continue' ';'                            #stmtCtrlContinue
     | 'return' (exp)? ';'                       #stmtReturn
     ;
 
@@ -191,8 +191,14 @@ mulExp
         DataType dataType,
         IROperand * result
     ]
-    : unaryExp                              #mulExpUnaryExp
-    | mulExp ('*' | '/' | '%') unaryExp     #mulExpMulExp
+    : unaryExp                  #mulExpUnaryExp
+    | mulExp mulOp unaryExp     #mulExpMulExp
+    ;
+
+mulOp
+    : '*'
+    | '/'
+    | '%'
     ;
 
 addExp
@@ -202,8 +208,13 @@ addExp
         DataType dataType,
         IROperand * result
     ]
-    : mulExp                        #addExpMulExp
-    | addExp ('+' | '-') mulExp     #addExpAddExp
+    : mulExp                    #addExpMulExp
+    | addExp addOp mulExp       #addExpAddExp
+    ;
+
+addOp
+    : '+'
+    | '-'
     ;
 
 relExp
@@ -213,9 +224,16 @@ relExp
         DataType dataType,
         IROperand * result
     ]
-    : addExp                                    #relExpAddExp
-    | relExp ('<' | '>' | '<=' | '>=') addExp   #relExpRelExp
-    | BoolConst                                 #relExpBoolConst
+    : addExp                    #relExpAddExp
+    | relExp relOp addExp       #relExpRelExp
+    | BoolConst                 #relExpBoolConst
+    ;
+
+relOp
+    : '<'
+    | '>'
+    | '<='
+    | '>='
     ;
 
 eqExp
@@ -225,8 +243,13 @@ eqExp
         DataType dataType,
         IROperand * result
     ]
-    : relExp                        #eqExpRelExp
-    | eqExp ('==' | '!=') relExp    #eqExpEqExp
+    : relExp                    #eqExpRelExp
+    | eqExp eqOp relExp         #eqExpEqExp
+    ;
+
+eqOp
+    : '=='
+    | '!='
     ;
 
 lAndExp

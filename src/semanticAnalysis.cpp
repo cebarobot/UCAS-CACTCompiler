@@ -289,10 +289,31 @@ void SemanticAnalysis::exitStmtBlock(CACTParser::StmtBlockContext * ctx) {
     // nothing to do
 }
 
-void SemanticAnalysis::enterStmtCtrl(CACTParser::StmtCtrlContext * ctx) {
+void SemanticAnalysis::enterStmtCtrlIf(CACTParser::StmtCtrlIfContext * ctx) {
     // nothing to do
 }
-void SemanticAnalysis::exitStmtCtrl(CACTParser::StmtCtrlContext * ctx) {
+void SemanticAnalysis::exitStmtCtrlIf(CACTParser::StmtCtrlIfContext * ctx) {
+    // nothing to do
+}
+
+void SemanticAnalysis::enterStmtCtrlWhile(CACTParser::StmtCtrlWhileContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitStmtCtrlWhile(CACTParser::StmtCtrlWhileContext * ctx) {
+    // nothing to do
+}
+
+void SemanticAnalysis::enterStmtCtrlBreak(CACTParser::StmtCtrlBreakContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitStmtCtrlBreak(CACTParser::StmtCtrlBreakContext * ctx) {
+    // nothing to do
+}
+
+void SemanticAnalysis::enterStmtCtrlContinue(CACTParser::StmtCtrlContinueContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitStmtCtrlContinue(CACTParser::StmtCtrlContinueContext * ctx) {
     // nothing to do
 }
 
@@ -550,6 +571,12 @@ void SemanticAnalysis::exitFuncRParams(CACTParser::FuncRParamsContext * ctx) {
     }
 }
 
+void SemanticAnalysis::enterMulOp(CACTParser::MulOpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitMulOp(CACTParser::MulOpContext * ctx) {
+    // nothing to do
+}
 
 void SemanticAnalysis::enterMulExpUnaryExp(CACTParser::MulExpUnaryExpContext * ctx) {
     // nothing to do
@@ -593,6 +620,13 @@ void SemanticAnalysis::exitMulExpMulExp(CACTParser::MulExpMulExpContext * ctx) {
             return;
         }
     }
+}
+
+void SemanticAnalysis::enterAddOp(CACTParser::AddOpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitAddOp(CACTParser::AddOpContext * ctx) {
+    // nothing to do
 }
 
 void SemanticAnalysis::enterAddExpMulExp(CACTParser::AddExpMulExpContext * ctx) {
@@ -639,6 +673,13 @@ void SemanticAnalysis::exitAddExpAddExp(CACTParser::AddExpAddExpContext * ctx) {
     }
 }
 
+void SemanticAnalysis::enterRelOp(CACTParser::RelOpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitRelOp(CACTParser::RelOpContext * ctx) {
+    // nothing to do
+}
+
 void SemanticAnalysis::enterRelExpAddExp(CACTParser::RelExpAddExpContext * ctx) {
     // nothing to do
 }
@@ -678,6 +719,13 @@ void SemanticAnalysis::enterRelExpBoolConst(CACTParser::RelExpBoolConstContext *
 void SemanticAnalysis::exitRelExpBoolConst(CACTParser::RelExpBoolConstContext * ctx) {
     ctx->isArray = false;
     ctx->dataType = DataType::BOOL;
+}
+
+void SemanticAnalysis::enterEqOp(CACTParser::EqOpContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitEqOp(CACTParser::EqOpContext * ctx) {
+    // nothing to do
 }
 
 void SemanticAnalysis::enterEqExpRelExp(CACTParser::EqExpRelExpContext * ctx) {
