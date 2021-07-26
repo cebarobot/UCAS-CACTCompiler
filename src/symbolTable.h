@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-enum class SymbolType {
+enum SymbolType {
     CONST,
     VAR,
     CONST_ARRAY,
@@ -13,13 +13,15 @@ enum class SymbolType {
     FUNC,
 };
 
-enum class DataType {
+enum DataType {
     VOID,
     BOOL,
     INT,
     FLOAT,
     DOUBLE,
 };
+
+std::string ToString(DataType x);
 
 class SymbolInfo {
 private:

@@ -43,7 +43,7 @@ void IRParam::print() {
 
 void IRCall::print() {
     if (getResult()) {
-        std::cout << getResult()->getName() << " = call " 
+        std::cout << getResult()->getName() << " := call " 
                   << getArg1()->getName() << ", " 
                   << getArg2()->getName() << "; " << std::endl;
     } else {
@@ -58,5 +58,5 @@ void IRReturn::print() {
 }
 
 void IRAssignInt::print() {
-    std::cout << getResult()->getName() << " = " << getArg1()->getName() << ";" << std::endl;
+    std::cout << getResult()->getName() << " := " << getArg1()->getName() << ";" << std::endl;
 }

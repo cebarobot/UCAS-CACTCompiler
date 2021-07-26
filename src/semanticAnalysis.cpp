@@ -8,7 +8,6 @@ SemanticAnalysis::SemanticAnalysis(BlockInfo * globalBlock, IRProgram * new_ir)
 
 void SemanticAnalysis::enterCompUnit(CACTParser::CompUnitContext * ctx) {
     // add build-in functions
-    std::cerr << "check point asdf" << std::endl;
     FuncSymbolInfo * printBoolFunc = globalBlock->addNewFunc("print_bool", DataType::VOID);
     printBoolFunc->addParamVar("value", DataType::BOOL);
     printBoolFunc->calcParamNum();
@@ -36,13 +35,11 @@ void SemanticAnalysis::exitCompUnit(CACTParser::CompUnitContext * ctx) {
     // check there is a "main" function
     FuncSymbolInfo * mainSymbolInfo = globalBlock->lookUpFunc("main");
     if (mainSymbolInfo == nullptr || mainSymbolInfo->getSymbolType() != SymbolType::FUNC) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC\n");
+        throw std::runtime_error("cannot find main function.");
         return;
     }
     if (mainSymbolInfo->getparamNum() > 0) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC\n");
+        throw std::runtime_error("main function should not have parameters.");
         return;
     }
 }
@@ -82,8 +79,7 @@ void SemanticAnalysis::exitBType(CACTParser::BTypeContext * ctx) {
     } else if (dataTypeText == "double") {
         ctx->bDataType = DataType::DOUBLE;
     } else {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC\n");
+        throw std::runtime_error(std::string("unknown type: ") + dataTypeText);
         return;
     }
     currentDataType = ctx->bDataType;
@@ -106,8 +102,7 @@ void SemanticAnalysis::exitConstDef(CACTParser::ConstDefContext * ctx) {
 void SemanticAnalysis::enterConstInitValBasic(CACTParser::ConstInitValBasicContext * ctx) {
     SymbolType thisSymbolType = ctx->thisSymbolInfo->getSymbolType();
     if (thisSymbolType != SymbolType::CONST && thisSymbolType != SymbolType::VAR) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC\n");
+        throw std::runtime_error("cannot initialize an array with single value.");
         return ;
     }
 }
@@ -118,8 +113,7 @@ void SemanticAnalysis::exitConstInitValBasic(CACTParser::ConstInitValBasicContex
 void SemanticAnalysis::enterConstInitValArray(CACTParser::ConstInitValArrayContext * ctx) {
     SymbolType thisSymbolType = ctx->thisSymbolInfo->getSymbolType();
     if (thisSymbolType != SymbolType::CONST_ARRAY && thisSymbolType != SymbolType::VAR_ARRAY) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC\n");
+        throw std::runtime_error("cannot initialize a variable with an array.");
         return ;
     }
 }
@@ -173,8 +167,7 @@ void SemanticAnalysis::enterFuncDef(CACTParser::FuncDefContext * ctx) {
     } else if (returnTypeText == "void") {
         returnType = DataType::VOID;
     } else {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC\n");
+        throw std::runtime_error(std::string("unknown function return value type: ") + returnTypeText);
         return;
     }
 
@@ -251,31 +244,32 @@ void SemanticAnalysis::enterStmtAssign(CACTParser::StmtAssignContext * ctx) {
 }
 void SemanticAnalysis::exitStmtAssign(CACTParser::StmtAssignContext * ctx) {
     if (!ctx->lVal()->isVar) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 135\n");
+        throw std::runtime_error(std::string("cannot assign to a constant: ") + ctx->lVal()->getText());
         return;
     }
 
     if (ctx->lVal()->dataType != ctx->exp()->dataType) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 146\n");
+        throw std::runtime_error(
+            std::string("cannot assign ") + ToString(ctx->lVal()->dataType) + 
+            std::string(" to ") + ToString(ctx->exp()->dataType)
+        );
         return;
     }
 
     if (ctx->lVal()->isArray) {
         if (!ctx->exp()->isArray) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 123\n");
+            throw std::runtime_error(
+                std::string("cannot assign a basic variable (") + ctx->lVal()->getText() + 
+                std::string(") to an array (") + ctx->exp()->getText() + std::string(")")
+            );
             return;
         } else if (ctx->lVal()->arraySize != ctx->exp()->arraySize) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 2345\n");
+            throw std::runtime_error("cannot assign an array to another array with different size");
             return;
         }
     } else {
         if (ctx->exp()->isArray) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 2753\n");
+            throw std::runtime_error("cannnot assign an array to a basic variable");
             return;
         }
     }
@@ -307,21 +301,18 @@ void SemanticAnalysis::enterStmtReturn(CACTParser::StmtReturnContext * ctx) {
 }
 void SemanticAnalysis::exitStmtReturn(CACTParser::StmtReturnContext * ctx) {
     if (currentFunc == nullptr) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 45\n");
+        throw std::runtime_error("cannot return here.");
         return;
     }
 
     if (ctx->exp() != nullptr) {
         if (currentFunc->getDataType() != ctx->exp()->dataType) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC4586\n");
+            throw std::runtime_error("return data type not match");
             return;
         }
     } else {
         if (currentFunc->getDataType() != DataType::VOID) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 4679\n");
+            throw std::runtime_error("this function needs an unvoid return value");
             return;
         }
     }
@@ -329,7 +320,7 @@ throw std::runtime_error("\nWRONG SENMANTIC 4679\n");
 
 void SemanticAnalysis::enterExpAddExp(CACTParser::ExpAddExpContext * ctx) {
     // nothing to do
-    std::cerr << "@@@@@@@@@@@22" << std::endl;
+    // std::cerr << "@@@@@@@@@@@22" << std::endl;
 }
 void SemanticAnalysis::exitExpAddExp(CACTParser::ExpAddExpContext * ctx) {
     ctx->isArray = ctx->addExp()->isArray;
@@ -345,7 +336,7 @@ void SemanticAnalysis::exitExpAddExp(CACTParser::ExpAddExpContext * ctx) {
 
 void SemanticAnalysis::enterExpBoolConst(CACTParser::ExpBoolConstContext * ctx) {
     // nothing to do
-    std::cerr << "!!!!!!!!!11" << std::endl;
+    // std::cerr << "!!!!!!!!!11" << std::endl;
 }
 
 void SemanticAnalysis::exitExpBoolConst(CACTParser::ExpBoolConstContext * ctx) {
@@ -361,14 +352,12 @@ void SemanticAnalysis::enterCond(CACTParser::CondContext * ctx) {
 }
 void SemanticAnalysis::exitCond(CACTParser::CondContext * ctx) {
     if (ctx->lOrExp()->isArray) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC e45\n");
+        throw std::runtime_error("an array cannot be a condition");
         return;
     }
 
     if (ctx->lOrExp()->dataType != DataType::BOOL) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 345\n");
+        throw std::runtime_error("the datatype of condition should be bool");
         return;
     }
 }
@@ -376,8 +365,9 @@ throw std::runtime_error("\nWRONG SENMANTIC 345\n");
 void SemanticAnalysis::enterLVal(CACTParser::LValContext * ctx) {
     SymbolInfo * thisSymbol = currentBlock->lookUpSymbol(ctx->Ident()->getText());
     if (thisSymbol == nullptr) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 23r\n");
+        throw std::runtime_error(
+            std::string("cannot find symbol ") + ctx->Ident()->getText()
+        );
         return;
     }
     ctx->thisSymbol = thisSymbol;
@@ -386,7 +376,7 @@ void SemanticAnalysis::exitLVal(CACTParser::LValContext * ctx) {
     SymbolInfo * thisSymbol = ctx->thisSymbol;
     SymbolType thisSymbolType = thisSymbol->getSymbolType();
     ctx->dataType = thisSymbol->getDataType();
-    if (ctx->exp() != nullptr) {    // with "[exp]""
+    if (ctx->exp() != nullptr) {    // with "[exp]"
         if (!ctx->exp()->isArray && ctx->exp()->dataType == DataType::INT) {
             if (thisSymbolType == SymbolType::CONST_ARRAY) {
                 ctx->isVar = false;
@@ -395,16 +385,14 @@ void SemanticAnalysis::exitLVal(CACTParser::LValContext * ctx) {
                 ctx->isVar = true;
                 ctx->isArray = false;
             } else {
-                // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 3q4t\n");
+                throw std::runtime_error("cannot use \"[index]\" for basic variable");
                 return;
             }
         } else {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC qrew\n");
+            throw std::runtime_error("array index should be int");
             return;
         }
-    } else {    // without "xxx"
+    } else {    // without "[exp]"
         if (thisSymbolType == SymbolType::CONST) {
             ctx->isArray = false;
             ctx->isVar = false;
@@ -420,8 +408,9 @@ throw std::runtime_error("\nWRONG SENMANTIC qrew\n");
             ctx->arraySize = thisSymbol->getArraySize();
             ctx->isVar = true;
         } else {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 789C\n");
+            throw std::runtime_error(
+                std::string("cannot use symbol ") + ctx->Ident()->getText()
+            );
         }
     }
 }
@@ -462,21 +451,17 @@ void SemanticAnalysis::exitUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpCont
 }
 
 void SemanticAnalysis::enterUnaryExpFunc(CACTParser::UnaryExpFuncContext * ctx) {
-    std::cerr << "check point asdf1" << std::endl;
     FuncSymbolInfo * thisFunc = globalBlock->lookUpFunc(ctx->Ident()->getText());
     if (thisFunc == nullptr) {
-        // TODO: throw exception
-    std::cerr << "check point asdf2" << std::endl;
-throw std::runtime_error("\nWRONG SENMANTIC 1234\n");
+        throw std::runtime_error(
+            std::string("cannot find function ") + ctx->Ident()->getText()
+        );
         return;
     }
-    std::cerr << "check point asdf3" << std::endl;
     ctx->thisFunc = thisFunc;
-    std::cerr << "check point asdf4" << std::endl;
     if (ctx->funcRParams() != nullptr) {
         ctx->funcRParams()->thisFunc = thisFunc;
     }
-    std::cerr << "check point asdf5" << std::endl;
 }
 void SemanticAnalysis::exitUnaryExpFunc(CACTParser::UnaryExpFuncContext * ctx) {
     std::cerr << "check point asdf5" << std::endl;
@@ -487,9 +472,11 @@ void SemanticAnalysis::exitUnaryExpFunc(CACTParser::UnaryExpFuncContext * ctx) {
     ctx->dataType = thisFunc->getDataType();
     
     if (ctx->funcRParams() == nullptr && thisFunc->getparamNum() > 0) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 758\n");
-            return;
+        throw std::runtime_error(
+            std::string("too many or too few parameters for function ") +
+            thisFunc->getName()
+        );
+        return;
     }
 }
 
@@ -500,8 +487,10 @@ void SemanticAnalysis::exitUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext * 
     std::string unaryOp = ctx->unaryOp()->getText();
     if (unaryOp == "+" || unaryOp == "-") {
         if (ctx->unaryExp()->dataType == DataType::BOOL || ctx->unaryExp()->dataType == DataType::VOID) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 758\n");
+            throw std::runtime_error(
+                std::string("cannot use unary operator ") + unaryOp + 
+                std::string(" on ") + ToString(ctx->unaryExp()->dataType) + std::string(" value")
+            );
             return;
         } else {
             ctx->isArray = ctx->unaryExp()->isArray;
@@ -510,12 +499,15 @@ throw std::runtime_error("\nWRONG SENMANTIC 758\n");
         }
     } else if (unaryOp == "!") {
         if (ctx->unaryExp()->dataType != DataType::BOOL) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 274\n");
+            throw std::runtime_error(
+                std::string("cannot use unary operator ") + unaryOp + 
+                std::string(" on ") + ToString(ctx->unaryExp()->dataType) + std::string(" value")
+            );
             return;
         } else if (ctx->unaryExp()->isArray) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 364\n");
+            throw std::runtime_error(
+                std::string("cannot use unary operator ") + unaryOp + std::string(" on array")
+            );
             return;
         } else {
             ctx->isArray = false;
@@ -538,8 +530,10 @@ void SemanticAnalysis::exitFuncRParams(CACTParser::FuncRParamsContext * ctx) {
     FuncSymbolInfo * thisFunc = ctx->thisFunc;
     size_t paramNum = thisFunc->getparamNum();
     if (ctx->exp().size() != paramNum) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC sfad\n");
+        throw std::runtime_error(
+            std::string("too many or too few parameters for function ") +
+            thisFunc->getName()
+        );
         return;
     }
     std::vector < SymbolInfo * > paramList = thisFunc->getparamList();
@@ -547,12 +541,10 @@ throw std::runtime_error("\nWRONG SENMANTIC sfad\n");
         bool paramIsArray = paramList[i]->getSymbolType() == SymbolType::CONST_ARRAY || paramList[i]->getSymbolType() == SymbolType::VAR_ARRAY;
 
         if (ctx->exp(i)->dataType != paramList[i]->getDataType()) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 4ei75\n");
+            throw std::runtime_error("different data type of parameters");
             return;
         } else if (ctx->exp(i)->isArray != paramIsArray) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC zryu\n");
+            throw std::runtime_error("different array type of parameters");
             return;
         }
     }
@@ -577,29 +569,27 @@ void SemanticAnalysis::exitMulExpMulExp(CACTParser::MulExpMulExpContext * ctx) {
     ctx->dataType = ctx->mulExp()->dataType;
     
     if (ctx->dataType != ctx->unaryExp()->dataType) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC q34t\n");
+        throw std::runtime_error(
+            std::string("different data type beside operator:") + 
+            ToString(ctx->dataType) + std::string(", ") + ToString(ctx->unaryExp()->dataType)
+        );
         return;
     } else if (ctx->dataType == DataType::BOOL) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 6rth\n");
+        throw std::runtime_error("cannot use non-logical operator for bool value");
         return;
     }
 
     if (ctx->isArray) {
         if (!ctx->unaryExp()->isArray) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC q34\n");
+            throw std::runtime_error("cannot do operation between basic value and array");
             return;
         } else if (ctx->arraySize != ctx->unaryExp()->arraySize) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC vhj\n");
+            throw std::runtime_error("cannot do operation between arrays with different size");
             return;
         }
     } else {
         if (ctx->unaryExp()->isArray) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC zeaa\n");
+            throw std::runtime_error("cannot do operation between basic value and array");
             return;
         }
     }
@@ -623,29 +613,27 @@ void SemanticAnalysis::exitAddExpAddExp(CACTParser::AddExpAddExpContext * ctx) {
     ctx->dataType = ctx->addExp()->dataType;
     
     if (ctx->dataType != ctx->mulExp()->dataType) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC r765\n");
+        throw std::runtime_error(
+            std::string("different data type beside operator:") + 
+            ToString(ctx->dataType) + std::string(", ") + ToString(ctx->mulExp()->dataType)
+        );
         return;
     } else if (ctx->dataType == DataType::BOOL) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC yfu87to\n");
+        throw std::runtime_error("cannot use non-logical operator for bool value");
         return;
     }
 
     if (ctx->isArray) {
         if (!ctx->mulExp()->isArray) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC     q3w\n");
+            throw std::runtime_error("cannot do operation between basic value and array");
             return;
         } else if (ctx->arraySize != ctx->mulExp()->arraySize) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC awet\n");
+            throw std::runtime_error("cannot do operation between arrays with different size");
             return;
         }
     } else {
         if (ctx->mulExp()->isArray) {
-            // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 784w5\n");
+            throw std::runtime_error("cannot do operation between basic value and array");
             return;
         }
     }
@@ -668,18 +656,18 @@ void SemanticAnalysis::exitRelExpRelExp(CACTParser::RelExpRelExpContext * ctx) {
     ctx->dataType = DataType::BOOL;
 
     if (ctx->relExp()->dataType != ctx->addExp()->dataType) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC q34\n");
+        throw std::runtime_error(
+            std::string("different data type beside operator:") + 
+            ToString(ctx->relExp()->dataType) + std::string(", ") + ToString(ctx->addExp()->dataType)
+        );
         return;
     } else if (ctx->relExp()->dataType == DataType::BOOL) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC fhjg\n");
+        throw std::runtime_error("cannot use non-logical operator for bool value");
         return;
     }
 
     if (ctx->relExp()->isArray || ctx->addExp()->isArray) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC w6y\n");
+        throw std::runtime_error("cannot use logical operation between arrays");
         return;
     }
 }
@@ -709,14 +697,15 @@ void SemanticAnalysis::exitEqExpEqExp(CACTParser::EqExpEqExpContext * ctx) {
     ctx->dataType = DataType::BOOL;
 
     if (ctx->eqExp()->dataType != ctx->relExp()->dataType) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC qw4\n");
+        throw std::runtime_error(
+            std::string("different data type beside operator:") + 
+            ToString(ctx->eqExp()->dataType) + std::string(", ") + ToString(ctx->relExp()->dataType)
+        );
         return;
     }
 
     if (ctx->eqExp()->isArray || ctx->relExp()->isArray) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC sd \n");
+        throw std::runtime_error("cannot use logical operation between arrays");
         return;
     }
 }
@@ -738,18 +727,18 @@ void SemanticAnalysis::exitLAndExpLAndExp(CACTParser::LAndExpLAndExpContext * ct
     ctx->dataType = DataType::BOOL;
 
     if (ctx->lAndExp()->dataType != ctx->eqExp()->dataType) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC q3564\n");
+        throw std::runtime_error(
+            std::string("different data type beside operator:") + 
+            ToString(ctx->lAndExp()->dataType) + std::string(", ") + ToString(ctx->eqExp()->dataType)
+        );
         return;
     } else if (ctx->lAndExp()->dataType != DataType::BOOL) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC 123\n");
+        throw std::runtime_error("cannot use non-logical operator for bool value");
         return;
     }
 
     if (ctx->lAndExp()->isArray || ctx->eqExp()->isArray) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC wetq\n");
+        throw std::runtime_error("cannot use logical operation between arrays");
         return;
     }
 }
@@ -771,18 +760,18 @@ void SemanticAnalysis::exitLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * ctx) {
     ctx->dataType = DataType::BOOL;
 
     if (ctx->lOrExp()->dataType != ctx->lAndExp()->dataType) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC\n");
+        throw std::runtime_error(
+            std::string("different data type beside operator:") + 
+            ToString(ctx->lOrExp()->dataType) + std::string(", ") + ToString(ctx->lAndExp()->dataType)
+        );
         return;
     } else if (ctx->lAndExp()->dataType != DataType::BOOL) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC\n");
+        throw std::runtime_error("cannot use non-logical operator for bool value");
         return;
     }
 
     if (ctx->lOrExp()->isArray || ctx->lAndExp()->isArray) {
-        // TODO: throw exception
-throw std::runtime_error("\nWRONG SENMANTIC\n");
+        throw std::runtime_error("cannot use logical operation between arrays");
         return;
     }
 }
@@ -807,7 +796,6 @@ void SemanticAnalysis::enterNumberIntConst(CACTParser::NumberIntConstContext * c
 }
 void SemanticAnalysis::exitNumberIntConst(CACTParser::NumberIntConstContext * ctx) {
     ctx->dataType = DataType::INT;
-    ctx->result = new IRIntConst(ctx->IntConst()->getText());
 }
 
 void SemanticAnalysis::enterNumberDoubleConst(CACTParser::NumberDoubleConstContext * ctx) {

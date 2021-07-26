@@ -1,6 +1,21 @@
 #include "symbolTable.h"
 #include <iostream>
 
+std::string ToString(DataType x) {
+    if (x == VOID) {
+        return "void";
+    } else if (x == BOOL) {
+        return "bool";
+    } else if (x == INT) {
+        return "int";
+    } else if (x == FLOAT) {
+        return "float";
+    } else if (x == DOUBLE) {
+        return "double";
+    }
+    return "unknown";
+}
+
 /* we decided not to assign value when constructing symbols
 ConstSymbolInfo::ConstSymbolInfo(const std::string & name, DataType dataType, const std::string & value)
 : SymbolInfo(name), dataType(dataType), valueText(value) {
