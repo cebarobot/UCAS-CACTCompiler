@@ -120,7 +120,7 @@ exp
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        IRArgument * result
+        IROperand * result
     ]
     : addExp        #expAddExp
     | BoolConst     #expBoolConst
@@ -129,6 +129,7 @@ exp
 cond
     locals[
         DataType dataType,
+        IROperand * result
     ]
     : lOrExp
     ;
@@ -139,7 +140,8 @@ lVal
         bool isArray,
         size_t arraySize,
         DataType dataType, 
-        SymbolInfo * thisSymbol
+        SymbolInfo * thisSymbol,
+        IROperand * result
     ]
     : Ident ('[' exp ']')?
     ;
@@ -148,7 +150,8 @@ primaryExp
     locals[
         bool isArray,
         size_t arraySize,
-        DataType dataType
+        DataType dataType,
+        IROperand * result
     ]
     : '(' exp ')'       #primaryExpExp
     | lVal              #primaryExpLVal
@@ -160,7 +163,8 @@ unaryExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        FuncSymbolInfo * thisFunc
+        FuncSymbolInfo * thisFunc,
+        IROperand * result
     ]
     : primaryExp                    #unaryExpPrimaryExp
     | Ident '(' (funcRParams)? ')'  #unaryExpFunc
@@ -185,6 +189,7 @@ mulExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
+        IROperand * result
     ]
     : unaryExp                              #mulExpUnaryExp
     | mulExp ('*' | '/' | '%') unaryExp     #mulExpMulExp
@@ -195,7 +200,7 @@ addExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        IRArgument * result
+        IROperand * result
     ]
     : mulExp                        #addExpMulExp
     | addExp ('+' | '-') mulExp     #addExpAddExp
@@ -206,7 +211,7 @@ relExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        IRArgument * result
+        IROperand * result
     ]
     : addExp                                    #relExpAddExp
     | relExp ('<' | '>' | '<=' | '>=') addExp   #relExpRelExp
@@ -218,7 +223,7 @@ eqExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        IRArgument * result
+        IROperand * result
     ]
     : relExp                        #eqExpRelExp
     | eqExp ('==' | '!=') relExp    #eqExpEqExp
@@ -229,7 +234,7 @@ lAndExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        IRArgument * result
+        IROperand * result
     ]
     : eqExp                 #lAndExpEqExp
     | lAndExp ('&&') eqExp  #lAndExpLAndExp
@@ -240,7 +245,7 @@ lOrExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        IRArgument * result
+        IROperand * result
     ]
     : lAndExp               #lOrExpLAndExp
     | lOrExp ('||') lAndExp #lOrExpLOrExp
@@ -249,7 +254,7 @@ lOrExp
 constExp
     locals[
         DataType dataType,
-        IRArgument * result
+        IROperand * result
     ]
     : number            #constExpNumber
     | BoolConst         #constExpBoolConst
@@ -258,7 +263,7 @@ constExp
 number
     locals[
         DataType dataType,
-        IRArgument * result
+        IROperand * result
     ]
     : IntConst          #numberIntConst
     | DoubleConst       #numberDoubleConst

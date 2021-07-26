@@ -1681,6 +1681,7 @@ void CACTParser::PrimaryExpContext::copyFrom(PrimaryExpContext *ctx) {
   this->isArray = ctx->isArray;
   this->arraySize = ctx->arraySize;
   this->dataType = ctx->dataType;
+  this->result = ctx->result;
 }
 
 //----------------- PrimaryExpExpContext ------------------------------------------------------------------
@@ -1809,6 +1810,7 @@ void CACTParser::UnaryExpContext::copyFrom(UnaryExpContext *ctx) {
   this->arraySize = ctx->arraySize;
   this->dataType = ctx->dataType;
   this->thisFunc = ctx->thisFunc;
+  this->result = ctx->result;
 }
 
 //----------------- UnaryExpFuncContext ------------------------------------------------------------------
@@ -2082,6 +2084,7 @@ void CACTParser::MulExpContext::copyFrom(MulExpContext *ctx) {
   this->isArray = ctx->isArray;
   this->arraySize = ctx->arraySize;
   this->dataType = ctx->dataType;
+  this->result = ctx->result;
 }
 
 //----------------- MulExpMulExpContext ------------------------------------------------------------------

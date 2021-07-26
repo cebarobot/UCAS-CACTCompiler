@@ -377,7 +377,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
-    IRArgument * result;
+    IROperand * result;
     ExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     ExpContext() = default;
@@ -412,6 +412,7 @@ public:
   class  CondContext : public antlr4::ParserRuleContext {
   public:
     DataType dataType;
+    IROperand * result;
     CondContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     LOrExpContext *lOrExp();
@@ -430,6 +431,7 @@ public:
     size_t arraySize;
     DataType dataType;
     SymbolInfo * thisSymbol;
+    IROperand * result;
     LValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Ident();
@@ -447,6 +449,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
+    IROperand * result;
     PrimaryExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     PrimaryExpContext() = default;
@@ -493,6 +496,7 @@ public:
     size_t arraySize;
     DataType dataType;
     FuncSymbolInfo * thisFunc;
+    IROperand * result;
     UnaryExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     UnaryExpContext() = default;
@@ -567,6 +571,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
+    IROperand * result;
     MulExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     MulExpContext() = default;
@@ -604,7 +609,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
-    IRArgument * result;
+    IROperand * result;
     AddExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     AddExpContext() = default;
@@ -642,7 +647,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
-    IRArgument * result;
+    IROperand * result;
     RelExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     RelExpContext() = default;
@@ -689,7 +694,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
-    IRArgument * result;
+    IROperand * result;
     EqExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     EqExpContext() = default;
@@ -727,7 +732,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
-    IRArgument * result;
+    IROperand * result;
     LAndExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     LAndExpContext() = default;
@@ -765,7 +770,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
-    IRArgument * result;
+    IROperand * result;
     LOrExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     LOrExpContext() = default;
@@ -801,7 +806,7 @@ public:
   class  ConstExpContext : public antlr4::ParserRuleContext {
   public:
     DataType dataType;
-    IRArgument * result;
+    IROperand * result;
     ConstExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     ConstExpContext() = default;
@@ -836,7 +841,7 @@ public:
   class  NumberContext : public antlr4::ParserRuleContext {
   public:
     DataType dataType;
-    IRArgument * result;
+    IROperand * result;
     NumberContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     NumberContext() = default;
