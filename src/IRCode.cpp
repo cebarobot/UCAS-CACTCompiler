@@ -43,6 +43,18 @@ IRCopyW::IRCopyW(IROperand * new_result, IROperand * new_arg1)
 IRCopyD::IRCopyD(IROperand * new_result, IROperand * new_arg1)
 : IRCode(COPY_D, new_result, new_arg1, nullptr) { }
 
+IRCopyFromIndexedW::IRCopyFromIndexedW(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(COPY_FROM_INDEXED_W, new_result, new_arg1, new_arg2) { }
+
+IRCopyFromIndexedD::IRCopyFromIndexedD(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(COPY_FROM_INDEXED_D, new_result, new_arg1, new_arg2) { }
+
+IRCopyToIndexedW::IRCopyToIndexedW(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(COPY_TO_INDEXED_W, new_result, new_arg1, new_arg2) { }
+
+IRCopyToIndexedD::IRCopyToIndexedD(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(COPY_TO_INDEXED_D, new_result, new_arg1, new_arg2) { }
+
 IRAddInt::IRAddInt(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
 : IRCode(ADD_INT, new_result, new_arg1, new_arg2) { }
 
@@ -59,7 +71,19 @@ IRModInt::IRModInt(IROperand * new_result, IROperand * new_arg1, IROperand * new
 : IRCode(DIV_INT, new_result, new_arg1, new_arg2) { }
 
 IRIfGreaterThanZeroGoto::IRIfGreaterThanZeroGoto(IROperand * new_result, IROperand * new_arg1)
-: IRCode(DIV_INT, new_result, new_arg1, nullptr) { }
+: IRCode(IF_GREATER_THAN_ZERO_GOTO, new_result, new_arg1, nullptr) { }
+
+IRIfGreaterThanGoto::IRIfGreaterThanGoto(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(IF_GREATER_THAN_GOTO, new_result, new_arg1, new_arg2) { }
+
+IRIfGreaterEqualThanGoto::IRIfGreaterEqualThanGoto(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(IF_GREATER_EQUAL_THAN_GOTO, new_result, new_arg1, new_arg2) { }
+
+IRIfLessThanGoto::IRIfLessThanGoto(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(IF_LESS_THAN_GOTO, new_result, new_arg1, new_arg2) { }
+
+IRIfLessEqualThanGoto::IRIfLessEqualThanGoto(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(IF_LESS_EQUAL_THAN_GOTO, new_result, new_arg1, new_arg2) { }
 
 void IRLabelHere::print() {
     std::cout << getArg1()->getName() << ":" << std::endl;
@@ -83,6 +107,44 @@ void IRCall::print() {
 
 void IRReturn::print() {
     std::cout << "return " << getArg1()->getName() << ";" << std::endl;
+}
+
+void IRCopyW::print() {
+    std::cout << getResult()->getName() << " := "
+              << getArg1()->getName() << ";" << std:endl;
+}
+
+void IRCopyD::print() {
+    std::cout << getResult()->getName() << " := "
+              << getArg1()->getName() << ";" << std:endl;
+}
+
+void IRCopyFromIndexedW::print() {
+    std::cout << getResult()->getName() << " := "
+              << getArg1()->getName() << " [ " 
+              << getArg2()->getName() << " ] "
+              << ";" << std:endl;
+}
+
+void IRCopyFromIndexedD::print() {
+    std::cout << getResult()->getName() << " := "
+              << getArg1()->getName() << " [ " 
+              << getArg2()->getName() << " ] "
+              << ";" << std:endl;
+}
+
+void IRCopyToIndexedW::print() {
+    std::cout << getResult()->getName() << " [ "
+              << getArg2()->getName() << " ] " 
+              << " := " <<
+              << getArg1()->getName() << ";" << std:endl;
+}
+
+void IRCopyToIndexedD::print() {
+    std::cout << getResult()->getName() << " [ "
+              << getArg2()->getName() << " ] " 
+              << " := " <<
+              << getArg1()->getName() << ";" << std:endl;
 }
 
 void IRAddInt::print() {
@@ -119,4 +181,32 @@ void IRIfGreaterThanZeroGoto::print() {
     std::cout << "If "
               << getArg1()->getName() << " >= 0 "
               << "Goto " << getResult()->getName() << ";" << std::endl;
+}
+
+void IRIfGreaterThanGoto::print() {
+    std::cout << "if "
+              << getArg1()->getName() << " > "
+              << getArg2()->getName() 
+              << "Goto " << getResult()->getName() << ";" << std:endl;
+}
+
+void IRIfGreaterEqualThanGoto::print() {
+    std::cout << "if "
+              << getArg1()->getName() << " >= "
+              << getArg2()->getName() 
+              << "Goto " << getResult()->getName() << ";" << std:endl;
+}
+
+void IRIfLessThanGoto::print() {
+    std::cout << "if "
+              << getArg1()->getName() << " < "
+              << getArg2()->getName() 
+              << "Goto " << getResult()->getName() << ";" << std:endl;
+}
+
+void IRIfLessEqualThanGoto::print() {
+    std::cout << "if "
+              << getArg1()->getName() << " <= "
+              << getArg2()->getName() 
+              << "Goto " << getResult()->getName() << ";" << std:endl;
 }

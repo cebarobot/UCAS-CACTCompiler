@@ -22,7 +22,11 @@ enum IROperation {
     MUL_INT,
     DIV_INT,
     MOD_INT,
+    IF_GREATER_THAN_ZERO_GOTO,
     IF_GREATER_THAN_GOTO,
+    IF_GREATER_EQUAL_THAN_GOTO,
+    IF_LESS_THAN_GOTO,
+    IF_LESS_EQUAL_THAN_GOTO,
 };
 
 class IRCode {
@@ -157,6 +161,34 @@ public:
 class IRIfGreaterThanZeroGoto : public IRCode {
 public:
     IRIfGreaterThanZeroGoto(IROperand * new_result, IROperand * new_arg1);
+
+    virtual void print();
+};
+
+class IRIfGreaterThanGoto : public IRCode {
+public:
+    IRIfGreaterThanGoto(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2);
+
+    virtual void print();
+};
+
+class IRIfGreaterEqualThanGoto : public IRCode {
+public:
+    IRIfGreaterEqualThanGoto(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2);
+
+    virtual void print();
+};
+
+class IRIfLessThanGoto : public IRCode {
+public:
+    IRIfLessThanGoto(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2);
+
+    virtual void print();
+};
+
+class IRIfLessEqualThanGoto : public IRCode {
+public:
+    IRIfLessEqualThanGoto(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2);
 
     virtual void print();
 };
