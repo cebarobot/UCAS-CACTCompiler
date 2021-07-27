@@ -870,7 +870,7 @@ void SemanticAnalysis::exitNumValIntConst(CACTParser::NumValIntConstContext * ct
     ctx->isArray = false;
     ctx->arraySize = 0;
     ctx->dataType = DataType::INT;
-    // ctx->result = irGen->
+    ctx->result = irGen->newValue(FLOAT, ctx->IntConst()->getText());
 }
 
 void SemanticAnalysis::enterNumValFloatConst(CACTParser::NumValFloatConstContext * ctx) {
@@ -880,6 +880,11 @@ void SemanticAnalysis::exitNumValFloatConst(CACTParser::NumValFloatConstContext 
     ctx->isArray = false;
     ctx->arraySize = 0;
     ctx->dataType = DataType::FLOAT;
+
+    std::string val_str = ctx->FloatConst()->getText();
+    val_str = val_str.substr(0, val_str.size()-1);
+
+    ctx->result = irGen->newValue(FLOAT, val_str);
 }
 
 void SemanticAnalysis::enterNumValDoubleConst(CACTParser::NumValDoubleConstContext * ctx) {
@@ -889,13 +894,23 @@ void SemanticAnalysis::exitNumValDoubleConst(CACTParser::NumValDoubleConstContex
     ctx->isArray = false;
     ctx->arraySize = 0;
     ctx->dataType = DataType::DOUBLE;
+    ctx->result = irGen->newValue(FLOAT, ctx->DoubleConst()->getText());
 }
 
 void SemanticAnalysis::enterBoolVal(CACTParser::BoolValContext * ctx) {
     // nothing to do
 }
 void SemanticAnalysis::exitBoolVal(CACTParser::BoolValContext * ctx) {
-    // nothing to do
+    ctx->isArray = false;
+    ctx->arraySize = 0;
+    ctx->dataType = DataType::BOOL;
+
+    std::string val_str = ctx->BoolConst()->getText();
+    if (val_str == "true") {
+        ctx->result = irGen->newValue(BOOL, "1");
+    } else {
+        ctx->result = irGen->newValue(BOOL, "0");
+    }
 }
 
 void SemanticAnalysis::enterLVal(CACTParser::LValContext * ctx) {
