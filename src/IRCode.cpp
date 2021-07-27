@@ -28,11 +28,11 @@ IRLabelHere::IRLabelHere(IROperand * new_arg1)
 IRParam::IRParam(IROperand * new_arg1)
 : IRCode(PARAM, nullptr, new_arg1, nullptr) { }
 
-IRCall::IRCall(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
-: IRCode(CALL, new_result, new_arg1, new_arg2) { }
+IRCall::IRCall(IROperand * new_result, IROperand * new_arg1)
+: IRCode(CALL, new_result, new_arg1, nullptr) { }
 
-IRCall::IRCall(IROperand * new_arg1, IROperand * new_arg2)
-: IRCode(CALL, new_arg1, new_arg2, nullptr) { }
+IRCall::IRCall(IROperand * new_arg1)
+: IRCode(CALL, nullptr, new_arg1, nullptr) { }
 
 IRReturn::IRReturn(IROperand * new_arg1)
 : IRCode(RETURN, nullptr, new_arg1, nullptr) { }

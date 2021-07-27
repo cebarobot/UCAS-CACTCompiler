@@ -65,8 +65,8 @@ public:
 
 class IRCall : public IRCode {
 public:
-    IRCall(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2);
-    IRCall(IROperand * new_arg1, IROperand * new_arg2);
+    IRCall(IROperand * new_result, IROperand * new_arg1);
+    IRCall(IROperand * new_arg1);
 
     virtual void print();
 };

@@ -1047,6 +1047,8 @@ void SemanticAnalysis::exitFuncVal(CACTParser::FuncValContext * ctx) {
     FuncSymbolInfo * thisFunc = ctx->thisFunc;
     ctx->isArray = false;
     ctx->dataType = thisFunc->getDataType();
+    ctx->result = irGen->newTemp(SizeOfDataType(ctx->dataType));
+    IROperand * funcLabel = ctx->thisFunc->getOp();
     
     if (ctx->funcRParams() == nullptr && thisFunc->getparamNum() > 0) {
         throw std::runtime_error(
@@ -1055,6 +1057,9 @@ void SemanticAnalysis::exitFuncVal(CACTParser::FuncValContext * ctx) {
         );
         return;
     }
+
+    irGen->addCode(new IRCall(ctx->result, funcLabel));
+
 }
 
 void SemanticAnalysis::enterFuncRParams(CACTParser::FuncRParamsContext * ctx) {
@@ -1081,6 +1086,9 @@ void SemanticAnalysis::exitFuncRParams(CACTParser::FuncRParamsContext * ctx) {
             throw std::runtime_error("different array type of parameters");
             return;
         }
+
+        IROperand * temp = ctx->exp(i)->result;
+        irGen->addCode(new IRParam(temp));
     }
 }
 
