@@ -23,29 +23,29 @@ public:
   virtual void enterCompUnit(CACTParser::CompUnitContext *ctx) = 0;
   virtual void exitCompUnit(CACTParser::CompUnitContext *ctx) = 0;
 
+  virtual void enterBType(CACTParser::BTypeContext *ctx) = 0;
+  virtual void exitBType(CACTParser::BTypeContext *ctx) = 0;
+
   virtual void enterDecl(CACTParser::DeclContext *ctx) = 0;
   virtual void exitDecl(CACTParser::DeclContext *ctx) = 0;
 
   virtual void enterConstDecl(CACTParser::ConstDeclContext *ctx) = 0;
   virtual void exitConstDecl(CACTParser::ConstDeclContext *ctx) = 0;
 
-  virtual void enterBType(CACTParser::BTypeContext *ctx) = 0;
-  virtual void exitBType(CACTParser::BTypeContext *ctx) = 0;
+  virtual void enterConstDefBasic(CACTParser::ConstDefBasicContext *ctx) = 0;
+  virtual void exitConstDefBasic(CACTParser::ConstDefBasicContext *ctx) = 0;
 
-  virtual void enterConstDef(CACTParser::ConstDefContext *ctx) = 0;
-  virtual void exitConstDef(CACTParser::ConstDefContext *ctx) = 0;
-
-  virtual void enterConstInitValBasic(CACTParser::ConstInitValBasicContext *ctx) = 0;
-  virtual void exitConstInitValBasic(CACTParser::ConstInitValBasicContext *ctx) = 0;
-
-  virtual void enterConstInitValArray(CACTParser::ConstInitValArrayContext *ctx) = 0;
-  virtual void exitConstInitValArray(CACTParser::ConstInitValArrayContext *ctx) = 0;
+  virtual void enterConstDefArray(CACTParser::ConstDefArrayContext *ctx) = 0;
+  virtual void exitConstDefArray(CACTParser::ConstDefArrayContext *ctx) = 0;
 
   virtual void enterVarDecl(CACTParser::VarDeclContext *ctx) = 0;
   virtual void exitVarDecl(CACTParser::VarDeclContext *ctx) = 0;
 
-  virtual void enterVarDef(CACTParser::VarDefContext *ctx) = 0;
-  virtual void exitVarDef(CACTParser::VarDefContext *ctx) = 0;
+  virtual void enterVarDefBasic(CACTParser::VarDefBasicContext *ctx) = 0;
+  virtual void exitVarDefBasic(CACTParser::VarDefBasicContext *ctx) = 0;
+
+  virtual void enterVarDefArray(CACTParser::VarDefArrayContext *ctx) = 0;
+  virtual void exitVarDefArray(CACTParser::VarDefArrayContext *ctx) = 0;
 
   virtual void enterFuncDef(CACTParser::FuncDefContext *ctx) = 0;
   virtual void exitFuncDef(CACTParser::FuncDefContext *ctx) = 0;
@@ -97,9 +97,6 @@ public:
 
   virtual void enterCond(CACTParser::CondContext *ctx) = 0;
   virtual void exitCond(CACTParser::CondContext *ctx) = 0;
-
-  virtual void enterLVal(CACTParser::LValContext *ctx) = 0;
-  virtual void exitLVal(CACTParser::LValContext *ctx) = 0;
 
   virtual void enterPrimaryExpExp(CACTParser::PrimaryExpExpContext *ctx) = 0;
   virtual void exitPrimaryExpExp(CACTParser::PrimaryExpExpContext *ctx) = 0;
@@ -176,20 +173,32 @@ public:
   virtual void enterLOrExpLOrExp(CACTParser::LOrExpLOrExpContext *ctx) = 0;
   virtual void exitLOrExpLOrExp(CACTParser::LOrExpLOrExpContext *ctx) = 0;
 
-  virtual void enterConstExpNumber(CACTParser::ConstExpNumberContext *ctx) = 0;
-  virtual void exitConstExpNumber(CACTParser::ConstExpNumberContext *ctx) = 0;
+  virtual void enterConstArrExp(CACTParser::ConstArrExpContext *ctx) = 0;
+  virtual void exitConstArrExp(CACTParser::ConstArrExpContext *ctx) = 0;
 
-  virtual void enterConstExpBoolConst(CACTParser::ConstExpBoolConstContext *ctx) = 0;
-  virtual void exitConstExpBoolConst(CACTParser::ConstExpBoolConstContext *ctx) = 0;
+  virtual void enterConstExpNumVal(CACTParser::ConstExpNumValContext *ctx) = 0;
+  virtual void exitConstExpNumVal(CACTParser::ConstExpNumValContext *ctx) = 0;
 
-  virtual void enterNumberIntConst(CACTParser::NumberIntConstContext *ctx) = 0;
-  virtual void exitNumberIntConst(CACTParser::NumberIntConstContext *ctx) = 0;
+  virtual void enterConstExpBoolVal(CACTParser::ConstExpBoolValContext *ctx) = 0;
+  virtual void exitConstExpBoolVal(CACTParser::ConstExpBoolValContext *ctx) = 0;
 
-  virtual void enterNumberDoubleConst(CACTParser::NumberDoubleConstContext *ctx) = 0;
-  virtual void exitNumberDoubleConst(CACTParser::NumberDoubleConstContext *ctx) = 0;
+  virtual void enterNumValIntConst(CACTParser::NumValIntConstContext *ctx) = 0;
+  virtual void exitNumValIntConst(CACTParser::NumValIntConstContext *ctx) = 0;
 
-  virtual void enterNumberFloatConst(CACTParser::NumberFloatConstContext *ctx) = 0;
-  virtual void exitNumberFloatConst(CACTParser::NumberFloatConstContext *ctx) = 0;
+  virtual void enterNumValDoubleConst(CACTParser::NumValDoubleConstContext *ctx) = 0;
+  virtual void exitNumValDoubleConst(CACTParser::NumValDoubleConstContext *ctx) = 0;
+
+  virtual void enterNumValFloatConst(CACTParser::NumValFloatConstContext *ctx) = 0;
+  virtual void exitNumValFloatConst(CACTParser::NumValFloatConstContext *ctx) = 0;
+
+  virtual void enterBoolVal(CACTParser::BoolValContext *ctx) = 0;
+  virtual void exitBoolVal(CACTParser::BoolValContext *ctx) = 0;
+
+  virtual void enterLVal(CACTParser::LValContext *ctx) = 0;
+  virtual void exitLVal(CACTParser::LValContext *ctx) = 0;
+
+  virtual void enterFuncVal(CACTParser::FuncValContext *ctx) = 0;
+  virtual void exitFuncVal(CACTParser::FuncValContext *ctx) = 0;
 
 
 };

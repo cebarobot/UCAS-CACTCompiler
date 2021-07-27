@@ -29,14 +29,15 @@ public:
   };
 
   enum {
-    RuleCompUnit = 0, RuleDecl = 1, RuleConstDecl = 2, RuleBType = 3, RuleConstDef = 4, 
-    RuleConstInitVal = 5, RuleVarDecl = 6, RuleVarDef = 7, RuleFuncDef = 8, 
-    RuleFuncType = 9, RuleFuncFParams = 10, RuleFuncFParam = 11, RuleBlock = 12, 
-    RuleBlockItem = 13, RuleStmt = 14, RuleExp = 15, RuleCond = 16, RuleLVal = 17, 
-    RulePrimaryExp = 18, RuleUnaryExp = 19, RuleUnaryOp = 20, RuleFuncRParams = 21, 
-    RuleMulExp = 22, RuleMulOp = 23, RuleAddExp = 24, RuleAddOp = 25, RuleRelExp = 26, 
-    RuleRelOp = 27, RuleEqExp = 28, RuleEqOp = 29, RuleLAndExp = 30, RuleLOrExp = 31, 
-    RuleConstExp = 32, RuleNumber = 33
+    RuleCompUnit = 0, RuleBType = 1, RuleDecl = 2, RuleConstDecl = 3, RuleConstDef = 4, 
+    RuleVarDecl = 5, RuleVarDef = 6, RuleFuncDef = 7, RuleFuncType = 8, 
+    RuleFuncFParams = 9, RuleFuncFParam = 10, RuleBlock = 11, RuleBlockItem = 12, 
+    RuleStmt = 13, RuleExp = 14, RuleCond = 15, RulePrimaryExp = 16, RuleUnaryExp = 17, 
+    RuleUnaryOp = 18, RuleFuncRParams = 19, RuleMulExp = 20, RuleMulOp = 21, 
+    RuleAddExp = 22, RuleAddOp = 23, RuleRelExp = 24, RuleRelOp = 25, RuleEqExp = 26, 
+    RuleEqOp = 27, RuleLAndExp = 28, RuleLOrExp = 29, RuleConstArrExp = 30, 
+    RuleConstExp = 31, RuleNumVal = 32, RuleBoolVal = 33, RuleLVal = 34, 
+    RuleFuncVal = 35
   };
 
   CACTParser(antlr4::TokenStream *input);
@@ -50,11 +51,10 @@ public:
 
 
   class CompUnitContext;
+  class BTypeContext;
   class DeclContext;
   class ConstDeclContext;
-  class BTypeContext;
   class ConstDefContext;
-  class ConstInitValContext;
   class VarDeclContext;
   class VarDefContext;
   class FuncDefContext;
@@ -66,7 +66,6 @@ public:
   class StmtContext;
   class ExpContext;
   class CondContext;
-  class LValContext;
   class PrimaryExpContext;
   class UnaryExpContext;
   class UnaryOpContext;
@@ -81,8 +80,12 @@ public:
   class EqOpContext;
   class LAndExpContext;
   class LOrExpContext;
+  class ConstArrExpContext;
   class ConstExpContext;
-  class NumberContext; 
+  class NumValContext;
+  class BoolValContext;
+  class LValContext;
+  class FuncValContext; 
 
   class  CompUnitContext : public antlr4::ParserRuleContext {
   public:
@@ -100,6 +103,19 @@ public:
   };
 
   CompUnitContext* compUnit();
+
+  class  BTypeContext : public antlr4::ParserRuleContext {
+  public:
+    DataType bDataType;
+    BTypeContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  BTypeContext* bType();
 
   class  DeclContext : public antlr4::ParserRuleContext {
   public:
@@ -130,42 +146,13 @@ public:
 
   ConstDeclContext* constDecl();
 
-  class  BTypeContext : public antlr4::ParserRuleContext {
-  public:
-    DataType bDataType;
-    BTypeContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  BTypeContext* bType();
-
   class  ConstDefContext : public antlr4::ParserRuleContext {
   public:
     SymbolInfo * thisSymbolInfo;
     ConstDefContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *Ident();
-    ConstInitValContext *constInitVal();
-    antlr4::tree::TerminalNode *IntConst();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
    
-  };
-
-  ConstDefContext* constDef();
-
-  class  ConstInitValContext : public antlr4::ParserRuleContext {
-  public:
-    SymbolInfo * thisSymbolInfo;
-    ConstInitValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-   
-    ConstInitValContext() = default;
-    void copyFrom(ConstInitValContext *context);
+    ConstDefContext() = default;
+    void copyFrom(ConstDefContext *context);
     using antlr4::ParserRuleContext::copyFrom;
 
     virtual size_t getRuleIndex() const override;
@@ -173,26 +160,28 @@ public:
    
   };
 
-  class  ConstInitValBasicContext : public ConstInitValContext {
+  class  ConstDefArrayContext : public ConstDefContext {
   public:
-    ConstInitValBasicContext(ConstInitValContext *ctx);
+    ConstDefArrayContext(ConstDefContext *ctx);
 
+    antlr4::tree::TerminalNode *Ident();
+    antlr4::tree::TerminalNode *IntConst();
+    ConstArrExpContext *constArrExp();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
+  class  ConstDefBasicContext : public ConstDefContext {
+  public:
+    ConstDefBasicContext(ConstDefContext *ctx);
+
+    antlr4::tree::TerminalNode *Ident();
     ConstExpContext *constExp();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
-  class  ConstInitValArrayContext : public ConstInitValContext {
-  public:
-    ConstInitValArrayContext(ConstInitValContext *ctx);
-
-    std::vector<ConstExpContext *> constExp();
-    ConstExpContext* constExp(size_t i);
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-  };
-
-  ConstInitValContext* constInitVal();
+  ConstDefContext* constDef();
 
   class  VarDeclContext : public antlr4::ParserRuleContext {
   public:
@@ -213,14 +202,35 @@ public:
   public:
     SymbolInfo * thisSymbolInfo;
     VarDefContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *Ident();
-    antlr4::tree::TerminalNode *IntConst();
-    ConstInitValContext *constInitVal();
+   
+    VarDefContext() = default;
+    void copyFrom(VarDefContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
 
+    virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  VarDefBasicContext : public VarDefContext {
+  public:
+    VarDefBasicContext(VarDefContext *ctx);
+
+    antlr4::tree::TerminalNode *Ident();
+    ConstExpContext *constExp();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
+  };
+
+  class  VarDefArrayContext : public VarDefContext {
+  public:
+    VarDefArrayContext(VarDefContext *ctx);
+
+    antlr4::tree::TerminalNode *Ident();
+    antlr4::tree::TerminalNode *IntConst();
+    ConstArrExpContext *constArrExp();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
   VarDefContext* varDef();
@@ -455,26 +465,6 @@ public:
 
   CondContext* cond();
 
-  class  LValContext : public antlr4::ParserRuleContext {
-  public:
-    bool isVar;
-    bool isArray;
-    size_t arraySize;
-    DataType dataType;
-    SymbolInfo * thisSymbol;
-    IROperand * result;
-    LValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *Ident();
-    ExpContext *exp();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  LValContext* lVal();
-
   class  PrimaryExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
@@ -514,7 +504,7 @@ public:
   public:
     PrimaryNumberContext(PrimaryExpContext *ctx);
 
-    NumberContext *number();
+    NumValContext *numVal();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
@@ -526,7 +516,6 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
-    FuncSymbolInfo * thisFunc;
     IROperand * result;
     UnaryExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
@@ -543,8 +532,7 @@ public:
   public:
     UnaryExpFuncContext(UnaryExpContext *ctx);
 
-    antlr4::tree::TerminalNode *Ident();
-    FuncRParamsContext *funcRParams();
+    FuncValContext *funcVal();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
@@ -886,8 +874,28 @@ public:
 
   LOrExpContext* lOrExp();
   LOrExpContext* lOrExp(int precedence);
+  class  ConstArrExpContext : public antlr4::ParserRuleContext {
+  public:
+    bool isArray;
+    size_t arraySize;
+    DataType dataType;
+    IROperand * result;
+    ConstArrExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<ConstExpContext *> constExp();
+    ConstExpContext* constExp(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  ConstArrExpContext* constArrExp();
+
   class  ConstExpContext : public antlr4::ParserRuleContext {
   public:
+    bool isArray;
+    size_t arraySize;
     DataType dataType;
     IROperand * result;
     ConstExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -901,34 +909,36 @@ public:
    
   };
 
-  class  ConstExpBoolConstContext : public ConstExpContext {
+  class  ConstExpNumValContext : public ConstExpContext {
   public:
-    ConstExpBoolConstContext(ConstExpContext *ctx);
+    ConstExpNumValContext(ConstExpContext *ctx);
 
-    antlr4::tree::TerminalNode *BoolConst();
+    NumValContext *numVal();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
-  class  ConstExpNumberContext : public ConstExpContext {
+  class  ConstExpBoolValContext : public ConstExpContext {
   public:
-    ConstExpNumberContext(ConstExpContext *ctx);
+    ConstExpBoolValContext(ConstExpContext *ctx);
 
-    NumberContext *number();
+    BoolValContext *boolVal();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
   ConstExpContext* constExp();
 
-  class  NumberContext : public antlr4::ParserRuleContext {
+  class  NumValContext : public antlr4::ParserRuleContext {
   public:
+    bool isArray;
+    size_t arraySize;
     DataType dataType;
     IROperand * result;
-    NumberContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    NumValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
-    NumberContext() = default;
-    void copyFrom(NumberContext *context);
+    NumValContext() = default;
+    void copyFrom(NumValContext *context);
     using antlr4::ParserRuleContext::copyFrom;
 
     virtual size_t getRuleIndex() const override;
@@ -936,34 +946,90 @@ public:
    
   };
 
-  class  NumberDoubleConstContext : public NumberContext {
+  class  NumValDoubleConstContext : public NumValContext {
   public:
-    NumberDoubleConstContext(NumberContext *ctx);
+    NumValDoubleConstContext(NumValContext *ctx);
 
     antlr4::tree::TerminalNode *DoubleConst();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
-  class  NumberFloatConstContext : public NumberContext {
+  class  NumValIntConstContext : public NumValContext {
   public:
-    NumberFloatConstContext(NumberContext *ctx);
-
-    antlr4::tree::TerminalNode *FloatConst();
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-  };
-
-  class  NumberIntConstContext : public NumberContext {
-  public:
-    NumberIntConstContext(NumberContext *ctx);
+    NumValIntConstContext(NumValContext *ctx);
 
     antlr4::tree::TerminalNode *IntConst();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
-  NumberContext* number();
+  class  NumValFloatConstContext : public NumValContext {
+  public:
+    NumValFloatConstContext(NumValContext *ctx);
+
+    antlr4::tree::TerminalNode *FloatConst();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
+  NumValContext* numVal();
+
+  class  BoolValContext : public antlr4::ParserRuleContext {
+  public:
+    bool isArray;
+    size_t arraySize;
+    DataType dataType;
+    IROperand * result;
+    BoolValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *BoolConst();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  BoolValContext* boolVal();
+
+  class  LValContext : public antlr4::ParserRuleContext {
+  public:
+    bool isVar;
+    bool isArray;
+    size_t arraySize;
+    DataType dataType;
+    IROperand * result;
+    SymbolInfo * thisSymbol;
+    LValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Ident();
+    ExpContext *exp();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  LValContext* lVal();
+
+  class  FuncValContext : public antlr4::ParserRuleContext {
+  public:
+    bool isArray;
+    size_t arraySize;
+    DataType dataType;
+    IROperand * result;
+    FuncSymbolInfo * thisFunc;
+    FuncValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Ident();
+    FuncRParamsContext *funcRParams();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  FuncValContext* funcVal();
 
 
   virtual bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;

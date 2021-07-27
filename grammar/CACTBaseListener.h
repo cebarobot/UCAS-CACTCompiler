@@ -25,29 +25,29 @@ public:
   virtual void enterCompUnit(CACTParser::CompUnitContext * /*ctx*/) override { }
   virtual void exitCompUnit(CACTParser::CompUnitContext * /*ctx*/) override { }
 
+  virtual void enterBType(CACTParser::BTypeContext * /*ctx*/) override { }
+  virtual void exitBType(CACTParser::BTypeContext * /*ctx*/) override { }
+
   virtual void enterDecl(CACTParser::DeclContext * /*ctx*/) override { }
   virtual void exitDecl(CACTParser::DeclContext * /*ctx*/) override { }
 
   virtual void enterConstDecl(CACTParser::ConstDeclContext * /*ctx*/) override { }
   virtual void exitConstDecl(CACTParser::ConstDeclContext * /*ctx*/) override { }
 
-  virtual void enterBType(CACTParser::BTypeContext * /*ctx*/) override { }
-  virtual void exitBType(CACTParser::BTypeContext * /*ctx*/) override { }
+  virtual void enterConstDefBasic(CACTParser::ConstDefBasicContext * /*ctx*/) override { }
+  virtual void exitConstDefBasic(CACTParser::ConstDefBasicContext * /*ctx*/) override { }
 
-  virtual void enterConstDef(CACTParser::ConstDefContext * /*ctx*/) override { }
-  virtual void exitConstDef(CACTParser::ConstDefContext * /*ctx*/) override { }
-
-  virtual void enterConstInitValBasic(CACTParser::ConstInitValBasicContext * /*ctx*/) override { }
-  virtual void exitConstInitValBasic(CACTParser::ConstInitValBasicContext * /*ctx*/) override { }
-
-  virtual void enterConstInitValArray(CACTParser::ConstInitValArrayContext * /*ctx*/) override { }
-  virtual void exitConstInitValArray(CACTParser::ConstInitValArrayContext * /*ctx*/) override { }
+  virtual void enterConstDefArray(CACTParser::ConstDefArrayContext * /*ctx*/) override { }
+  virtual void exitConstDefArray(CACTParser::ConstDefArrayContext * /*ctx*/) override { }
 
   virtual void enterVarDecl(CACTParser::VarDeclContext * /*ctx*/) override { }
   virtual void exitVarDecl(CACTParser::VarDeclContext * /*ctx*/) override { }
 
-  virtual void enterVarDef(CACTParser::VarDefContext * /*ctx*/) override { }
-  virtual void exitVarDef(CACTParser::VarDefContext * /*ctx*/) override { }
+  virtual void enterVarDefBasic(CACTParser::VarDefBasicContext * /*ctx*/) override { }
+  virtual void exitVarDefBasic(CACTParser::VarDefBasicContext * /*ctx*/) override { }
+
+  virtual void enterVarDefArray(CACTParser::VarDefArrayContext * /*ctx*/) override { }
+  virtual void exitVarDefArray(CACTParser::VarDefArrayContext * /*ctx*/) override { }
 
   virtual void enterFuncDef(CACTParser::FuncDefContext * /*ctx*/) override { }
   virtual void exitFuncDef(CACTParser::FuncDefContext * /*ctx*/) override { }
@@ -99,9 +99,6 @@ public:
 
   virtual void enterCond(CACTParser::CondContext * /*ctx*/) override { }
   virtual void exitCond(CACTParser::CondContext * /*ctx*/) override { }
-
-  virtual void enterLVal(CACTParser::LValContext * /*ctx*/) override { }
-  virtual void exitLVal(CACTParser::LValContext * /*ctx*/) override { }
 
   virtual void enterPrimaryExpExp(CACTParser::PrimaryExpExpContext * /*ctx*/) override { }
   virtual void exitPrimaryExpExp(CACTParser::PrimaryExpExpContext * /*ctx*/) override { }
@@ -178,20 +175,32 @@ public:
   virtual void enterLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * /*ctx*/) override { }
   virtual void exitLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * /*ctx*/) override { }
 
-  virtual void enterConstExpNumber(CACTParser::ConstExpNumberContext * /*ctx*/) override { }
-  virtual void exitConstExpNumber(CACTParser::ConstExpNumberContext * /*ctx*/) override { }
+  virtual void enterConstArrExp(CACTParser::ConstArrExpContext * /*ctx*/) override { }
+  virtual void exitConstArrExp(CACTParser::ConstArrExpContext * /*ctx*/) override { }
 
-  virtual void enterConstExpBoolConst(CACTParser::ConstExpBoolConstContext * /*ctx*/) override { }
-  virtual void exitConstExpBoolConst(CACTParser::ConstExpBoolConstContext * /*ctx*/) override { }
+  virtual void enterConstExpNumVal(CACTParser::ConstExpNumValContext * /*ctx*/) override { }
+  virtual void exitConstExpNumVal(CACTParser::ConstExpNumValContext * /*ctx*/) override { }
 
-  virtual void enterNumberIntConst(CACTParser::NumberIntConstContext * /*ctx*/) override { }
-  virtual void exitNumberIntConst(CACTParser::NumberIntConstContext * /*ctx*/) override { }
+  virtual void enterConstExpBoolVal(CACTParser::ConstExpBoolValContext * /*ctx*/) override { }
+  virtual void exitConstExpBoolVal(CACTParser::ConstExpBoolValContext * /*ctx*/) override { }
 
-  virtual void enterNumberDoubleConst(CACTParser::NumberDoubleConstContext * /*ctx*/) override { }
-  virtual void exitNumberDoubleConst(CACTParser::NumberDoubleConstContext * /*ctx*/) override { }
+  virtual void enterNumValIntConst(CACTParser::NumValIntConstContext * /*ctx*/) override { }
+  virtual void exitNumValIntConst(CACTParser::NumValIntConstContext * /*ctx*/) override { }
 
-  virtual void enterNumberFloatConst(CACTParser::NumberFloatConstContext * /*ctx*/) override { }
-  virtual void exitNumberFloatConst(CACTParser::NumberFloatConstContext * /*ctx*/) override { }
+  virtual void enterNumValDoubleConst(CACTParser::NumValDoubleConstContext * /*ctx*/) override { }
+  virtual void exitNumValDoubleConst(CACTParser::NumValDoubleConstContext * /*ctx*/) override { }
+
+  virtual void enterNumValFloatConst(CACTParser::NumValFloatConstContext * /*ctx*/) override { }
+  virtual void exitNumValFloatConst(CACTParser::NumValFloatConstContext * /*ctx*/) override { }
+
+  virtual void enterBoolVal(CACTParser::BoolValContext * /*ctx*/) override { }
+  virtual void exitBoolVal(CACTParser::BoolValContext * /*ctx*/) override { }
+
+  virtual void enterLVal(CACTParser::LValContext * /*ctx*/) override { }
+  virtual void exitLVal(CACTParser::LValContext * /*ctx*/) override { }
+
+  virtual void enterFuncVal(CACTParser::FuncValContext * /*ctx*/) override { }
+  virtual void exitFuncVal(CACTParser::FuncValContext * /*ctx*/) override { }
 
 
   virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }

@@ -17,15 +17,6 @@ compUnit
     : (decl | funcDef)* EOF
     ;
 
-decl
-    : constDecl
-    | varDecl
-    ;
-
-constDecl
-    : 'const' bType constDef (',' constDef)* ';'
-    ;
-
 bType
     locals [
         DataType bDataType
@@ -36,19 +27,21 @@ bType
     | 'float'
     ;
 
+decl
+    : constDecl
+    | varDecl
+    ;
+
+constDecl
+    : 'const' bType constDef (',' constDef)* ';'
+    ;
+
 constDef
     locals[
         SymbolInfo * thisSymbolInfo
     ]
-    : Ident ('[' IntConst ']')? '=' constInitVal
-    ;
-
-constInitVal
-    locals[
-        SymbolInfo * thisSymbolInfo
-    ]
-    : constExp                                  #constInitValBasic
-    | '{' (constExp (',' constExp)*)? '}'       #constInitValArray
+    : Ident                  '=' constExp           #constDefBasic
+    | Ident '[' IntConst ']' '=' constArrExp        #constDefArray
     ;
 
 varDecl
@@ -59,8 +52,8 @@ varDef
     locals[
         SymbolInfo * thisSymbolInfo
     ]
-    : Ident ('[' IntConst ']')?
-    | Ident ('[' IntConst ']')? '=' constInitVal
+    : Ident                  ('=' constExp)?        #varDefBasic
+    | Ident '[' IntConst ']' ('=' constArrExp)?     #varDefArray
     ;
 
 funcDef
@@ -122,8 +115,8 @@ exp
         DataType dataType,
         IROperand * result
     ]
-    : addExp        #expAddExp
-    | BoolConst     #expBoolConst
+    : addExp                    #expAddExp
+    | BoolConst                 #expBoolConst
     ;
 
 cond
@@ -134,18 +127,6 @@ cond
     : lOrExp
     ;
 
-lVal
-    locals[
-        bool isVar,
-        bool isArray,
-        size_t arraySize,
-        DataType dataType, 
-        SymbolInfo * thisSymbol,
-        IROperand * result
-    ]
-    : Ident ('[' exp ']')?
-    ;
-
 primaryExp
     locals[
         bool isArray,
@@ -153,9 +134,9 @@ primaryExp
         DataType dataType,
         IROperand * result
     ]
-    : '(' exp ')'       #primaryExpExp
-    | lVal              #primaryExpLVal
-    | number            #primaryNumber
+    : '(' exp ')'               #primaryExpExp
+    | lVal                      #primaryExpLVal
+    | numVal                    #primaryNumber
     ;
 
 unaryExp
@@ -163,12 +144,11 @@ unaryExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        FuncSymbolInfo * thisFunc,
         IROperand * result
     ]
-    : primaryExp                    #unaryExpPrimaryExp
-    | Ident '(' (funcRParams)? ')'  #unaryExpFunc
-    | unaryOp unaryExp              #unaryExpUnaryOp
+    : primaryExp                #unaryExpPrimaryExp
+    | funcVal                   #unaryExpFunc
+    | unaryOp unaryExp          #unaryExpUnaryOp
     ;
 
 unaryOp
@@ -259,8 +239,8 @@ lAndExp
         DataType dataType,
         IROperand * result
     ]
-    : eqExp                 #lAndExpEqExp
-    | lAndExp ('&&') eqExp  #lAndExpLAndExp
+    : eqExp                     #lAndExpEqExp
+    | lAndExp '&&' eqExp        #lAndExpLAndExp
     ;
 
 lOrExp
@@ -270,27 +250,74 @@ lOrExp
         DataType dataType,
         IROperand * result
     ]
-    : lAndExp               #lOrExpLAndExp
-    | lOrExp ('||') lAndExp #lOrExpLOrExp
+    : lAndExp                   #lOrExpLAndExp
+    | lOrExp '||' lAndExp       #lOrExpLOrExp
+    ;
+
+constArrExp
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+        IROperand * result
+    ]
+    : '{' (constExp (',' constExp)*)? '}'
     ;
 
 constExp
     locals[
+        bool isArray,
+        size_t arraySize,
         DataType dataType,
         IROperand * result
     ]
-    : number            #constExpNumber
-    | BoolConst         #constExpBoolConst
+    : numVal                    #constExpNumVal
+    | boolVal                   #constExpBoolVal
     ;
 
-number
+numVal
     locals[
+        bool isArray,
+        size_t arraySize,
         DataType dataType,
         IROperand * result
     ]
-    : IntConst          #numberIntConst
-    | DoubleConst       #numberDoubleConst
-    | FloatConst        #numberFloatConst
+    : IntConst                  #numValIntConst
+    | DoubleConst               #numValDoubleConst
+    | FloatConst                #numValFloatConst
+    ;
+
+boolVal
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+        IROperand * result
+    ]
+    : BoolConst
+    ;
+
+lVal
+    locals[
+        bool isVar,
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+        IROperand * result, 
+        SymbolInfo * thisSymbol
+    ]
+    : Ident ('[' exp ']')?
+    ;
+
+funcVal
+    locals[
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+        IROperand * result,
+        FuncSymbolInfo * thisFunc,
+    ]
+    : Ident '(' (funcRParams)? ')'
     ;
 
 /********** Lexer **********/

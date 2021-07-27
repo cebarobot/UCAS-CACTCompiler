@@ -2,7 +2,7 @@
 
 #include "../grammar/CACTBaseListener.h"
 #include "symbolTable.h"
-#include "IR.h"
+#include "IRGenerator.h"
 
 class SemanticAnalysis : public CACTBaseListener {
 private:
@@ -12,17 +12,18 @@ private:
     SymbolInfo * currentSymbol;
     FuncSymbolInfo * currentFunc;
     DataType currentDataType;
-
-    IRProgram * ir;
-    IRFunction * currentIRFunc;
-
+    
+    IRGenerator * irGen;
 public:
-    SemanticAnalysis(BlockInfo * globalBlock, IRProgram * new_ir);
+    SemanticAnalysis(BlockInfo * globalBlock, IRGenerator * newIRGen);
     ~SemanticAnalysis(){}
 
 
     void enterCompUnit(CACTParser::CompUnitContext * ctx) override;
     void exitCompUnit(CACTParser::CompUnitContext * ctx) override;
+
+    void enterBType(CACTParser::BTypeContext * ctx) override;
+    void exitBType(CACTParser::BTypeContext * ctx) override;
 
     void enterDecl(CACTParser::DeclContext * ctx) override;
     void exitDecl(CACTParser::DeclContext * ctx) override;
@@ -30,24 +31,20 @@ public:
     void enterConstDecl(CACTParser::ConstDeclContext * ctx) override;
     void exitConstDecl(CACTParser::ConstDeclContext * ctx) override;
 
-    void enterBType(CACTParser::BTypeContext * ctx) override;
-    void exitBType(CACTParser::BTypeContext * ctx) override;
+    void enterConstDefBasic(CACTParser::ConstDefBasicContext * ctx) override;
+    void exitConstDefBasic(CACTParser::ConstDefBasicContext * ctx) override;
 
-    void enterConstDef(CACTParser::ConstDefContext * ctx) override;
-    void exitConstDef(CACTParser::ConstDefContext * ctx) override;
-
-    void enterConstInitValBasic(CACTParser::ConstInitValBasicContext * ctx) override;
-    void exitConstInitValBasic(CACTParser::ConstInitValBasicContext * ctx) override;
-
-    void enterConstInitValArray(CACTParser::ConstInitValArrayContext * ctx) override;
-    void exitConstInitValArray(CACTParser::ConstInitValArrayContext * ctx) override;
-
-
+    void enterConstDefArray(CACTParser::ConstDefArrayContext * ctx) override;
+    void exitConstDefArray(CACTParser::ConstDefArrayContext * ctx) override;
+  
     void enterVarDecl(CACTParser::VarDeclContext * ctx) override;
     void exitVarDecl(CACTParser::VarDeclContext * ctx) override;
 
-    void enterVarDef(CACTParser::VarDefContext * ctx) override;
-    void exitVarDef(CACTParser::VarDefContext * ctx) override;
+    void enterVarDefBasic(CACTParser::VarDefBasicContext * ctx) override;
+    void exitVarDefBasic(CACTParser::VarDefBasicContext * ctx) override;
+
+    void enterVarDefArray(CACTParser::VarDefArrayContext * ctx) override;
+    void exitVarDefArray(CACTParser::VarDefArrayContext * ctx) override;
 
     void enterFuncDef(CACTParser::FuncDefContext * ctx) override;
     void exitFuncDef(CACTParser::FuncDefContext * ctx) override;
@@ -99,9 +96,6 @@ public:
 
     void enterCond(CACTParser::CondContext * ctx) override;
     void exitCond(CACTParser::CondContext * ctx) override;
-
-    void enterLVal(CACTParser::LValContext * ctx) override;
-    void exitLVal(CACTParser::LValContext * ctx) override;
 
     void enterPrimaryExpExp(CACTParser::PrimaryExpExpContext * ctx) override;
     void exitPrimaryExpExp(CACTParser::PrimaryExpExpContext * ctx) override;
@@ -178,21 +172,32 @@ public:
     void enterLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * ctx) override;
     void exitLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * ctx) override;
 
-    void enterConstExpNumber(CACTParser::ConstExpNumberContext * ctx) override;
-    void exitConstExpNumber(CACTParser::ConstExpNumberContext * ctx) override;
+    void enterConstExpNumVal(CACTParser::ConstExpNumValContext * ctx) override;
+    void exitConstExpNumVal(CACTParser::ConstExpNumValContext * ctx) override;
 
-    void enterConstExpBoolConst(CACTParser::ConstExpBoolConstContext * ctx) override;
-    void exitConstExpBoolConst(CACTParser::ConstExpBoolConstContext * ctx) override;
+    void enterConstArrExp(CACTParser::ConstArrExpContext * ctx) override;
+    void exitConstArrExp(CACTParser::ConstArrExpContext * ctx) override;
 
-    void enterNumberIntConst(CACTParser::NumberIntConstContext * ctx) override;
-    void exitNumberIntConst(CACTParser::NumberIntConstContext * ctx) override;
+    void enterConstExpBoolVal(CACTParser::ConstExpBoolValContext * ctx) override;
+    void exitConstExpBoolVal(CACTParser::ConstExpBoolValContext * ctx) override;
 
-    void enterNumberDoubleConst(CACTParser::NumberDoubleConstContext * ctx) override;
-    void exitNumberDoubleConst(CACTParser::NumberDoubleConstContext * ctx) override;
+    void enterNumValIntConst(CACTParser::NumValIntConstContext * ctx) override;
+    void exitNumValIntConst(CACTParser::NumValIntConstContext * ctx) override;
 
-    void enterNumberFloatConst(CACTParser::NumberFloatConstContext * ctx) override;
-    void exitNumberFloatConst(CACTParser::NumberFloatConstContext * ctx) override;
+    void enterNumValDoubleConst(CACTParser::NumValDoubleConstContext * ctx) override;
+    void exitNumValDoubleConst(CACTParser::NumValDoubleConstContext * ctx) override;
 
+    void enterNumValFloatConst(CACTParser::NumValFloatConstContext * ctx) override;
+    void exitNumValFloatConst(CACTParser::NumValFloatConstContext * ctx) override;
+
+    void enterBoolVal(CACTParser::BoolValContext * ctx) override;
+    void exitBoolVal(CACTParser::BoolValContext * ctx) override;
+
+    void enterLVal(CACTParser::LValContext * ctx) override;
+    void exitLVal(CACTParser::LValContext * ctx) override;
+
+    void enterFuncVal(CACTParser::FuncValContext * ctx) override;
+    void exitFuncVal(CACTParser::FuncValContext * ctx) override;
 
     void enterEveryRule(antlr4::ParserRuleContext * ctx) override;
     void exitEveryRule(antlr4::ParserRuleContext * ctx) override;
