@@ -879,7 +879,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
-    IROperand * result;
+    IRValue * result;
     ConstArrExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<ConstExpContext *> constExp();

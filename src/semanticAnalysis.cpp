@@ -98,10 +98,24 @@ void SemanticAnalysis::enterConstDefBasic(CACTParser::ConstDefBasicContext * ctx
     std::string name = ctx->Ident()->getText();
 
     ctx->thisSymbolInfo = currentBlock->addNewConst(name, currentDataType);
-
 }
 void SemanticAnalysis::exitConstDefBasic(CACTParser::ConstDefBasicContext * ctx) {
+    std::string name = ctx->Ident()->getText();
+    IRValue * initVal = ctx->constExp()->result;
 
+    if (ctx->constExp()->dataType != currentDataType) {
+        throw std::runtime_error("inital value data type not match.");
+    }
+
+    if (currentFunc) {
+        IRVariable* irVar = irGen->newVar(name, currentDataType);
+        irGen->assignBasic(currentDataType, irVar, initVal);
+        ctx->thisSymbolInfo->setOp(irVar);
+
+    } else {
+        initVal->setName(name);
+        ctx->thisSymbolInfo->setOp(initVal);
+    }
 }
 
 void SemanticAnalysis::enterConstDefArray(CACTParser::ConstDefArrayContext * ctx) {
@@ -111,7 +125,28 @@ void SemanticAnalysis::enterConstDefArray(CACTParser::ConstDefArrayContext * ctx
     ctx->thisSymbolInfo = currentBlock->addNewConstArray(name, currentDataType, arraySize);
 }
 void SemanticAnalysis::exitConstDefArray(CACTParser::ConstDefArrayContext * ctx) {
+    std::string name = ctx->Ident()->getText();
+    size_t arraySize = std::stoi(ctx->IntConst()->getText());
+    IRValue * initVal = ctx->constArrExp()->result;
+    
+    if (ctx->constArrExp()->dataType != currentDataType) {
+        throw std::runtime_error("inital value data type not match.");
+    }
 
+    if (ctx->constArrExp()->arraySize > arraySize) {
+        throw std::runtime_error("inital value array size not match.");
+    }
+    initVal->fillValue(arraySize);
+
+    if (currentFunc) {
+        IRVariable * irVar = irGen->newVar(name, currentDataType, arraySize);
+        irGen->assignArray(currentDataType, arraySize, irVar, initVal);
+        ctx->thisSymbolInfo->setOp(irVar);
+
+    } else {
+        initVal->setName(name);
+        ctx->thisSymbolInfo->setOp(initVal);
+    }
 }
 
 void SemanticAnalysis::enterVarDecl(CACTParser::VarDeclContext * ctx) {
@@ -122,17 +157,71 @@ void SemanticAnalysis::exitVarDecl(CACTParser::VarDeclContext * ctx) {
 }
 
 void SemanticAnalysis::enterVarDefBasic(CACTParser::VarDefBasicContext * ctx) {
+    std::string name = ctx->Ident()->getText();
 
+    ctx->thisSymbolInfo = currentBlock->addNewVar(name, currentDataType);
 }
 void SemanticAnalysis::exitVarDefBasic(CACTParser::VarDefBasicContext * ctx) {
+    std::string name = ctx->Ident()->getText();
+    IRValue * initVal;
 
+    if (ctx->constExp()) {
+        initVal = ctx->constExp()->result;
+
+        if (ctx->constExp()->dataType != currentDataType) {
+            throw std::runtime_error("inital value data type not match.");
+        }
+
+    } else {
+        initVal = irGen->newValue(currentDataType, "0");
+    }
+
+    if (currentFunc) {
+        IRVariable * irVar = irGen->newVar(name, currentDataType);
+        irGen->assignBasic(currentDataType, irVar, initVal);
+        ctx->thisSymbolInfo->setOp(irVar);
+
+    } else {
+        initVal->setName(name);
+        ctx->thisSymbolInfo->setOp(initVal);
+    }
 }
 
 void SemanticAnalysis::enterVarDefArray(CACTParser::VarDefArrayContext * ctx) {
+    std::string name = ctx->Ident()->getText();
+    size_t arraySize = std::stoi(ctx->IntConst()->getText());
 
+    ctx->thisSymbolInfo = currentBlock->addNewVarArray(name, currentDataType, arraySize);
 }
 void SemanticAnalysis::exitVarDefArray(CACTParser::VarDefArrayContext * ctx) {
+    std::string name = ctx->Ident()->getText();
+    size_t arraySize = std::stoi(ctx->IntConst()->getText());
+    IRValue * initVal;
 
+    if (ctx->constArrExp()) {
+        initVal = ctx->constArrExp()->result;
+
+        if (ctx->constArrExp()->dataType != currentDataType) {
+            throw std::runtime_error("inital value data type not match.");
+        }
+        
+        if (ctx->constArrExp()->arraySize > arraySize) {
+            throw std::runtime_error("inital value array size not match.");
+        }
+    } else {
+        initVal = irGen->newValue(currentDataType);
+    }
+    initVal->fillValue(arraySize);
+
+    if (currentFunc) {
+        IRVariable * irVar = irGen->newVar(name, currentDataType, arraySize);
+        irGen->assignArray(currentDataType, arraySize, irVar, initVal);
+        ctx->thisSymbolInfo->setOp(irVar);
+
+    } else {
+        initVal->setName(name);
+        ctx->thisSymbolInfo->setOp(initVal);
+    }
 }
 
 void SemanticAnalysis::enterFuncDef(CACTParser::FuncDefContext * ctx) {
@@ -747,14 +836,6 @@ void SemanticAnalysis::exitLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * ctx) {
     }
 }
 
-void SemanticAnalysis::enterConstExpNumVal(CACTParser::ConstExpNumValContext * ctx) {
-    // nothing to do
-}
-void SemanticAnalysis::exitConstExpNumVal(CACTParser::ConstExpNumValContext * ctx) {
-    ctx->dataType = ctx->number()->dataType;
-    ctx->result = ctx->number()->result;
-}
-
 void SemanticAnalysis::enterConstArrExp(CACTParser::ConstArrExpContext * ctx) {
 
 }
@@ -762,32 +843,52 @@ void SemanticAnalysis::exitConstArrExp(CACTParser::ConstArrExpContext * ctx) {
     
 }
 
+void SemanticAnalysis::enterConstExpNumVal(CACTParser::ConstExpNumValContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitConstExpNumVal(CACTParser::ConstExpNumValContext * ctx) {
+    ctx->isArray = ctx->numVal()->isArray;
+    ctx->arraySize = ctx->numVal()->arraySize;
+    ctx->dataType = ctx->numVal()->dataType;
+    ctx->result = ctx->numVal()->result;
+}
+
 void SemanticAnalysis::enterConstExpBoolVal(CACTParser::ConstExpBoolValContext * ctx) {
     // nothing to do
 }
 void SemanticAnalysis::exitConstExpBoolVal(CACTParser::ConstExpBoolValContext * ctx) {
-    ctx->dataType = DataType::BOOL;
+    ctx->isArray = ctx->boolVal()->isArray;
+    ctx->arraySize = ctx->boolVal()->arraySize;
+    ctx->dataType = ctx->boolVal()->dataType;
+    ctx->result = ctx->boolVal()->result;
 }
 
 void SemanticAnalysis::enterNumValIntConst(CACTParser::NumValIntConstContext * ctx) {
     // nothing to do
 }
 void SemanticAnalysis::exitNumValIntConst(CACTParser::NumValIntConstContext * ctx) {
+    ctx->isArray = false;
+    ctx->arraySize = 0;
     ctx->dataType = DataType::INT;
-}
-
-void SemanticAnalysis::enterNumValDoubleConst(CACTParser::NumValDoubleConstContext * ctx) {
-    // nothing to do
-}
-void SemanticAnalysis::exitNumValDoubleConst(CACTParser::NumValDoubleConstContext * ctx) {
-    ctx->dataType = DataType::DOUBLE;
+    // ctx->result = irGen->
 }
 
 void SemanticAnalysis::enterNumValFloatConst(CACTParser::NumValFloatConstContext * ctx) {
     // nothing to do
 }
 void SemanticAnalysis::exitNumValFloatConst(CACTParser::NumValFloatConstContext * ctx) {
+    ctx->isArray = false;
+    ctx->arraySize = 0;
     ctx->dataType = DataType::FLOAT;
+}
+
+void SemanticAnalysis::enterNumValDoubleConst(CACTParser::NumValDoubleConstContext * ctx) {
+    // nothing to do
+}
+void SemanticAnalysis::exitNumValDoubleConst(CACTParser::NumValDoubleConstContext * ctx) {
+    ctx->isArray = false;
+    ctx->arraySize = 0;
+    ctx->dataType = DataType::DOUBLE;
 }
 
 void SemanticAnalysis::enterBoolVal(CACTParser::BoolValContext * ctx) {

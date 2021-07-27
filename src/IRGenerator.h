@@ -9,6 +9,12 @@ private:
     IRFunction * currentIRFunc;
 
     IRValue * currentIRVal;
+
+    int tempCount;
+    int valueCount;
+
+    IRLabel * arrRepeatLabel;
+    IROperand * arrRepeatVar;
 public:
     IRGenerator(IRProgram * newIR);
 
@@ -18,13 +24,26 @@ public:
     void startConstArr();
     void endConstArr();
 
-    IRVariable * newArray(std::string name, DataType dataType, size_t arraySize);
-    void addArrValue();
-    void addArrValue(std::string newValue);
-    void endNewArray();
+    IRValue * newValue(DataType dataType);
+    IRValue * newValue(DataType dataType, std::string value);
 
     IRVariable * newVar(std::string name, DataType dataType);
+    IRVariable * newVar(std::string name, DataType dataType, size_t len);
 
     IRLabel * newLabel(std::string name);
     IRLabel * newLabel();
+
+    IRValue * newInt(int intVal);
+
+    IRVariable * newTemp(int size);
+    IRVariable * newIntTemp();
+
+    void startArrOp(DataType datatype, size_t len);
+    void endArrOp();
+    IROperand * getArrRepeatVar();
+
+    void addCode(IRCode * newCode);
+
+    void assignBasic(DataType datatype, IROperand * d, IROperand * s);
+    void assignArray(DataType datatype, size_t len, IROperand * d, IROperand * s);
 };

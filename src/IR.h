@@ -20,7 +20,7 @@ public:
 
 class IRProgram {
 public:
-    std::vector<IRVariable *> globalVariables;
+    std::vector<IRValue *> globalValues;
     std::vector<IRFunction *> functions;
 
     std::vector<IRLabel *> labels;

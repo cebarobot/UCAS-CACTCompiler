@@ -259,7 +259,7 @@ constArrExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        IROperand * result
+        IRValue * result
     ]
     : '{' (constExp (',' constExp)*)? '}'
     ;

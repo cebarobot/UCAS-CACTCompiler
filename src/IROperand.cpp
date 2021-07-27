@@ -7,6 +7,10 @@ bool IRLabel::isVariable() {
     return true;
 }
 
+void IRValue::setName(std::string newName) {
+    name = newName;
+}
+
 std::string IRLabel::getName() {
     return name;
 }
@@ -23,6 +27,10 @@ bool IRVariable::isVariable() {
     return true;
 }
 
+void IRValue::setName(std::string newName) {
+    name = newName;
+}
+
 std::string IRVariable::getName() {
     return name;
 }
@@ -32,11 +40,21 @@ std::string IRVariable::getTarget() {
 }
 
 
-IRValue::IRValue(std::string newName, DataType newDataType, bool newIsVar) 
-: name(newName), dataType(newDataType), isVar(newIsVar) { }
+IRValue::IRValue(std::string newName, DataType newDataType) 
+: name(newName), dataType(newDataType), isVar(true) { }
+
+
+IRValue::IRValue(int newVal)
+: name(std::to_string(newVal)), dataType(INT), isVar(true) {
+    values.push_back(std::to_string(newVal));
+}
 
 bool IRValue::isVariable() {
     return isVar;
+}
+
+void IRValue::setName(std::string newName) {
+    name = newName;
 }
 
 std::string IRValue::getName() {
@@ -45,4 +63,25 @@ std::string IRValue::getName() {
 
 std::string IRValue::getTarget() {
     // TODO:
+}
+
+void IRValue::addValue(std::string newValue) {
+    values.push_back(newValue);
+}
+
+std::string IRValue::getValue(int x) {
+    if (x >= values.size()) {
+        throw std::runtime_error("irGen: wrong index");
+    }
+    return values[x];
+}
+
+std::vector<std::string> IRValue::getValue() {
+    return values;
+}
+
+void IRValue::fillValue(int len) {
+    while (values.size() < len) {
+        values.push_back("0");
+    }
 }

@@ -17,6 +17,7 @@ public:
     virtual ~IROperand() {}
 
     virtual bool isVariable() = 0;
+    virtual void setName(std::string) = 0;
     virtual std::string getName() = 0;
     virtual std::string getTarget() = 0;
 };
@@ -28,6 +29,7 @@ public:
     IRLabel(std::string newName);
 
     virtual bool isVariable();
+    virtual void setName(std::string);
     virtual std::string getName();
     virtual std::string getTarget();
 };
@@ -41,6 +43,7 @@ public:
     IRVariable(std::string newName, int newSize);
 
     virtual bool isVariable();
+    virtual void setName(std::string);
     virtual std::string getName();
     virtual std::string getTarget();
 };
@@ -50,15 +53,21 @@ private:
     std::string name;
     bool isVar;
     DataType dataType;
-    std::vector<std::string> value;
+    std::vector<std::string> values;
 
 public:
-    IRValue(std::string newName, DataType newDataType, bool newIsVar);
+    IRValue(std::string newName, DataType newDataType);
+    IRValue(int newVal);
 
     virtual bool isVariable();
     virtual std::string getName();
+    virtual void setName(std::string);
     virtual std::string getTarget();
 
+
     void addValue(std::string newValue);
+    std::string getValue(int x);
+    std::vector<std::string> getValue();
+    void fillValue(int len);
 };
 
