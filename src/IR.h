@@ -23,5 +23,7 @@ public:
     std::vector<IRVariable *> globalVariables;
     std::vector<IRFunction *> functions;
 
+    std::vector<IRLabel *> labels;
+
     void print();
 };

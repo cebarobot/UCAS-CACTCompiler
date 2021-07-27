@@ -897,7 +897,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
-    IROperand * result;
+    IRValue * result;
     ConstExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     ConstExpContext() = default;
@@ -934,7 +934,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
-    IROperand * result;
+    IRValue * result;
     NumValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     NumValContext() = default;
@@ -980,7 +980,7 @@ public:
     bool isArray;
     size_t arraySize;
     DataType dataType;
-    IROperand * result;
+    IRValue * result;
     BoolValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *BoolConst();

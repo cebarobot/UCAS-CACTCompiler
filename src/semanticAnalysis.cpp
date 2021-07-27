@@ -8,27 +8,43 @@ SemanticAnalysis::SemanticAnalysis(BlockInfo * globalBlock, IRGenerator * newIRG
 
 void SemanticAnalysis::enterCompUnit(CACTParser::CompUnitContext * ctx) {
     // add build-in functions
+    IRLabel * funcLabel;
+
     FuncSymbolInfo * printBoolFunc = globalBlock->addNewFunc("print_bool", DataType::VOID);
     printBoolFunc->addParamVar("value", DataType::BOOL);
     printBoolFunc->calcParamNum();
+    printBoolFunc->setOp(irGen->newLabel("print_bool"));
+
     FuncSymbolInfo * printIntFunc = globalBlock->addNewFunc("print_int", DataType::VOID);
     printIntFunc->addParamVar("value", DataType::INT);
     printIntFunc->calcParamNum();
+    printIntFunc->setOp(irGen->newLabel("print_int"));
+    
     FuncSymbolInfo * printFloatFunc = globalBlock->addNewFunc("print_float", DataType::VOID);
     printFloatFunc->addParamVar("value", DataType::FLOAT);
     printFloatFunc->calcParamNum();
+    printFloatFunc->setOp(irGen->newLabel("print_float"));
+
     FuncSymbolInfo * printDoubleFunc = globalBlock->addNewFunc("print_double", DataType::VOID);
     printDoubleFunc->addParamVar("value", DataType::DOUBLE);
     printDoubleFunc->calcParamNum();
+    printDoubleFunc->setOp(irGen->newLabel("print_double"));
 
     FuncSymbolInfo * getBoolFunc = globalBlock->addNewFunc("get_bool", DataType::BOOL);
     getBoolFunc->calcParamNum();
+    getBoolFunc->setOp(irGen->newLabel("get_bool"));
+
     FuncSymbolInfo * getIntFunc = globalBlock->addNewFunc("get_int", DataType::INT);
     getIntFunc->calcParamNum();
+    getIntFunc->setOp(irGen->newLabel("get_int"));
+
     FuncSymbolInfo * getFloatFunc = globalBlock->addNewFunc("get_float", DataType::FLOAT);
     getFloatFunc->calcParamNum();
+    getFloatFunc->setOp(irGen->newLabel("get_float"));
+
     FuncSymbolInfo * getDoubleFunc = globalBlock->addNewFunc("get_double", DataType::DOUBLE);
     getDoubleFunc->calcParamNum();
+    getDoubleFunc->setOp(irGen->newLabel("get_double"));
 }
 
 void SemanticAnalysis::exitCompUnit(CACTParser::CompUnitContext * ctx) {
@@ -80,13 +96,11 @@ void SemanticAnalysis::exitConstDecl(CACTParser::ConstDeclContext * ctx) {
 
 void SemanticAnalysis::enterConstDefBasic(CACTParser::ConstDefBasicContext * ctx) {
     std::string name = ctx->Ident()->getText();
-    
-    IRVariable * irVar = irGen->newVar(name, currentDataType);
-    ctx->thisSymbolInfo = currentBlock->addNewConst(name, currentDataType, irVar);
+
+    ctx->thisSymbolInfo = currentBlock->addNewConst(name, currentDataType);
 
 }
 void SemanticAnalysis::exitConstDefBasic(CACTParser::ConstDefBasicContext * ctx) {
-    ctx->thisSymbolInfo->checkValue();
 
 }
 
@@ -94,11 +108,9 @@ void SemanticAnalysis::enterConstDefArray(CACTParser::ConstDefArrayContext * ctx
     std::string name = ctx->Ident()->getText();
     size_t arraySize = std::stoi(ctx->IntConst()->getText());
 
-    IRVariable * irVar = irGen->newArray(name, currentDataType, arraySize);
-    ctx->thisSymbolInfo = currentBlock->addNewConstArray(name, currentDataType, arraySize, irVar);
+    ctx->thisSymbolInfo = currentBlock->addNewConstArray(name, currentDataType, arraySize);
 }
 void SemanticAnalysis::exitConstDefArray(CACTParser::ConstDefArrayContext * ctx) {
-    ctx->thisSymbolInfo->checkValue();
 
 }
 
@@ -109,50 +121,18 @@ void SemanticAnalysis::exitVarDecl(CACTParser::VarDeclContext * ctx) {
     // nothing to do
 }
 
-void SemanticAnalysis::enterVarDef(CACTParser::VarDefContext * ctx) {
-    // check whether it is array & add new symbol
-    if (ctx->IntConst() != nullptr) { // array
-        size_t arraySize = std::stoi(ctx->IntConst()->getText());
+void SemanticAnalysis::enterVarDefBasic(CACTParser::VarDefBasicContext * ctx) {
 
-        
-
-        ctx->thisSymbolInfo = currentBlock->addNewVarArray(ctx->Ident()->getText(), currentDataType, arraySize);
-
-        
-
-    } else { // basic
-        ctx->thisSymbolInfo = currentBlock->addNewVar(ctx->Ident()->getText(), currentDataType);
-    }
-    if (ctx->constInitVal() != nullptr) {
-        ctx->constInitVal()->thisSymbolInfo = ctx->thisSymbolInfo;
-    }
 }
-void SemanticAnalysis::exitVarDef(CACTParser::VarDefContext * ctx) {
-    ctx->thisSymbolInfo->checkValue();
+void SemanticAnalysis::exitVarDefBasic(CACTParser::VarDefBasicContext * ctx) {
+
 }
 
-void SemanticAnalysis::enterConstInitValBasic(CACTParser::ConstInitValBasicContext * ctx) {
-    SymbolType thisSymbolType = ctx->thisSymbolInfo->getSymbolType();
-    if (thisSymbolType != SymbolType::CONST && thisSymbolType != SymbolType::VAR) {
-        throw std::runtime_error("cannot initialize an array with single value.");
-        return ;
-    }
-}
-void SemanticAnalysis::exitConstInitValBasic(CACTParser::ConstInitValBasicContext * ctx) {
-    ctx->thisSymbolInfo->addValue(ctx->constExp()->dataType, ctx->constExp()->getText());
-}
+void SemanticAnalysis::enterVarDefArray(CACTParser::VarDefArrayContext * ctx) {
 
-void SemanticAnalysis::enterConstInitValArray(CACTParser::ConstInitValArrayContext * ctx) {
-    SymbolType thisSymbolType = ctx->thisSymbolInfo->getSymbolType();
-    if (thisSymbolType != SymbolType::CONST_ARRAY && thisSymbolType != SymbolType::VAR_ARRAY) {
-        throw std::runtime_error("cannot initialize a variable with an array.");
-        return ;
-    }
 }
-void SemanticAnalysis::exitConstInitValArray(CACTParser::ConstInitValArrayContext * ctx) {
-    for (const auto & oneConstExp : ctx->constExp()) {
-        ctx->thisSymbolInfo->addValue(oneConstExp->dataType, oneConstExp->getText());
-    }
+void SemanticAnalysis::exitVarDefArray(CACTParser::VarDefArrayContext * ctx) {
+
 }
 
 void SemanticAnalysis::enterFuncDef(CACTParser::FuncDefContext * ctx) {
@@ -776,7 +756,7 @@ void SemanticAnalysis::exitConstExpNumVal(CACTParser::ConstExpNumValContext * ct
 }
 
 void SemanticAnalysis::enterConstArrExp(CACTParser::ConstArrExpContext * ctx) {
-    
+
 }
 void SemanticAnalysis::exitConstArrExp(CACTParser::ConstArrExpContext * ctx) {
     

@@ -269,7 +269,7 @@ constExp
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        IROperand * result
+        IRValue * result
     ]
     : numVal                    #constExpNumVal
     | boolVal                   #constExpBoolVal
@@ -280,7 +280,7 @@ numVal
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        IROperand * result
+        IRValue * result
     ]
     : IntConst                  #numValIntConst
     | DoubleConst               #numValDoubleConst
@@ -292,7 +292,7 @@ boolVal
         bool isArray,
         size_t arraySize,
         DataType dataType,
-        IROperand * result
+        IRValue * result
     ]
     : BoolConst
     ;

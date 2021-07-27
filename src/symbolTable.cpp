@@ -29,42 +29,51 @@ size_t SizeOfDataType(DataType x) {
     return 0;
 }
 
-SymbolInfo::SymbolInfo(const std::string & name, IROperand * op)
-: name(name), operand(op) { }
+SymbolInfo::SymbolInfo(const std::string & name)
+: name(name), operand(nullptr) { }
 
-ConstSymbolInfo::ConstSymbolInfo(const std::string & name, IROperand * op, DataType dataType)
-: SymbolInfo(name, op), dataType(dataType) { }
-
-
-VarSymbolInfo::VarSymbolInfo(const std::string & name, IROperand * op, DataType dataType)
-: SymbolInfo(name, op), dataType(dataType) { }
-
-
-ConstArraySymbolInfo::ConstArraySymbolInfo(const std::string & name, IROperand * op, DataType dataType, size_t arraySize)
-: SymbolInfo(name, op), dataType(dataType), arraySize(arraySize) { }
-
-
-VarArraySymbolInfo::VarArraySymbolInfo(const std::string & name, IROperand * op, DataType dataType, size_t arraySize)
-: SymbolInfo(name, op), dataType(dataType), arraySize(arraySize) { }
-
-
-FuncSymbolInfo::FuncSymbolInfo(const std::string & name, IROperand * op, DataType returnType)
-: SymbolInfo(name, op), returnType(returnType), blockInfo(nullptr) { }
-
-SymbolInfo * FuncSymbolInfo::addParamVar(const std::string & name, IROperand * op, DataType dataType) {
-    VarSymbolInfo * newParam = new VarSymbolInfo(name, op, dataType);
-    paramList.push_back(newParam);
-    return newParam;
+std::string SymbolInfo::getName() {
+    return name;
 }
 
+void SymbolInfo::setOp(IROperand * op) {
+    operand = op;
+}
+
+IROperand * SymbolInfo::getOp() {
+    if (!operand) {
+        throw std::runtime_error("try to get null op");
+    }
+    return operand;
+}
+
+ConstSymbolInfo::ConstSymbolInfo(const std::string & name, DataType dataType)
+: SymbolInfo(name), dataType(dataType) { }
+
+
+VarSymbolInfo::VarSymbolInfo(const std::string & name, DataType dataType)
+: SymbolInfo(name), dataType(dataType) { }
+
+
+ConstArraySymbolInfo::ConstArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize)
+: SymbolInfo(name), dataType(dataType), arraySize(arraySize) { }
+
+
+VarArraySymbolInfo::VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize)
+: SymbolInfo(name), dataType(dataType), arraySize(arraySize) { }
+
+
+FuncSymbolInfo::FuncSymbolInfo(const std::string & name, DataType returnType)
+: SymbolInfo(name), returnType(returnType), blockInfo(nullptr) { }
+
 SymbolInfo * FuncSymbolInfo::addParamVar(const std::string & name, DataType dataType) {
-    VarSymbolInfo * newParam = new VarSymbolInfo(name, nullptr, dataType);
+    VarSymbolInfo * newParam = new VarSymbolInfo(name, dataType);
     paramList.push_back(newParam);
     return newParam;
 }
 
 SymbolInfo * FuncSymbolInfo::addParamArray(const std::string & name, DataType dataType) {
-    VarArraySymbolInfo * newParam = new VarArraySymbolInfo(name, nullptr, dataType, 0);
+    VarArraySymbolInfo * newParam = new VarArraySymbolInfo(name, dataType, 0);
     paramList.push_back(newParam);
     return newParam;
 }
@@ -98,47 +107,47 @@ FuncSymbolInfo * BlockInfo::lookUpFunc(std::string symbolName) {
     return nullptr;
 }
     
-ConstSymbolInfo * BlockInfo::addNewConst(const std::string & name, IROperand * op, DataType dataType) {
+ConstSymbolInfo * BlockInfo::addNewConst(const std::string & name, DataType dataType) {
     if (symbolTable.count(name) > 0) {
         throw std::runtime_error("duplicate name of symbol");
         return nullptr;
     }
-    ConstSymbolInfo * newSymbol = new ConstSymbolInfo(name, op, dataType);
+    ConstSymbolInfo * newSymbol = new ConstSymbolInfo(name, dataType);
     symbolTable[name] = newSymbol;
     return newSymbol;
 }
 
-VarSymbolInfo * BlockInfo::addNewVar(const std::string & name, IROperand * op, DataType dataType) {
+VarSymbolInfo * BlockInfo::addNewVar(const std::string & name, DataType dataType) {
     if (symbolTable.count(name) > 0) {
         throw std::runtime_error("duplicate name of symbol");
         return nullptr;
     }
-    VarSymbolInfo * newSymbol = new VarSymbolInfo(name, op, dataType);
+    VarSymbolInfo * newSymbol = new VarSymbolInfo(name, dataType);
     symbolTable[name] = newSymbol;
     return newSymbol;
 }
 
-ConstArraySymbolInfo * BlockInfo::addNewConstArray(const std::string & name, IROperand * op, DataType dataType, size_t arraySize) {
+ConstArraySymbolInfo * BlockInfo::addNewConstArray(const std::string & name, DataType dataType, size_t arraySize) {
     if (symbolTable.count(name) > 0) {
         throw std::runtime_error("duplicate name of symbol");
         return nullptr;
     }
-    ConstArraySymbolInfo * newSymbol = new ConstArraySymbolInfo(name, op, dataType, arraySize);
+    ConstArraySymbolInfo * newSymbol = new ConstArraySymbolInfo(name, dataType, arraySize);
     symbolTable[name] = newSymbol;
     return newSymbol;
 }
 
-VarArraySymbolInfo * BlockInfo::addNewVarArray(const std::string & name, IROperand * op, DataType dataType, size_t arraySize) {
+VarArraySymbolInfo * BlockInfo::addNewVarArray(const std::string & name, DataType dataType, size_t arraySize) {
     if (symbolTable.count(name) > 0) {
         throw std::runtime_error("duplicate name of symbol");
         return nullptr;
     }
-    VarArraySymbolInfo * newSymbol = new VarArraySymbolInfo(name, op, dataType, arraySize);
+    VarArraySymbolInfo * newSymbol = new VarArraySymbolInfo(name, dataType, arraySize);
     symbolTable[name] = newSymbol;
     return newSymbol;
 }
 
-FuncSymbolInfo * BlockInfo::addNewFunc(const std::string & name, IROperand * op, DataType returnType) {
+FuncSymbolInfo * BlockInfo::addNewFunc(const std::string & name, DataType returnType) {
     if (parentBlock != nullptr || belongTo != nullptr) {
         throw std::runtime_error("cannot declare a function in other function or block");
         return nullptr;
@@ -146,7 +155,7 @@ FuncSymbolInfo * BlockInfo::addNewFunc(const std::string & name, IROperand * op,
         throw std::runtime_error("duplicate name of function");
         return nullptr;
     }
-    FuncSymbolInfo * newFunc = new FuncSymbolInfo(name, op, returnType);
+    FuncSymbolInfo * newFunc = new FuncSymbolInfo(name, returnType);
     funcTable[name] = newFunc;
     return newFunc;
 }

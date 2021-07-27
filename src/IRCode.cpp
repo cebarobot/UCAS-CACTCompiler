@@ -22,20 +22,48 @@ IROperand * IRCode::getResult() {
     return result;
 }
 
-IRParam::IRParam(IROperand * new_arg1)
-: IRCode(PARAM, new_arg1, nullptr, nullptr) { }
+IRLabelHere::IRLabelHere(IROperand * new_arg1)
+: IRCode(LABEL_HERE, nullptr, new_arg1, nullptr) { }
 
-IRCall::IRCall(IROperand * new_arg1, IROperand * new_arg2, IROperand * new_result)
-: IRCode(CALL, new_arg1, new_arg2, new_result) { }
+IRParam::IRParam(IROperand * new_arg1)
+: IRCode(PARAM, nullptr, new_arg1, nullptr) { }
+
+IRCall::IRCall(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(CALL, new_result, new_arg1, new_arg2) { }
 
 IRCall::IRCall(IROperand * new_arg1, IROperand * new_arg2)
 : IRCode(CALL, new_arg1, new_arg2, nullptr) { }
 
 IRReturn::IRReturn(IROperand * new_arg1)
-: IRCode(RETURN, new_arg1, nullptr, nullptr) { }
+: IRCode(RETURN, nullptr, new_arg1, nullptr) { }
 
-IRAssignInt::IRAssignInt(IROperand * new_arg1, IROperand * new_result)
-: IRCode(ASSIGN_INT, new_arg1, nullptr, new_result) { }
+IRCopyW::IRCopyW(IROperand * new_result, IROperand * new_arg1)
+: IRCode(COPY_W, new_result, new_arg1, nullptr) { }
+
+IRCopyD::IRCopyD(IROperand * new_result, IROperand * new_arg1)
+: IRCode(COPY_D, new_result, new_arg1, nullptr) { }
+
+IRAddInt::IRAddInt(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(ADD_INT, new_result, new_arg1, new_arg2) { }
+
+IRSubInt::IRSubInt(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(SUB_INT, new_result, new_arg1, new_arg2) { }
+
+IRMulInt::IRMulInt(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(MUL_INT, new_result, new_arg1, new_arg2) { }
+
+IRDivInt::IRDivInt(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(DIV_INT, new_result, new_arg1, new_arg2) { }
+
+IRModInt::IRModInt(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(DIV_INT, new_result, new_arg1, new_arg2) { }
+
+IRIfGreaterThanZeroGoto::IRIfGreaterThanZeroGoto(IROperand * new_result, IROperand * new_arg1)
+: IRCode(DIV_INT, new_result, new_arg1, nullptr) { }
+
+void IRLabelHere::print() {
+    std::cout << getArg1()->getName() << ":" << std::endl;
+}
 
 void IRParam::print() {
     std::cout << "param " << getArg1()->getName() << ";" << std::endl;
@@ -57,6 +85,38 @@ void IRReturn::print() {
     std::cout << "return " << getArg1()->getName() << ";" << std::endl;
 }
 
-void IRAssignInt::print() {
-    std::cout << getResult()->getName() << " := " << getArg1()->getName() << ";" << std::endl;
+void IRAddInt::print() {
+    std::cout << getResult()->getName() << " := "
+              << getArg1()->getName() << " + "
+              << getArg2()->getName() << ";" << std::endl;
+}
+
+void IRSubInt::print() {
+    std::cout << getResult()->getName() << " := "
+              << getArg1()->getName() << " - "
+              << getArg2()->getName() << ";" << std::endl;
+}
+
+void IRMulInt::print() {
+    std::cout << getResult()->getName() << " := "
+              << getArg1()->getName() << " * "
+              << getArg2()->getName() << ";" << std::endl;
+}
+
+void IRDivInt::print() {
+    std::cout << getResult()->getName() << " := "
+              << getArg1()->getName() << " / "
+              << getArg2()->getName() << ";" << std::endl;
+}
+
+void IRModInt::print() {
+    std::cout << getResult()->getName() << " := "
+              << getArg1()->getName() << " % "
+              << getArg2()->getName() << ";" << std::endl;
+}
+
+void IRIfGreaterThanZeroGoto::print() {
+    std::cout << "If "
+              << getArg1()->getName() << " >= 0 "
+              << "Goto " << getResult()->getName() << ";" << std::endl;
 }
