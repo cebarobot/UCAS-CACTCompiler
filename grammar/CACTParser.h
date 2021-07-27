@@ -418,7 +418,7 @@ public:
   class  ExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IROperand * result;
     ExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -445,7 +445,7 @@ public:
   public:
     ExpBoolConstContext(ExpContext *ctx);
 
-    antlr4::tree::TerminalNode *BoolConst();
+    BoolValContext *boolVal();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
@@ -470,7 +470,7 @@ public:
   class  PrimaryExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IROperand * result;
     PrimaryExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -516,7 +516,7 @@ public:
   class  UnaryExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IROperand * result;
     UnaryExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -575,7 +575,7 @@ public:
   class  MulExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IROperand * result;
     MulExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -626,7 +626,7 @@ public:
   class  AddExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IROperand * result;
     AddExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -677,7 +677,7 @@ public:
   class  RelExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IROperand * result;
     RelExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -737,7 +737,7 @@ public:
   class  EqExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IROperand * result;
     EqExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -788,7 +788,7 @@ public:
   class  LAndExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IROperand * result;
     LAndExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -826,7 +826,7 @@ public:
   class  LOrExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IROperand * result;
     LOrExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -864,7 +864,7 @@ public:
   class  ConstArrExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IRValue * result;
     ConstArrExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -882,7 +882,7 @@ public:
   class  ConstExpContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IRValue * result;
     ConstExpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -919,7 +919,7 @@ public:
   class  NumValContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IRValue * result;
     NumValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -965,7 +965,7 @@ public:
   class  BoolValContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IRValue * result;
     BoolValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -982,8 +982,9 @@ public:
   class  LValContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
+    IROperand * result;
     IROperand * index;
     SymbolInfo * thisSymbol;
     LValContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -1021,7 +1022,7 @@ public:
   class  RValContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IROperand * result;
     SymbolInfo * thisSymbol;
@@ -1060,7 +1061,7 @@ public:
   class  FuncValContext : public antlr4::ParserRuleContext {
   public:
     bool isArray;
-    size_t arraySize;
+    int arraySize;
     DataType dataType;
     IROperand * result;
     FuncSymbolInfo * thisFunc;

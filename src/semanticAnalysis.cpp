@@ -178,6 +178,7 @@ void SemanticAnalysis::exitVarDefBasic(CACTParser::VarDefBasicContext * ctx) {
 
     if (currentFunc) {
         IRVariable * irVar = irGen->newVar(name, currentDataType);
+        std::cerr << irVar << std::endl;
         irGen->assignBasic(currentDataType, irVar, initVal);
         ctx->thisSymbolInfo->setOp(irVar);
 
@@ -336,6 +337,20 @@ void SemanticAnalysis::exitStmtAssign(CACTParser::StmtAssignContext * ctx) {
             return;
         }
     }
+
+    if (ctx->lVal()->index) {
+        if (ctx->lVal()->dataType == DOUBLE) {
+            irGen->addCode(new IRCopyToIndexedD(ctx->lVal()->result, ctx->exp()->result, ctx->lVal()->index));
+        } else {
+            irGen->addCode(new IRCopyToIndexedW(ctx->lVal()->result, ctx->exp()->result, ctx->lVal()->index));
+        }
+    } else {
+        if (ctx->lVal()->dataType == DOUBLE) {
+            irGen->addCode(new IRCopyD(ctx->lVal()->result, ctx->exp()->result));
+        } else {
+            irGen->addCode(new IRCopyW(ctx->lVal()->result, ctx->exp()->result));
+        }
+    }
 }
 
 void SemanticAnalysis::enterStmtExp(CACTParser::StmtExpContext * ctx) {
@@ -400,35 +415,29 @@ void SemanticAnalysis::exitStmtReturn(CACTParser::StmtReturnContext * ctx) {
             return;
         }
     }
+
+    irGen->addCode(new IRReturn(ctx->exp()->result));
 }
 
 void SemanticAnalysis::enterExpAddExp(CACTParser::ExpAddExpContext * ctx) {
     // nothing to do
-    // std::cerr << "@@@@@@@@@@@22" << std::endl;
 }
 void SemanticAnalysis::exitExpAddExp(CACTParser::ExpAddExpContext * ctx) {
     ctx->isArray = ctx->addExp()->isArray;
     ctx->arraySize = ctx->addExp()->arraySize;
     ctx->dataType = ctx->addExp()->dataType;
-
     ctx->result = ctx->addExp()->result;
-
-    // std::cerr << int(ctx->dataType) << std::endl;
-    // std::cerr << ctx->getText() << std::endl;
-    // std::cerr << "++++" << ctx << std::endl;
 }
 
 void SemanticAnalysis::enterExpBoolConst(CACTParser::ExpBoolConstContext * ctx) {
     // nothing to do
-    // std::cerr << "!!!!!!!!!11" << std::endl;
 }
 
 void SemanticAnalysis::exitExpBoolConst(CACTParser::ExpBoolConstContext * ctx) {
-    ctx->isArray = false;
-    ctx->dataType = DataType::BOOL;
-    // std::cerr << int(ctx->dataType) << std::endl;
-    // std::cerr << ctx->getText() << std::endl;
-    // std::cerr << "++++" << ctx << std::endl;
+    ctx->isArray = ctx->boolVal()->isArray;
+    ctx->arraySize = ctx->boolVal()->arraySize;
+    ctx->dataType = ctx->boolVal()->dataType;
+    ctx->result = ctx->boolVal()->result;
 }
 
 void SemanticAnalysis::enterCond(CACTParser::CondContext * ctx) {
@@ -513,6 +522,17 @@ void SemanticAnalysis::exitUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext * 
             ctx->arraySize = ctx->unaryExp()->arraySize;
             ctx->dataType = ctx->unaryExp()->dataType;
         }
+
+        if (unaryOp == "+") {
+            ctx->result = ctx->unaryExp()->result;
+        } else if (unaryOp == "-") {
+            if (ctx->dataType == INT) {
+                ctx->result = irGen->newTemp(ctx->dataType);
+                irGen->addCode(new IRNegInt(ctx->result, ctx->unaryExp()->result));
+            }
+            // TODO:
+        }
+
     } else if (unaryOp == "!") {
         if (ctx->unaryExp()->dataType != DataType::BOOL) {
             throw std::runtime_error(
@@ -529,6 +549,9 @@ void SemanticAnalysis::exitUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext * 
             ctx->isArray = false;
             ctx->dataType = DataType::BOOL;
         }
+
+        // TODO
+
     }
 }
 
@@ -553,6 +576,7 @@ void SemanticAnalysis::exitMulExpUnaryExp(CACTParser::MulExpUnaryExpContext * ct
     ctx->isArray = ctx->unaryExp()->isArray;
     ctx->arraySize = ctx->unaryExp()->arraySize;
     ctx->dataType = ctx->unaryExp()->dataType;
+    ctx->result = ctx->unaryExp()->result;
 }
 
 void SemanticAnalysis::enterMulExpMulExp(CACTParser::MulExpMulExpContext * ctx) {
@@ -562,6 +586,7 @@ void SemanticAnalysis::exitMulExpMulExp(CACTParser::MulExpMulExpContext * ctx) {
     ctx->isArray = ctx->mulExp()->isArray;
     ctx->arraySize = ctx->mulExp()->arraySize;
     ctx->dataType = ctx->mulExp()->dataType;
+    ctx->result = irGen->newTemp(ctx->dataType);
     
     if (ctx->dataType != ctx->unaryExp()->dataType) {
         throw std::runtime_error(
@@ -588,6 +613,23 @@ void SemanticAnalysis::exitMulExpMulExp(CACTParser::MulExpMulExpContext * ctx) {
             return;
         }
     }
+
+    std::string mul_op = ctx->mulOp()->getText();
+    if (mul_op == "*") {
+        if (ctx->dataType == INT) {
+            irGen->addCode(new IRMulInt(ctx->result, ctx->mulExp()->result, ctx->unaryExp()->result));
+        }
+    } else if (mul_op == "/") {
+        if (ctx->dataType == INT) {
+            irGen->addCode(new IRDivInt(ctx->result, ctx->mulExp()->result, ctx->unaryExp()->result));
+        }
+    } else if (mul_op == "%") {
+        if (ctx->dataType == INT) {
+            irGen->addCode(new IRModInt(ctx->result, ctx->mulExp()->result, ctx->unaryExp()->result));
+        }
+    }
+
+    // TODO:
 }
 
 void SemanticAnalysis::enterAddOp(CACTParser::AddOpContext * ctx) {
@@ -604,6 +646,7 @@ void SemanticAnalysis::exitAddExpMulExp(CACTParser::AddExpMulExpContext * ctx) {
     ctx->isArray = ctx->mulExp()->isArray;
     ctx->arraySize = ctx->mulExp()->arraySize;
     ctx->dataType = ctx->mulExp()->dataType;
+    ctx->result = ctx->mulExp()->result;
 }
 
 void SemanticAnalysis::enterAddExpAddExp(CACTParser::AddExpAddExpContext * ctx) {
@@ -613,6 +656,7 @@ void SemanticAnalysis::exitAddExpAddExp(CACTParser::AddExpAddExpContext * ctx) {
     ctx->isArray = ctx->addExp()->isArray;
     ctx->arraySize = ctx->addExp()->arraySize;
     ctx->dataType = ctx->addExp()->dataType;
+    ctx->result = irGen->newTemp(ctx->dataType);
     
     if (ctx->dataType != ctx->mulExp()->dataType) {
         throw std::runtime_error(
@@ -639,6 +683,19 @@ void SemanticAnalysis::exitAddExpAddExp(CACTParser::AddExpAddExpContext * ctx) {
             return;
         }
     }
+
+    std::string add_op = ctx->addOp()->getText();
+    if (add_op == "+") {
+        if (ctx->dataType == INT) {
+            irGen->addCode(new IRAddInt(ctx->result, ctx->addExp()->result, ctx->mulExp()->result));
+        }
+    } else if (add_op == "-") {
+        if (ctx->dataType == INT) {
+            irGen->addCode(new IRSubInt(ctx->result, ctx->addExp()->result, ctx->mulExp()->result));
+        }
+    }
+    // TODO:
+
 }
 
 void SemanticAnalysis::enterRelOp(CACTParser::RelOpContext * ctx) {
@@ -897,6 +954,7 @@ void SemanticAnalysis::exitLValBasic(CACTParser::LValBasicContext * ctx) {
     SymbolInfo * thisSymbol = ctx->thisSymbol;
     SymbolType thisSymbolType = thisSymbol->getSymbolType();
     ctx->dataType = thisSymbol->getDataType();
+    ctx->result = thisSymbol->getOp();
 
     if (thisSymbolType == SymbolType::CONST) {
         throw std::runtime_error(std::string("cannot assign to a constant: ") + ctx->getText());
@@ -932,6 +990,7 @@ void SemanticAnalysis::enterLValIndexed(CACTParser::LValIndexedContext * ctx) {
 void SemanticAnalysis::exitLValIndexed(CACTParser::LValIndexedContext * ctx) {
     SymbolInfo * thisSymbol = ctx->thisSymbol;
     SymbolType thisSymbolType = thisSymbol->getSymbolType();
+    ctx->result = thisSymbol->getOp();
     ctx->dataType = thisSymbol->getDataType();
     ctx->isArray = false;
 
@@ -976,7 +1035,7 @@ void SemanticAnalysis::exitRValBasic(CACTParser::RValBasicContext * ctx) {
     } else if (thisSymbolType == SymbolType::CONST_ARRAY || thisSymbolType == SymbolType::VAR_ARRAY) {
         ctx->isArray = true;
         ctx->arraySize = thisSymbol->getArraySize();
-        ctx->result = irGen->newTemp(SizeOfDataType(ctx->dataType));
+        ctx->result = irGen->newTemp(ctx->dataType);
 
         IROperand * index = irGen->getArrRepeatVar();
         if (ctx->dataType == DOUBLE) {
@@ -1015,7 +1074,7 @@ void SemanticAnalysis::exitRValIndexed(CACTParser::RValIndexedContext * ctx) {
         return;
     }
     IROperand * index = ctx->exp()->result;
-    ctx->result = irGen->newTemp(SizeOfDataType(ctx->dataType));
+    ctx->result = irGen->newTemp(ctx->dataType);
 
     if (thisSymbolType == SymbolType::CONST_ARRAY || thisSymbolType == SymbolType::VAR_ARRAY) {
         if (ctx->dataType == DOUBLE) {
@@ -1047,7 +1106,7 @@ void SemanticAnalysis::exitFuncVal(CACTParser::FuncValContext * ctx) {
     FuncSymbolInfo * thisFunc = ctx->thisFunc;
     ctx->isArray = false;
     ctx->dataType = thisFunc->getDataType();
-    ctx->result = irGen->newTemp(SizeOfDataType(ctx->dataType));
+    ctx->result = irGen->newTemp(ctx->dataType);
     IROperand * funcLabel = ctx->thisFunc->getOp();
     
     if (ctx->funcRParams() == nullptr && thisFunc->getparamNum() > 0) {
@@ -1068,7 +1127,7 @@ void SemanticAnalysis::enterFuncRParams(CACTParser::FuncRParamsContext * ctx) {
 void SemanticAnalysis::exitFuncRParams(CACTParser::FuncRParamsContext * ctx) {
     FuncSymbolInfo * thisFunc = ctx->thisFunc;
     int paramNum = thisFunc->getparamNum();
-    if (ctx->exp().size() != paramNum) {
+    if ((int) ctx->exp().size() != paramNum) {
         throw std::runtime_error(
             std::string("too many or too few parameters for function ") +
             thisFunc->getName()

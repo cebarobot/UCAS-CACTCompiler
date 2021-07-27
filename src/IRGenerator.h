@@ -38,8 +38,7 @@ public:
 
     IRValue * newInt(int intVal);
 
-    IRVariable * newTemp(int size);
-    IRVariable * newIntTemp();
+    IRVariable * newTemp(DataType dataType);
 
     void startArrOp(DataType datatype, int len);
     void endArrOp();

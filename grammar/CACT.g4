@@ -112,12 +112,12 @@ stmt
 exp
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IROperand * result
     ]
     : addExp                    #expAddExp
-    | BoolConst                 #expBoolConst
+    | boolVal                   #expBoolConst
     ;
 
 cond
@@ -131,7 +131,7 @@ cond
 primaryExp
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IROperand * result
     ]
@@ -143,7 +143,7 @@ primaryExp
 unaryExp
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IROperand * result
     ]
@@ -161,7 +161,7 @@ unaryOp
 mulExp
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IROperand * result
     ]
@@ -178,7 +178,7 @@ mulOp
 addExp
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IROperand * result
     ]
@@ -194,7 +194,7 @@ addOp
 relExp
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IROperand * result
     ]
@@ -213,7 +213,7 @@ relOp
 eqExp
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IROperand * result
     ]
@@ -229,7 +229,7 @@ eqOp
 lAndExp
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IROperand * result
     ]
@@ -240,7 +240,7 @@ lAndExp
 lOrExp
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IROperand * result
     ]
@@ -251,7 +251,7 @@ lOrExp
 constArrExp
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IRValue * result
     ]
@@ -261,7 +261,7 @@ constArrExp
 constExp
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IRValue * result
     ]
@@ -272,7 +272,7 @@ constExp
 numVal
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IRValue * result
     ]
@@ -284,7 +284,7 @@ numVal
 boolVal
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IRValue * result
     ]
@@ -294,8 +294,9 @@ boolVal
 lVal
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
+        IROperand * result,
         IROperand * index,
         SymbolInfo * thisSymbol
     ]
@@ -306,7 +307,7 @@ lVal
 rVal
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IROperand * result, 
         SymbolInfo * thisSymbol
@@ -318,7 +319,7 @@ rVal
 funcVal
     locals[
         bool isArray,
-        size_t arraySize,
+        int arraySize,
         DataType dataType,
         IROperand * result,
         FuncSymbolInfo * thisFunc,

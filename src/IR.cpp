@@ -19,6 +19,11 @@ void IRFunction::print() {
 void IRProgram::print() {
     std::cout << "------------------------- IR -------------------------" << std::endl;
     std::cout << "data: " << std::endl;
+
+    for (auto p : globalValues) {
+        std::cout << p->getName() << std::endl;
+    }
+
     std::cout << "text: " << std::endl;
 
     for (auto p : functions) {

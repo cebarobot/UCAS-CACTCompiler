@@ -20,9 +20,11 @@ enum IROperation {
     COPY_TO_INDEXED_D,
     ADD_INT,
     SUB_INT,
+    NEG_INT,
     MUL_INT,
     DIV_INT,
     MOD_INT,
+
     IF_GREATER_THAN_ZERO_GOTO,
     IF_GREATER_THAN_GOTO,
     IF_GREATER_EQUAL_THAN_GOTO,
@@ -33,9 +35,9 @@ enum IROperation {
 class IRCode {
 private:
     IROperation operation;
+    IROperand * result;
     IROperand * arg1;
     IROperand * arg2;
-    IROperand * result;
 
 public:
     IRCode(IROperation new_op, IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2);
@@ -134,6 +136,13 @@ public:
 class IRSubInt : public IRCode {
 public:
     IRSubInt(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2);
+
+    virtual void print();
+};
+
+class IRNegInt : public IRCode {
+public:
+    IRNegInt(IROperand * new_result, IROperand * new_arg1);
 
     virtual void print();
 };

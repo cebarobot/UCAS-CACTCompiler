@@ -3,8 +3,8 @@
 #include "IRCode.h"
 
 
-IRCode::IRCode(IROperation new_op, IROperand * new_arg1, IROperand * new_arg2, IROperand * new_result)
-: operation(new_op), arg1(new_arg1), arg2(new_arg2), result(new_result) { }
+IRCode::IRCode(IROperation new_op, IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: operation(new_op), result(new_result), arg1(new_arg1), arg2(new_arg2) { }
 
 IROperation IRCode::getOperation() {
     return operation;
@@ -61,6 +61,9 @@ IRAddInt::IRAddInt(IROperand * new_result, IROperand * new_arg1, IROperand * new
 IRSubInt::IRSubInt(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
 : IRCode(SUB_INT, new_result, new_arg1, new_arg2) { }
 
+IRNegInt::IRNegInt(IROperand * new_result, IROperand * new_arg1)
+: IRCode(NEG_INT, new_result, new_arg1, nullptr) { }
+
 IRMulInt::IRMulInt(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
 : IRCode(MUL_INT, new_result, new_arg1, new_arg2) { }
 
@@ -96,12 +99,10 @@ void IRParam::print() {
 void IRCall::print() {
     if (getResult()) {
         std::cout << getResult()->getName() << " := call " 
-                  << getArg1()->getName() << ", " 
-                  << getArg2()->getName() << "; " << std::endl;
+                  << getArg1()->getName() << "; " << std::endl;
     } else {
         std::cout << "call " 
-                  << getArg1()->getName() << ", " 
-                  << getArg2()->getName() << "; " << std::endl;
+                  << getArg1()->getName() << "; " << std::endl;
     }
 }
 
@@ -157,6 +158,12 @@ void IRSubInt::print() {
     std::cout << getResult()->getName() << " := "
               << getArg1()->getName() << " - "
               << getArg2()->getName() << ";" << std::endl;
+}
+
+void IRNegInt::print() {
+    std::cout << getResult()->getName() << " := "
+              << " - "
+              << getArg1()->getName() << ";" << std::endl;
 }
 
 void IRMulInt::print() {

@@ -89,23 +89,19 @@ IRValue * IRGenerator::newInt(int intVal) {
     return new IRValue(intVal);
 }
 
-IRVariable * IRGenerator::newTemp(int size) {
+IRVariable * IRGenerator::newTemp(DataType dataType) {
     std::string name = std::string("temp") + std::to_string(tempCount);
     tempCount += 1;
 
-    IRVariable * temp = new IRVariable(name, size);
+    IRVariable * temp = new IRVariable(name, SizeOfDataType(dataType));
     return temp;
-}
-
-IRVariable * IRGenerator::newIntTemp() {
-    return newTemp(SizeOfDataType(INT));
 }
 
 void IRGenerator::startArrOp(DataType datatype, int len) {
     int cellSize = SizeOfDataType(datatype);
     IROperand * ir_cs = newInt(cellSize);
     IROperand * ir_len = newInt(len);
-    arrRepeatVar = newIntTemp();
+    arrRepeatVar = newTemp(INT);
     arrRepeatLabel = newLabel();
     addCode(new IRMulInt(arrRepeatVar, ir_cs, ir_len));
     addCode(new IRLabelHere(arrRepeatLabel));
@@ -143,7 +139,7 @@ void IRGenerator::assignArray(DataType datatype, int len, IROperand * d, IROpera
     startArrOp(datatype, len);
 
     IROperand * ppp = getArrRepeatVar();
-    IROperand * temp = newTemp(SizeOfDataType(datatype));
+    IROperand * temp = newTemp(datatype);
 
     if (datatype == INT) {
         addCode(new IRCopyFromIndexedW(temp, s, ppp));

@@ -17,6 +17,7 @@ std::string IRLabel::getName() {
 
 std::string IRLabel::getTarget() {
     // TODO:
+    return "";
 }
 
 
@@ -37,6 +38,7 @@ std::string IRVariable::getName() {
 
 std::string IRVariable::getTarget() {
     // TODO:
+    return "";
 }
 
 
@@ -63,6 +65,7 @@ std::string IRValue::getName() {
 
 std::string IRValue::getTarget() {
     // TODO:
+    return "";
 }
 
 void IRValue::addValue(std::string newValue) {
@@ -70,7 +73,7 @@ void IRValue::addValue(std::string newValue) {
 }
 
 std::string IRValue::getValue(int x) {
-    if (x >= values.size()) {
+    if (x >= (int) values.size()) {
         throw std::runtime_error("irGen: wrong index");
     }
     return values[x];
@@ -81,7 +84,7 @@ std::vector<std::string> IRValue::getValue() {
 }
 
 void IRValue::fillValue(int len) {
-    while (values.size() < len) {
+    while ((int) values.size() < len) {
         values.push_back("0");
     }
 }

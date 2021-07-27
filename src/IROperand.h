@@ -52,8 +52,8 @@ public:
 class IRValue : public IROperand {
 private:
     std::string name;
-    bool isVar;
     DataType dataType;
+    bool isVar;
     std::vector<std::string> values;
 
 public:
