@@ -1,5 +1,21 @@
 #include <IR.h>
 
+IRLabel::IRLabel(std::string newName)
+: name(newName) { }
+
+bool IRLabel::isVariable() {
+    return true;
+}
+
+std::string IRLabel::getName() {
+    return name;
+}
+
+std::string IRLabel::getTarget() {
+    // TODO:
+}
+
+
 IRVariable::IRVariable(std::string newName, int newSize)
 : name(newName), size(newSize) { }
 
@@ -13,21 +29,20 @@ std::string IRVariable::getName() {
 
 std::string IRVariable::getTarget() {
     // TODO:
-    return name;
 }
 
-IRValue::IRValue(std::string newValue) 
-: value(newValue) { }
+
+IRValue::IRValue(std::string newName, DataType newDataType, bool newIsVar) 
+: name(newName), dataType(newDataType), isVar(newIsVar) { }
 
 bool IRValue::isVariable() {
-    return false;
+    return isVar;
 }
 
 std::string IRValue::getName() {
-    return value;
+    return name;
 }
 
 std::string IRValue::getTarget() {
     // TODO:
-    return value;
 }

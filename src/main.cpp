@@ -32,11 +32,13 @@ int main(int argc, const char* argv[]) {
 
     BlockInfo globalBlockInfo(nullptr);
     IRProgram ir;
-    SemanticAnalysis listener(&globalBlockInfo, &ir);
+    IRGenerator irGen(&ir);
+    SemanticAnalysis listener(&globalBlockInfo, &irGen);
+
     try {
         tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
     } catch(const std::exception& excp) {
-        std::cerr << excp.what() << std::endl;
+        std::cerr << "Semantic Error: " << excp.what() << std::endl;
 		return 1;
     }
 
