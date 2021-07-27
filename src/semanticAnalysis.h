@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../grammar/CACTBaseListener.h"
+#include "CACT.h"
 #include "symbolTable.h"
 #include "IRGenerator.h"
 
@@ -100,11 +101,11 @@ public:
     void enterPrimaryExpExp(CACTParser::PrimaryExpExpContext * ctx) override;
     void exitPrimaryExpExp(CACTParser::PrimaryExpExpContext * ctx) override;
 
-    void enterPrimaryExpLVal(CACTParser::PrimaryExpLValContext * ctx) override;
-    void exitPrimaryExpLVal(CACTParser::PrimaryExpLValContext * ctx) override;
+    void enterPrimaryExpRVal(CACTParser::PrimaryExpRValContext * ctx) override;
+    void exitPrimaryExpRVal(CACTParser::PrimaryExpRValContext * ctx) override;
 
-    void enterPrimaryNumber(CACTParser::PrimaryNumberContext * ctx) override;
-    void exitPrimaryNumber(CACTParser::PrimaryNumberContext * ctx) override;
+    void enterPrimaryNumVal(CACTParser::PrimaryNumValContext * ctx) override;
+    void exitPrimaryNumVal(CACTParser::PrimaryNumValContext * ctx) override;
 
     void enterUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext * ctx) override;
     void exitUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext * ctx) override;
@@ -117,9 +118,6 @@ public:
 
     void enterUnaryOp(CACTParser::UnaryOpContext * ctx) override;
     void exitUnaryOp(CACTParser::UnaryOpContext * ctx) override;
-
-    void enterFuncRParams(CACTParser::FuncRParamsContext * ctx) override;
-    void exitFuncRParams(CACTParser::FuncRParamsContext * ctx) override;
 
     void enterMulOp(CACTParser::MulOpContext * ctx) override;
     void exitMulOp(CACTParser::MulOpContext * ctx) override;
@@ -193,11 +191,23 @@ public:
     void enterBoolVal(CACTParser::BoolValContext * ctx) override;
     void exitBoolVal(CACTParser::BoolValContext * ctx) override;
 
-    void enterLVal(CACTParser::LValContext * ctx) override;
-    void exitLVal(CACTParser::LValContext * ctx) override;
+    void enterLValBasic(CACTParser::LValBasicContext * ctx) override;
+    void exitLValBasic(CACTParser::LValBasicContext * ctx) override;
+
+    void enterLValIndexed(CACTParser::LValIndexedContext * ctx) override;
+    void exitLValIndexed(CACTParser::LValIndexedContext * ctx) override;
+
+    void enterRValBasic(CACTParser::RValBasicContext * ctx) override;
+    void exitRValBasic(CACTParser::RValBasicContext * ctx) override;
+
+    void enterRValIndexed(CACTParser::RValIndexedContext * ctx) override;
+    void exitRValIndexed(CACTParser::RValIndexedContext * ctx) override;
 
     void enterFuncVal(CACTParser::FuncValContext * ctx) override;
     void exitFuncVal(CACTParser::FuncValContext * ctx) override;
+
+    void enterFuncRParams(CACTParser::FuncRParamsContext * ctx) override;
+    void exitFuncRParams(CACTParser::FuncRParamsContext * ctx) override;
 
     void enterEveryRule(antlr4::ParserRuleContext * ctx) override;
     void exitEveryRule(antlr4::ParserRuleContext * ctx) override;

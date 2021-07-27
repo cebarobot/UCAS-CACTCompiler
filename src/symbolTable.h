@@ -5,26 +5,12 @@
 #include <string>
 #include <iostream>
 
-#include "IROperand.h"
-
-enum SymbolType {
-    CONST,
-    VAR,
-    CONST_ARRAY,
-    VAR_ARRAY,
-    FUNC,
-};
-
-enum DataType {
-    VOID,
-    BOOL,
-    INT,
-    FLOAT,
-    DOUBLE,
-};
+#include "CACT.h"
 
 std::string ToString(DataType x);
-size_t SizeOfDataType(DataType x);
+int SizeOfDataType(DataType x);
+
+class IROperand;
 
 class SymbolInfo {
 private:
@@ -38,7 +24,7 @@ public:
     IROperand * getOp();
 
     virtual DataType getDataType() = 0;
-    virtual size_t getArraySize() = 0;
+    virtual int getArraySize() = 0;
     virtual SymbolType getSymbolType() = 0;
 
     SymbolInfo(const std::string & name);
@@ -50,7 +36,7 @@ private:
 
 public:
     virtual DataType getDataType() { return dataType; }
-    virtual size_t getArraySize() { return -1; };
+    virtual int getArraySize() { return -1; };
     virtual SymbolType getSymbolType() { return SymbolType::CONST; }
 
     ConstSymbolInfo(const std::string & name, DataType dataType);
@@ -61,7 +47,7 @@ class VarSymbolInfo : public SymbolInfo {
 
 public:
     virtual DataType getDataType() { return dataType; }
-    virtual size_t getArraySize() { return -1; };
+    virtual int getArraySize() { return -1; };
     virtual SymbolType getSymbolType() { return SymbolType::VAR; }
 
     VarSymbolInfo(const std::string & name, DataType dataType);
@@ -70,28 +56,28 @@ public:
 class ConstArraySymbolInfo : public SymbolInfo {
 private:
     DataType dataType;
-    size_t arraySize;
+    int arraySize;
 
 public:
     virtual DataType getDataType() { return dataType; }
-    virtual size_t getArraySize() { return arraySize; };
+    virtual int getArraySize() { return arraySize; };
     virtual SymbolType getSymbolType() { return SymbolType::CONST_ARRAY; }
 
-    ConstArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize);
+    ConstArraySymbolInfo(const std::string & name, DataType dataType, int arraySize);
 };
 
 class VarArraySymbolInfo : public SymbolInfo {
 private:
     DataType dataType;
-    size_t arraySize;
+    int arraySize;
 
 public:
     virtual DataType getDataType() { return dataType; }
-    virtual size_t getArraySize() { return arraySize; };
+    virtual int getArraySize() { return arraySize; };
     virtual SymbolType getSymbolType() { return SymbolType::VAR_ARRAY; }
 
-    // VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize, const std::vector <std::string> & value);
-    VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize);
+    // VarArraySymbolInfo(const std::string & name, DataType dataType, int arraySize, const std::vector <std::string> & value);
+    VarArraySymbolInfo(const std::string & name, DataType dataType, int arraySize);
 };
 
 class BlockInfo;
@@ -99,21 +85,21 @@ class BlockInfo;
 class FuncSymbolInfo : public SymbolInfo {
 private:
     DataType returnType;
-    size_t paramNum;
+    int paramNum;
     std::vector < SymbolInfo * > paramList;
     BlockInfo * blockInfo;
 public:
     virtual DataType getDataType()  { return returnType; }
-    virtual size_t getArraySize() { return paramNum; };
+    virtual int getArraySize() { return paramNum; };
     virtual SymbolType getSymbolType()  { return SymbolType::FUNC; }
     std::vector < SymbolInfo * > getparamList() { return paramList; }
-    size_t getparamNum() { return paramNum; }
+    int getparamNum() { return paramNum; }
 
     SymbolInfo * addParamVar(const std::string & name, DataType dataType);
     SymbolInfo * addParamArray(const std::string & name, DataType dataType);
-    size_t calcParamNum();
+    int calcParamNum();
 
-    // FuncSymbolInfo(const std::string & name, DataType returnType, size_t paramNum);
+    // FuncSymbolInfo(const std::string & name, DataType returnType, int paramNum);
     FuncSymbolInfo(const std::string & name, DataType returnType);
 };
 
@@ -132,8 +118,8 @@ public:
     
     ConstSymbolInfo * addNewConst(const std::string & name, DataType dataType);
     VarSymbolInfo * addNewVar(const std::string & name, DataType dataType);
-    ConstArraySymbolInfo * addNewConstArray(const std::string & name, DataType dataType, size_t arraySize);
-    VarArraySymbolInfo * addNewVarArray(const std::string & name, DataType dataType, size_t arraySize);
+    ConstArraySymbolInfo * addNewConstArray(const std::string & name, DataType dataType, int arraySize);
+    VarArraySymbolInfo * addNewVarArray(const std::string & name, DataType dataType, int arraySize);
     FuncSymbolInfo * addNewFunc(const std::string & name, DataType returnType);
 
     BlockInfo * addNewBlock();

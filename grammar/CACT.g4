@@ -8,6 +8,7 @@ options {
 @header {
     #include <vector>
     #include <string>
+    #include "../src/CACT.h"
     #include "../src/symbolTable.h"
     #include "../src/IR.h"
 }
@@ -135,8 +136,8 @@ primaryExp
         IROperand * result
     ]
     : '(' exp ')'               #primaryExpExp
-    | lVal                      #primaryExpLVal
-    | numVal                    #primaryNumber
+    | rVal                      #primaryExpRVal
+    | numVal                    #primaryNumVal
     ;
 
 unaryExp
@@ -155,13 +156,6 @@ unaryOp
     : '+'
     | '-'
     | '!'
-    ;
-
-funcRParams
-    locals[
-        FuncSymbolInfo * thisFunc
-    ]
-    : exp (',' exp)*
     ;
 
 mulExp
@@ -299,14 +293,26 @@ boolVal
 
 lVal
     locals[
-        bool isVar,
+        bool isArray,
+        size_t arraySize,
+        DataType dataType,
+        IROperand * index,
+        SymbolInfo * thisSymbol
+    ]
+    : Ident                     #lValBasic
+    | Ident '[' exp ']'         #lValIndexed
+    ;
+
+rVal
+    locals[
         bool isArray,
         size_t arraySize,
         DataType dataType,
         IROperand * result, 
         SymbolInfo * thisSymbol
     ]
-    : Ident ('[' exp ']')?
+    : Ident                     #rValBasic
+    | Ident '[' exp ']'         #rValIndexed
     ;
 
 funcVal
@@ -318,6 +324,13 @@ funcVal
         FuncSymbolInfo * thisFunc,
     ]
     : Ident '(' (funcRParams)? ')'
+    ;
+
+funcRParams
+    locals[
+        FuncSymbolInfo * thisFunc
+    ]
+    : exp (',' exp)*
     ;
 
 /********** Lexer **********/

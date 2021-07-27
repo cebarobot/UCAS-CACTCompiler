@@ -16,7 +16,7 @@ std::string ToString(DataType x) {
     return "unknown";
 }
 
-size_t SizeOfDataType(DataType x) {
+int SizeOfDataType(DataType x) {
     if (x == BOOL) {
         return 4;
     } else if (x == INT) {
@@ -55,11 +55,11 @@ VarSymbolInfo::VarSymbolInfo(const std::string & name, DataType dataType)
 : SymbolInfo(name), dataType(dataType) { }
 
 
-ConstArraySymbolInfo::ConstArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize)
+ConstArraySymbolInfo::ConstArraySymbolInfo(const std::string & name, DataType dataType, int arraySize)
 : SymbolInfo(name), dataType(dataType), arraySize(arraySize) { }
 
 
-VarArraySymbolInfo::VarArraySymbolInfo(const std::string & name, DataType dataType, size_t arraySize)
+VarArraySymbolInfo::VarArraySymbolInfo(const std::string & name, DataType dataType, int arraySize)
 : SymbolInfo(name), dataType(dataType), arraySize(arraySize) { }
 
 
@@ -78,7 +78,7 @@ SymbolInfo * FuncSymbolInfo::addParamArray(const std::string & name, DataType da
     return newParam;
 }
 
-size_t FuncSymbolInfo::calcParamNum() {
+int FuncSymbolInfo::calcParamNum() {
     paramNum = paramList.size();
     return paramNum;
 }
@@ -127,7 +127,7 @@ VarSymbolInfo * BlockInfo::addNewVar(const std::string & name, DataType dataType
     return newSymbol;
 }
 
-ConstArraySymbolInfo * BlockInfo::addNewConstArray(const std::string & name, DataType dataType, size_t arraySize) {
+ConstArraySymbolInfo * BlockInfo::addNewConstArray(const std::string & name, DataType dataType, int arraySize) {
     if (symbolTable.count(name) > 0) {
         throw std::runtime_error("duplicate name of symbol");
         return nullptr;
@@ -137,7 +137,7 @@ ConstArraySymbolInfo * BlockInfo::addNewConstArray(const std::string & name, Dat
     return newSymbol;
 }
 
-VarArraySymbolInfo * BlockInfo::addNewVarArray(const std::string & name, DataType dataType, size_t arraySize) {
+VarArraySymbolInfo * BlockInfo::addNewVarArray(const std::string & name, DataType dataType, int arraySize) {
     if (symbolTable.count(name) > 0) {
         throw std::runtime_error("duplicate name of symbol");
         return nullptr;

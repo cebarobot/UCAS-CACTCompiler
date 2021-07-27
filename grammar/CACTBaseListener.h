@@ -1,6 +1,7 @@
 
     #include <vector>
     #include <string>
+    #include "../src/CACT.h"
     #include "../src/symbolTable.h"
     #include "../src/IR.h"
 
@@ -103,11 +104,11 @@ public:
   virtual void enterPrimaryExpExp(CACTParser::PrimaryExpExpContext * /*ctx*/) override { }
   virtual void exitPrimaryExpExp(CACTParser::PrimaryExpExpContext * /*ctx*/) override { }
 
-  virtual void enterPrimaryExpLVal(CACTParser::PrimaryExpLValContext * /*ctx*/) override { }
-  virtual void exitPrimaryExpLVal(CACTParser::PrimaryExpLValContext * /*ctx*/) override { }
+  virtual void enterPrimaryExpRVal(CACTParser::PrimaryExpRValContext * /*ctx*/) override { }
+  virtual void exitPrimaryExpRVal(CACTParser::PrimaryExpRValContext * /*ctx*/) override { }
 
-  virtual void enterPrimaryNumber(CACTParser::PrimaryNumberContext * /*ctx*/) override { }
-  virtual void exitPrimaryNumber(CACTParser::PrimaryNumberContext * /*ctx*/) override { }
+  virtual void enterPrimaryNumVal(CACTParser::PrimaryNumValContext * /*ctx*/) override { }
+  virtual void exitPrimaryNumVal(CACTParser::PrimaryNumValContext * /*ctx*/) override { }
 
   virtual void enterUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext * /*ctx*/) override { }
   virtual void exitUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext * /*ctx*/) override { }
@@ -120,9 +121,6 @@ public:
 
   virtual void enterUnaryOp(CACTParser::UnaryOpContext * /*ctx*/) override { }
   virtual void exitUnaryOp(CACTParser::UnaryOpContext * /*ctx*/) override { }
-
-  virtual void enterFuncRParams(CACTParser::FuncRParamsContext * /*ctx*/) override { }
-  virtual void exitFuncRParams(CACTParser::FuncRParamsContext * /*ctx*/) override { }
 
   virtual void enterMulExpMulExp(CACTParser::MulExpMulExpContext * /*ctx*/) override { }
   virtual void exitMulExpMulExp(CACTParser::MulExpMulExpContext * /*ctx*/) override { }
@@ -196,11 +194,23 @@ public:
   virtual void enterBoolVal(CACTParser::BoolValContext * /*ctx*/) override { }
   virtual void exitBoolVal(CACTParser::BoolValContext * /*ctx*/) override { }
 
-  virtual void enterLVal(CACTParser::LValContext * /*ctx*/) override { }
-  virtual void exitLVal(CACTParser::LValContext * /*ctx*/) override { }
+  virtual void enterLValBasic(CACTParser::LValBasicContext * /*ctx*/) override { }
+  virtual void exitLValBasic(CACTParser::LValBasicContext * /*ctx*/) override { }
+
+  virtual void enterLValIndexed(CACTParser::LValIndexedContext * /*ctx*/) override { }
+  virtual void exitLValIndexed(CACTParser::LValIndexedContext * /*ctx*/) override { }
+
+  virtual void enterRValBasic(CACTParser::RValBasicContext * /*ctx*/) override { }
+  virtual void exitRValBasic(CACTParser::RValBasicContext * /*ctx*/) override { }
+
+  virtual void enterRValIndexed(CACTParser::RValIndexedContext * /*ctx*/) override { }
+  virtual void exitRValIndexed(CACTParser::RValIndexedContext * /*ctx*/) override { }
 
   virtual void enterFuncVal(CACTParser::FuncValContext * /*ctx*/) override { }
   virtual void exitFuncVal(CACTParser::FuncValContext * /*ctx*/) override { }
+
+  virtual void enterFuncRParams(CACTParser::FuncRParamsContext * /*ctx*/) override { }
+  virtual void exitFuncRParams(CACTParser::FuncRParamsContext * /*ctx*/) override { }
 
 
   virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }

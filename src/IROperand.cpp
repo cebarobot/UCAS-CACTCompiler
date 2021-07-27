@@ -7,7 +7,7 @@ bool IRLabel::isVariable() {
     return true;
 }
 
-void IRValue::setName(std::string newName) {
+void IRLabel::setName(std::string newName) {
     name = newName;
 }
 
@@ -27,7 +27,7 @@ bool IRVariable::isVariable() {
     return true;
 }
 
-void IRValue::setName(std::string newName) {
+void IRVariable::setName(std::string newName) {
     name = newName;
 }
 

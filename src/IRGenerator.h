@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CACT.h"
 #include "IR.h"
 #include "symbolTable.h"
 
@@ -11,6 +12,7 @@ private:
     IRValue * currentIRVal;
 
     int tempCount;
+    int labelCount;
     int valueCount;
 
     IRLabel * arrRepeatLabel;
@@ -26,9 +28,10 @@ public:
 
     IRValue * newValue(DataType dataType);
     IRValue * newValue(DataType dataType, std::string value);
+    void removeValues(int cnt);
 
     IRVariable * newVar(std::string name, DataType dataType);
-    IRVariable * newVar(std::string name, DataType dataType, size_t len);
+    IRVariable * newVar(std::string name, DataType dataType, int len);
 
     IRLabel * newLabel(std::string name);
     IRLabel * newLabel();
@@ -38,12 +41,12 @@ public:
     IRVariable * newTemp(int size);
     IRVariable * newIntTemp();
 
-    void startArrOp(DataType datatype, size_t len);
+    void startArrOp(DataType datatype, int len);
     void endArrOp();
     IROperand * getArrRepeatVar();
 
     void addCode(IRCode * newCode);
 
     void assignBasic(DataType datatype, IROperand * d, IROperand * s);
-    void assignArray(DataType datatype, size_t len, IROperand * d, IROperand * s);
+    void assignArray(DataType datatype, int len, IROperand * d, IROperand * s);
 };

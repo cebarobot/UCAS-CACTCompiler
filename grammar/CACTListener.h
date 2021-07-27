@@ -1,6 +1,7 @@
 
     #include <vector>
     #include <string>
+    #include "../src/CACT.h"
     #include "../src/symbolTable.h"
     #include "../src/IR.h"
 
@@ -101,11 +102,11 @@ public:
   virtual void enterPrimaryExpExp(CACTParser::PrimaryExpExpContext *ctx) = 0;
   virtual void exitPrimaryExpExp(CACTParser::PrimaryExpExpContext *ctx) = 0;
 
-  virtual void enterPrimaryExpLVal(CACTParser::PrimaryExpLValContext *ctx) = 0;
-  virtual void exitPrimaryExpLVal(CACTParser::PrimaryExpLValContext *ctx) = 0;
+  virtual void enterPrimaryExpRVal(CACTParser::PrimaryExpRValContext *ctx) = 0;
+  virtual void exitPrimaryExpRVal(CACTParser::PrimaryExpRValContext *ctx) = 0;
 
-  virtual void enterPrimaryNumber(CACTParser::PrimaryNumberContext *ctx) = 0;
-  virtual void exitPrimaryNumber(CACTParser::PrimaryNumberContext *ctx) = 0;
+  virtual void enterPrimaryNumVal(CACTParser::PrimaryNumValContext *ctx) = 0;
+  virtual void exitPrimaryNumVal(CACTParser::PrimaryNumValContext *ctx) = 0;
 
   virtual void enterUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext *ctx) = 0;
   virtual void exitUnaryExpPrimaryExp(CACTParser::UnaryExpPrimaryExpContext *ctx) = 0;
@@ -118,9 +119,6 @@ public:
 
   virtual void enterUnaryOp(CACTParser::UnaryOpContext *ctx) = 0;
   virtual void exitUnaryOp(CACTParser::UnaryOpContext *ctx) = 0;
-
-  virtual void enterFuncRParams(CACTParser::FuncRParamsContext *ctx) = 0;
-  virtual void exitFuncRParams(CACTParser::FuncRParamsContext *ctx) = 0;
 
   virtual void enterMulExpMulExp(CACTParser::MulExpMulExpContext *ctx) = 0;
   virtual void exitMulExpMulExp(CACTParser::MulExpMulExpContext *ctx) = 0;
@@ -194,11 +192,23 @@ public:
   virtual void enterBoolVal(CACTParser::BoolValContext *ctx) = 0;
   virtual void exitBoolVal(CACTParser::BoolValContext *ctx) = 0;
 
-  virtual void enterLVal(CACTParser::LValContext *ctx) = 0;
-  virtual void exitLVal(CACTParser::LValContext *ctx) = 0;
+  virtual void enterLValBasic(CACTParser::LValBasicContext *ctx) = 0;
+  virtual void exitLValBasic(CACTParser::LValBasicContext *ctx) = 0;
+
+  virtual void enterLValIndexed(CACTParser::LValIndexedContext *ctx) = 0;
+  virtual void exitLValIndexed(CACTParser::LValIndexedContext *ctx) = 0;
+
+  virtual void enterRValBasic(CACTParser::RValBasicContext *ctx) = 0;
+  virtual void exitRValBasic(CACTParser::RValBasicContext *ctx) = 0;
+
+  virtual void enterRValIndexed(CACTParser::RValIndexedContext *ctx) = 0;
+  virtual void exitRValIndexed(CACTParser::RValIndexedContext *ctx) = 0;
 
   virtual void enterFuncVal(CACTParser::FuncValContext *ctx) = 0;
   virtual void exitFuncVal(CACTParser::FuncValContext *ctx) = 0;
+
+  virtual void enterFuncRParams(CACTParser::FuncRParamsContext *ctx) = 0;
+  virtual void exitFuncRParams(CACTParser::FuncRParamsContext *ctx) = 0;
 
 
 };

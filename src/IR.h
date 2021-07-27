@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 
+#include "CACT.h"
 #include "IRCode.h"
 #include "IROperand.h"
 

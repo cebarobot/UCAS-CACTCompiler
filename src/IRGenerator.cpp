@@ -2,6 +2,7 @@
 
 IRGenerator::IRGenerator(IRProgram * newIR)
 :ir(newIR), currentIRFunc(nullptr) {
+    labelCount = 1;
     valueCount = 1;
 }
 
@@ -39,6 +40,12 @@ IRValue * IRGenerator::newValue(DataType dataType, std::string value) {
     return val;
 }
 
+void IRGenerator::removeValues(int cnt) {
+    for (int i = 0; i < cnt; i++) {
+        ir->globalValues.pop_back();
+    }
+}
+
 IRVariable * IRGenerator::newVar(std::string name, DataType dataType) {
     IRVariable * var = new IRVariable(name, SizeOfDataType(dataType));
 
@@ -51,7 +58,7 @@ IRVariable * IRGenerator::newVar(std::string name, DataType dataType) {
     return var;
 }
 
-IRVariable * IRGenerator::newVar(std::string name, DataType dataType, size_t len) {
+IRVariable * IRGenerator::newVar(std::string name, DataType dataType, int len) {
     IRVariable * var = new IRVariable(name, SizeOfDataType(dataType) * len);
 
     if (currentIRFunc) {
@@ -64,6 +71,15 @@ IRVariable * IRGenerator::newVar(std::string name, DataType dataType, size_t len
 }
 
 IRLabel * IRGenerator::newLabel(std::string name) {
+    IRLabel * label = new IRLabel(name);
+    ir->labels.push_back(label);
+    return label;
+}
+
+IRLabel * IRGenerator::newLabel() {
+    std::string name = std::string("label") + std::to_string(labelCount);
+    labelCount += 1;
+
     IRLabel * label = new IRLabel(name);
     ir->labels.push_back(label);
     return label;
@@ -85,7 +101,7 @@ IRVariable * IRGenerator::newIntTemp() {
     return newTemp(SizeOfDataType(INT));
 }
 
-void IRGenerator::startArrOp(DataType datatype, size_t len) {
+void IRGenerator::startArrOp(DataType datatype, int len) {
     int cellSize = SizeOfDataType(datatype);
     IROperand * ir_cs = newInt(cellSize);
     IROperand * ir_len = newInt(len);
@@ -104,6 +120,9 @@ void IRGenerator::endArrOp() {
 }
 
 IROperand * IRGenerator::getArrRepeatVar() {
+    if (!arrRepeatVar) {
+        throw std::runtime_error("no repeat var");
+    }
     return arrRepeatVar;
 }
 
@@ -120,7 +139,7 @@ void IRGenerator::assignBasic(DataType datatype, IROperand * d, IROperand * s) {
     }
 }
 
-void IRGenerator::assignArray(DataType datatype, size_t len, IROperand * d, IROperand * s) {
+void IRGenerator::assignArray(DataType datatype, int len, IROperand * d, IROperand * s) {
     startArrOp(datatype, len);
 
     IROperand * ppp = getArrRepeatVar();

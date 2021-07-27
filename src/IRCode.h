@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 
+#include "CACT.h"
 #include "IROperand.h"
 
 enum IROperation {
