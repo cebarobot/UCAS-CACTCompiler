@@ -998,7 +998,9 @@ void SemanticAnalysis::exitLValIndexed(CACTParser::LValIndexedContext * ctx) {
         throw std::runtime_error("array index should be int");
         return;
     }
-    ctx->index = ctx->exp()->result;
+    ctx->index = irGen->newTemp(INT);
+    IROperand * ir_cs = irGen->newInt(SizeOfDataType(ctx->dataType));
+    irGen->addCode(new IRMulInt(ctx->index, ir_cs, ctx->exp()->result));
 
     if (thisSymbolType == SymbolType::CONST_ARRAY) {
         throw std::runtime_error(std::string("cannot assign to a constant: ") + ctx->getText());
@@ -1073,7 +1075,10 @@ void SemanticAnalysis::exitRValIndexed(CACTParser::RValIndexedContext * ctx) {
         throw std::runtime_error("array index should be int");
         return;
     }
-    IROperand * index = ctx->exp()->result;
+    IROperand * index = irGen->newTemp(INT);
+    IROperand * ir_cs = irGen->newInt(SizeOfDataType(ctx->dataType));
+    irGen->addCode(new IRMulInt(index, ir_cs, ctx->exp()->result));
+
     ctx->result = irGen->newTemp(ctx->dataType);
 
     if (thisSymbolType == SymbolType::CONST_ARRAY || thisSymbolType == SymbolType::VAR_ARRAY) {
