@@ -550,6 +550,12 @@ void SemanticAnalysis::exitUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext * 
             if (ctx->dataType == INT) {
                 ctx->result = irGen->newTemp(ctx->dataType);
                 irGen->addCode(new IRNegInt(ctx->result, ctx->unaryExp()->result));
+            } else if (ctx->dataType == FLOAT) {
+                ctx->result = irGen->newTemp(ctx->dataType);
+                irGen->addCode(new IRNegFloat(ctx->result, ctx->unaryExp()->result));
+            } else if (ctx->dataType == DOUBLE) {
+                ctx->result = irGen->newTemp(ctx->dataType);
+                irGen->addCode(new IRNegDouble(ctx->result, ctx->unaryExp()->result));
             }
             // TODO:
         }
@@ -709,10 +715,18 @@ void SemanticAnalysis::exitAddExpAddExp(CACTParser::AddExpAddExpContext * ctx) {
     if (add_op == "+") {
         if (ctx->dataType == INT) {
             irGen->addCode(new IRAddInt(ctx->result, ctx->addExp()->result, ctx->mulExp()->result));
+        } else if (ctx->dataType == FLOAT) {
+            irGen->addCode(new IRAddFloat(ctx->result, ctx->addExp()->result, ctx->mulExp()->result));
+        } else if (ctx->dataType == DOUBLE) {
+            irGen->addCode(new IRAddDouble(ctx->result, ctx->addExp()->result, ctx->mulExp()->result));
         }
     } else if (add_op == "-") {
         if (ctx->dataType == INT) {
             irGen->addCode(new IRSubInt(ctx->result, ctx->addExp()->result, ctx->mulExp()->result));
+        } else if (ctx->dataType == FLOAT) {
+            irGen->addCode(new IRSubFloat(ctx->result, ctx->addExp()->result, ctx->mulExp()->result));
+        } else if (ctx->dataType == DOUBLE) {
+            irGen->addCode(new IRSubDouble(ctx->result, ctx->addExp()->result, ctx->mulExp()->result));
         }
     }
     // TODO:
