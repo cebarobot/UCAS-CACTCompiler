@@ -171,6 +171,7 @@ void IRParamW::print() {
     std::cout << "param " << getArg1()->getName() << ";" << std::endl;
 }
 
+
 void IRParamF::print() {
     std::cout << "param " << getArg1()->getName() << ";" << std::endl;
 }
