@@ -645,10 +645,18 @@ void SemanticAnalysis::exitMulExpMulExp(CACTParser::MulExpMulExpContext * ctx) {
     if (mul_op == "*") {
         if (ctx->dataType == INT) {
             irGen->addCode(new IRMulInt(ctx->result, ctx->mulExp()->result, ctx->unaryExp()->result));
+        } else if (ctx->dataType == FLOAT) {
+            irGen->addCode(new IRMulFloat(ctx->result, ctx->mulExp()->result, ctx->unaryExp()->result));
+        } else if (ctx->dataType == DOUBLE) {
+            irGen->addCode(new IRMulDouble(ctx->result, ctx->mulExp()->result, ctx->unaryExp()->result));
         }
     } else if (mul_op == "/") {
         if (ctx->dataType == INT) {
             irGen->addCode(new IRDivInt(ctx->result, ctx->mulExp()->result, ctx->unaryExp()->result));
+        } else if (ctx->dataType == FLOAT) {
+            irGen->addCode(new IRDivFloat(ctx->result, ctx->mulExp()->result, ctx->unaryExp()->result));
+        } else if (ctx->dataType == DOUBLE) {
+            irGen->addCode(new IRDivDouble(ctx->result, ctx->mulExp()->result, ctx->unaryExp()->result));
         }
     } else if (mul_op == "%") {
         if (ctx->dataType == INT) {
