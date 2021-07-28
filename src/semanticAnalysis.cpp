@@ -271,12 +271,24 @@ void SemanticAnalysis::enterFuncFParams(CACTParser::FuncFParamsContext * ctx) {
 }
 void SemanticAnalysis::exitFuncFParams(CACTParser::FuncFParamsContext * ctx) {
     for (const auto & oneParam : ctx->funcFParam()) {
+        std::string name = oneParam->Ident()->getText();
+        DataType dt = oneParam->bDataType;
+
         if (oneParam->ArraySymbol() != nullptr) {
-            ctx->thisFuncInfo->addParamArray(oneParam->Ident()->getText(), oneParam->bDataType);
+            SymbolInfo * thisSymbolInfo = ctx->thisFuncInfo->addParamArray(name, dt);
             // TODO: add to ir variable
         } else {
-            ctx->thisFuncInfo->addParamVar(oneParam->Ident()->getText(), oneParam->bDataType);
-            // TODO: add to ir variable
+            SymbolInfo * thisSymbolInfo = ctx->thisFuncInfo->addParamVar(name, dt);
+            IROperand * param_var = irGen->newVar(name, dt);
+            thisSymbolInfo->setOp(param_var);
+
+            if (dt == BOOL || dt == INT) {
+                irGen->addCode(new IRGetParamW(param_var));
+            } else if (dt == FLOAT) {
+                irGen->addCode(new IRGetParamF(param_var));
+            } else if (dt == DOUBLE) {
+                irGen->addCode(new IRGetParamD(param_var));
+            }
         }
     }
 }
@@ -404,19 +416,28 @@ void SemanticAnalysis::exitStmtReturn(CACTParser::StmtReturnContext * ctx) {
         return;
     }
 
+    DataType dt = currentFunc->getDataType();
+
     if (ctx->exp() != nullptr) {
-        if (currentFunc->getDataType() != ctx->exp()->dataType) {
+        if (dt != ctx->exp()->dataType) {
             throw std::runtime_error("return data type not match");
             return;
         }
     } else {
-        if (currentFunc->getDataType() != DataType::VOID) {
+        if (dt != DataType::VOID) {
             throw std::runtime_error("this function needs an unvoid return value");
             return;
         }
     }
 
-    irGen->addCode(new IRReturn(ctx->exp()->result));
+    if (dt == BOOL || dt == INT) {
+        irGen->addCode(new IRReturnW(ctx->exp()->result));
+    } else if (dt == FLOAT) {
+        irGen->addCode(new IRReturnF(ctx->exp()->result));
+    } else if (dt == DOUBLE) {
+        irGen->addCode(new IRReturnD(ctx->exp()->result));
+    }
+
 }
 
 void SemanticAnalysis::enterExpAddExp(CACTParser::ExpAddExpContext * ctx) {
@@ -1122,8 +1143,14 @@ void SemanticAnalysis::exitFuncVal(CACTParser::FuncValContext * ctx) {
         return;
     }
 
-    irGen->addCode(new IRCall(ctx->result, funcLabel));
-
+    irGen->addCode(new IRCall(funcLabel));
+    if (ctx->dataType == BOOL || ctx->dataType == INT) {
+        irGen->addCode(new IRGetReturnW(ctx->result));
+    } else if (ctx->dataType == FLOAT) {
+        irGen->addCode(new IRGetReturnF(ctx->result));
+    } else if (ctx->dataType == DOUBLE) {
+        irGen->addCode(new IRGetReturnD(ctx->result));
+    }
 }
 
 void SemanticAnalysis::enterFuncRParams(CACTParser::FuncRParamsContext * ctx) {
@@ -1142,8 +1169,8 @@ void SemanticAnalysis::exitFuncRParams(CACTParser::FuncRParamsContext * ctx) {
     std::vector < SymbolInfo * > paramList = thisFunc->getparamList();
     for (int i = 0; i < paramNum; i++) {
         bool paramIsArray = paramList[i]->getSymbolType() == SymbolType::CONST_ARRAY || paramList[i]->getSymbolType() == SymbolType::VAR_ARRAY;
-
-        if (ctx->exp(i)->dataType != paramList[i]->getDataType()) {
+        DataType dt = ctx->exp(i)->dataType;
+        if (dt != paramList[i]->getDataType()) {
             throw std::runtime_error("different data type of parameters");
             return;
         } else if (ctx->exp(i)->isArray != paramIsArray) {
@@ -1152,7 +1179,13 @@ void SemanticAnalysis::exitFuncRParams(CACTParser::FuncRParamsContext * ctx) {
         }
 
         IROperand * temp = ctx->exp(i)->result;
-        irGen->addCode(new IRParam(temp));
+        if (dt == BOOL || dt == INT) {
+            irGen->addCode(new IRParamW(temp));
+        } else if (dt == FLOAT) {
+            irGen->addCode(new IRParamF(temp));
+        } else if (dt == DOUBLE) {
+            irGen->addCode(new IRParamD(temp));
+        }
     }
 }
 
