@@ -353,16 +353,20 @@ void SemanticAnalysis::exitStmtAssign(CACTParser::StmtAssignContext * ctx) {
     }
 
     if (ctx->lVal()->index) {
-        if (ctx->lVal()->dataType == DOUBLE) {
-            irGen->addCode(new IRCopyToIndexedD(ctx->lVal()->result, ctx->exp()->result, ctx->lVal()->index));
-        } else {
+        if (ctx->lVal()->dataType == INT || ctx->lVal()->dataType == BOOL) {
             irGen->addCode(new IRCopyToIndexedW(ctx->lVal()->result, ctx->exp()->result, ctx->lVal()->index));
+        } else if (ctx->lVal()->dataType == FLOAT) {
+            irGen->addCode(new IRCopyToIndexedF(ctx->lVal()->result, ctx->exp()->result, ctx->lVal()->index));
+        } else if (ctx->lVal()->dataType == DOUBLE) {
+            irGen->addCode(new IRCopyToIndexedD(ctx->lVal()->result, ctx->exp()->result, ctx->lVal()->index));
         }
     } else {
-        if (ctx->lVal()->dataType == DOUBLE) {
-            irGen->addCode(new IRCopyD(ctx->lVal()->result, ctx->exp()->result));
-        } else {
+        if (ctx->lVal()->dataType == INT || ctx->lVal()->dataType == BOOL) {
             irGen->addCode(new IRCopyW(ctx->lVal()->result, ctx->exp()->result));
+        } else if (ctx->lVal()->dataType == FLOAT) {
+            irGen->addCode(new IRCopyF(ctx->lVal()->result, ctx->exp()->result));
+        } else if (ctx->lVal()->dataType == DOUBLE) {
+            irGen->addCode(new IRCopyD(ctx->lVal()->result, ctx->exp()->result));
         }
     }
 }

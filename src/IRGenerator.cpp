@@ -97,6 +97,9 @@ IRVariable * IRGenerator::newTemp(DataType dataType) {
     tempCount += 1;
 
     IRVariable * temp = new IRVariable(name, dataType);
+    if (currentIRFunc) {
+        currentIRFunc->localVariables.push_back(temp);
+    }
     return temp;
 }
 

@@ -141,10 +141,11 @@ int IRValue::getSize() {
 }
 
 std::string IRValue::getImme() {
-    if ((dataType == INT || dataType == BOOL) && values.size() == 1 && !isVar) {
+    if (values[0] == std::string("")) {
+        return "0";
+    } else {
         return values[0];
     }
-    throw std::runtime_error("cannot get imme");
 }
 
 void IRValue::alloc(TargetCodeList * t) {
@@ -195,7 +196,7 @@ void IRValue::loadTo(TargetCodeList * t, std::string reg) {
             t->add(std::string("\tlui\tt1, %hi(") + name + std::string(")"));
             t->add(std::string("\tlw\t") + reg + std::string(", %lo(") + name + std::string(")(t1)"));
         } else {
-            t->add(std::string("\tli\t") + reg + std::string(", ") + values[0]);
+            t->add(std::string("\tli\t") + reg + std::string(", ") + getImme());
         }
     } else if (dataType == FLOAT) {
         t->add(std::string("\tlui\tt1, %hi(") + name + std::string(")"));
