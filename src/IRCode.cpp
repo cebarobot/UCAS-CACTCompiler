@@ -34,8 +34,14 @@ IRParamF::IRParamF(IROperand * new_arg1)
 IRParamD::IRParamD(IROperand * new_arg1)
 : IRCode(PARAM_D, nullptr, new_arg1, nullptr) { }
 
-IRCall::IRCall(IROperand * new_result, IROperand * new_arg1)
-: IRCode(CALL, new_result, new_arg1, nullptr) { }
+IRGetParamW::IRGetParamW(IROperand * new_result)
+: IRCode(GET_PARAM_W, new_result, nullptr, nullptr) { }
+
+IRGetParamF::IRGetParamF(IROperand * new_result)
+: IRCode(GET_PARAM_F, new_result, nullptr, nullptr) { }
+
+IRGetParamD::IRGetParamD(IROperand * new_result)
+: IRCode(GET_PARAM_D, new_result, nullptr, nullptr) { }
 
 IRCall::IRCall(IROperand * new_arg1)
 : IRCode(CALL, nullptr, new_arg1, nullptr) { }
@@ -48,6 +54,15 @@ IRReturnF::IRReturnF(IROperand * new_arg1)
 
 IRReturnD::IRReturnD(IROperand * new_arg1)
 : IRCode(RETURN_D, nullptr, new_arg1, nullptr) { }
+
+IRGetReturnW::IRGetReturnW(IROperand * new_result)
+: IRCode(GET_RETURN_W, new_result, nullptr, nullptr) { }
+
+IRGetReturnF::IRGetReturnF(IROperand * new_result)
+: IRCode(GET_RETURN_F, new_result, nullptr, nullptr) { }
+
+IRGetReturnD::IRGetReturnD(IROperand * new_result)
+: IRCode(GET_RETURN_D, new_result, nullptr, nullptr) { }
 
 IRCopyW::IRCopyW(IROperand * new_result, IROperand * new_arg1)
 : IRCode(COPY_W, new_result, new_arg1, nullptr) { }
@@ -171,7 +186,6 @@ void IRParamW::print() {
     std::cout << "param " << getArg1()->getName() << ";" << std::endl;
 }
 
-
 void IRParamF::print() {
     std::cout << "param " << getArg1()->getName() << ";" << std::endl;
 }
@@ -180,14 +194,25 @@ void IRParamD::print() {
     std::cout << "param " << getArg1()->getName() << ";" << std::endl;
 }
 
+void IRGetParamW::print() {
+    std::cout << getResult()->getName() << " = " << " param "
+              << ";" << std::endl;
+}
+
+void IRGetParamF::print() {
+    std::cout << getResult()->getName() << " = " << " param "
+              << ";" << std::endl;
+}
+
+void IRGetParamD::print() {
+    std::cout << getResult()->getName() << " = " << " param "
+              << ";" << std::endl;
+}
+
 void IRCall::print() {
-    if (getResult()) {
-        std::cout << getResult()->getName() << " := call " 
-                  << getArg1()->getName() << "; " << std::endl;
-    } else {
-        std::cout << "call " 
-                  << getArg1()->getName() << "; " << std::endl;
-    }
+    std::cout << "call " 
+              << getArg1()->getName() << "; " << std::endl;
+    
 }
 
 void IRReturnW::print() {
@@ -200,6 +225,21 @@ void IRReturnF::print() {
 
 void IRReturnD::print() {
     std::cout << "return " << getArg1()->getName() << ";" << std::endl;
+}
+
+void IRGetReturnW::print() {
+    std::cout <<  getResult()->getName() << " = " << " return "
+              << ";" << std::endl;
+}
+
+void IRGetReturnF::print() {
+    std::cout <<  getResult()->getName() << " = " << " return "
+              << ";" << std::endl;
+}
+
+void IRGetReturnD::print() {
+    std::cout <<  getResult()->getName() << " = " << " return "
+              << ";" << std::endl;
 }
 
 void IRCopyW::print() {

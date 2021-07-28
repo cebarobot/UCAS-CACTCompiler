@@ -19,6 +19,9 @@ enum IROperation {
     RETURN_W,
     RETURN_F,
     RETURN_D,
+    GET_RETURN_W,
+    GET_RETURN_F,
+    GET_RETURN_D,
     COPY_W,
     COPY_F,
     COPY_D,
@@ -93,7 +96,6 @@ public:
     virtual void print();
 };
 
-
 class IRParamF : public IRCode {
 public:
     IRParamF(IROperand * new_arg1);
@@ -108,9 +110,29 @@ public:
     virtual void print();
 };
 
+class IRGetParamW : public IRCode {
+public:
+    IRGetParamW(IROperand * new_result);
+
+    virtual void print();
+};
+
+class IRGetParamF : public IRCode {
+public:
+    IRGetParamF(IROperand * new_result);
+
+    virtual void print();
+};
+
+class IRGetParamD : public IRCode {
+public:
+    IRGetParamD(IROperand * new_result);
+
+    virtual void print();
+};
+
 class IRCall : public IRCode {
 public:
-    IRCall(IROperand * new_result, IROperand * new_arg1);
     IRCall(IROperand * new_arg1);
 
     virtual void print();
@@ -133,6 +155,27 @@ public:
 class IRReturnD : public IRCode {
 public:
     IRReturnD(IROperand * new_arg1);
+
+    virtual void print();
+};
+
+class IRGetReturnW : public IRCode {
+public:
+    IRGetReturnW(IROperand * new_result);
+
+    virtual void print();
+};
+
+class IRGetReturnF : public IRCode {
+public:
+    IRGetReturnF(IROperand * new_result);
+
+    virtual void print();
+};
+
+class IRGetReturnD : public IRCode {
+public:
+    IRGetReturnD(IROperand * new_result);
 
     virtual void print();
 };
