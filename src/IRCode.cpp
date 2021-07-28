@@ -521,6 +521,7 @@ void IRGetParamD::genTargetCode(TargetCodeList * t) {
 }
 
 void IRCall::genTargetCode(TargetCodeList * t) {
+    t->resetRegParam();
     t->add(std::string("\tcall\t") + getArg1()->getImme());
 }
 
@@ -549,147 +550,175 @@ void IRGetReturnD::genTargetCode(TargetCodeList * t) {
 }
 
 void IRCopyW::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "t5");
-    getResult()->storeFrom(t, "t5");
+    getArg1()->loadTo(t, "t4");
+    getResult()->storeFrom(t, "t4");
 }
 
 void IRCopyF::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "ft5");
-    getResult()->storeFrom(t, "ft5");
+    getArg1()->loadTo(t, "ft4");
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRCopyD::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "ft5");
-    getResult()->storeFrom(t, "ft5");
+    getArg1()->loadTo(t, "ft4");
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRCopyFromIndexedW::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadAddrTo(t, "t6");
-    getArg2()->loadAddrTo(t, "t7");
-    t->add(std::string("\tadd\tt6, t6, t7"));
-    t->add(std::string("\tlw\tt5, 0(t6)"));
-    getResult()->storeFrom(t, "t5");
+    getArg1()->loadAddrTo(t, "t5");
+    getArg2()->loadAddrTo(t, "t6");
+    t->add(std::string("\tadd\tt5, t5, t6"));
+    t->add(std::string("\tlw\tt4, 0(t5)"));
+    getResult()->storeFrom(t, "t4");
 }
 
 void IRCopyFromIndexedF::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadAddrTo(t, "t6");
-    getArg2()->loadAddrTo(t, "t7");
-    t->add(std::string("\tadd\tt6, t6, t7"));
-    t->add(std::string("\tflw\tft5, 0(t6)"));
-    getResult()->storeFrom(t, "ft5");
+    getArg1()->loadAddrTo(t, "t5");
+    getArg2()->loadAddrTo(t, "t6");
+    t->add(std::string("\tadd\tt5, t5, t6"));
+    t->add(std::string("\tflw\tft4, 0(t5)"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRCopyFromIndexedD::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadAddrTo(t, "t6");
-    getArg2()->loadAddrTo(t, "t7");
-    t->add(std::string("\tadd\tt6, t6, t7"));
-    t->add(std::string("\tfld\tft5, 0(t6)"));
-    getResult()->storeFrom(t, "ft5");
+    getArg1()->loadAddrTo(t, "t5");
+    getArg2()->loadAddrTo(t, "t6");
+    t->add(std::string("\tadd\tt5, t5, t6"));
+    t->add(std::string("\tfld\tft4, 0(t5)"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRCopyToIndexedW::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "t5");
-    getResult()->loadAddrTo(t, "t6");
-    getArg2()->loadAddrTo(t, "t7");
-    t->add(std::string("\tadd\tt6, t6, t7"));
-    t->add(std::string("\tsw\tt5, 0(t6)"));
+    getArg1()->loadTo(t, "t4");
+    getResult()->loadAddrTo(t, "t5");
+    getArg2()->loadAddrTo(t, "t6");
+    t->add(std::string("\tadd\tt5, t5, t6"));
+    t->add(std::string("\tsw\tt4, 0(t5)"));
 }
 
 void IRCopyToIndexedF::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "ft5");
-    getResult()->loadAddrTo(t, "t6");
-    getArg2()->loadAddrTo(t, "t7");
-    t->add(std::string("\tadd\tt6, t6, t7"));
-    t->add(std::string("\tfsw\tft5, 0(t6)"));
+    getArg1()->loadTo(t, "ft4");
+    getResult()->loadAddrTo(t, "t5");
+    getArg2()->loadAddrTo(t, "t6");
+    t->add(std::string("\tadd\tt5, t5, t6"));
+    t->add(std::string("\tfsw\tft4, 0(t5)"));
 }
 
 void IRCopyToIndexedD::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "ft5");
-    getResult()->loadAddrTo(t, "t6");
-    getArg2()->loadAddrTo(t, "t7");
-    t->add(std::string("\tadd\tt6, t6, t7"));
-    t->add(std::string("\tfsd\tft5, 0(t6)"));
+    getArg1()->loadTo(t, "ft4");
+    getResult()->loadAddrTo(t, "t5");
+    getArg2()->loadAddrTo(t, "t6");
+    t->add(std::string("\tadd\tt5, t5, t6"));
+    t->add(std::string("\tfsd\tft4, 0(t5)"));
 }
 
 void IRAddInt::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "t6");
-    getArg2()->loadTo(t, "t7");
-    t->add(std::string("\tadd\tt5, t6, t7"));
-    getResult()->storeFrom(t, "t5");
+    getArg1()->loadTo(t, "t5");
+    getArg2()->loadTo(t, "t6");
+    t->add(std::string("\tadd\tt4, t5, t6"));
+    getResult()->storeFrom(t, "t4");
 }
 
 void IRAddFloat::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg2()->loadTo(t, "ft6");
+    t->add(std::string("\tfadd.s\tft4, ft5, ft6"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRAddDouble::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg2()->loadTo(t, "ft6");
+    t->add(std::string("\tfadd.d\tft4, ft5, ft6"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRSubInt::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "t6");
-    getArg2()->loadTo(t, "t7");
-    t->add(std::string("\tsub\tt5, t6, t7"));
-    getResult()->storeFrom(t, "t5");
+    getArg1()->loadTo(t, "t5");
+    getArg2()->loadTo(t, "t6");
+    t->add(std::string("\tsub\tt4, t5, t6"));
+    getResult()->storeFrom(t, "t4");
 }
 
 void IRSubFloat::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg2()->loadTo(t, "ft6");
+    t->add(std::string("\tfsub.s\tft4, ft5, ft6"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRSubDouble::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg2()->loadTo(t, "ft6");
+    t->add(std::string("\tfsub.d\tft4, ft5, ft6"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRNegInt::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "t6");
-    t->add(std::string("\tsub\tt5, x0, t6"));
-    getResult()->storeFrom(t, "t5");
+    getArg1()->loadTo(t, "t5");
+    t->add(std::string("\tsub\tt4, x0, t5"));
+    getResult()->storeFrom(t, "t4");
 }
 
 void IRNegFloat::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    t->add(std::string("\tfneg.s\tft4, ft5"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRNegDouble::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    t->add(std::string("\tfneg.d\tft4, ft5"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRMulInt::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "t6");
-    getArg2()->loadTo(t, "t7");
-    t->add(std::string("\tmul\tt5, t6, t7"));
-    getResult()->storeFrom(t, "t5");
+    getArg1()->loadTo(t, "t5");
+    getArg2()->loadTo(t, "t6");
+    t->add(std::string("\tmul\tt4, t5, t6"));
+    getResult()->storeFrom(t, "t4");
 }
 
 void IRMulFloat::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg2()->loadTo(t, "ft6");
+    t->add(std::string("\tfmul.s\tft4, ft5, ft6"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRMulDouble::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg2()->loadTo(t, "ft6");
+    t->add(std::string("\tfmul.d\tft4, ft5, ft6"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRDivInt::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "t6");
-    getArg2()->loadTo(t, "t7");
-    t->add(std::string("\tdiv\tt5, t6, t7"));
-    getResult()->storeFrom(t, "t5");
+    getArg1()->loadTo(t, "t5");
+    getArg2()->loadTo(t, "t6");
+    t->add(std::string("\tdiv\tt4, t5, t6"));
+    getResult()->storeFrom(t, "t4");
 }
 
 void IRDivFloat::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg2()->loadTo(t, "ft6");
+    t->add(std::string("\tfdiv.s\tft4, ft5, ft6"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRDivDouble::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg2()->loadTo(t, "ft6");
+    t->add(std::string("\tfdiv.d\tft4, ft5, ft6"));
+    getResult()->storeFrom(t, "ft4");
 }
 
 void IRModInt::genTargetCode(TargetCodeList * t) {
-    getArg1()->loadTo(t, "t6");
-    getArg2()->loadTo(t, "t7");
-    t->add(std::string("\trem\tt5, t6, t7"));
-    getResult()->storeFrom(t, "t5");
+    getArg1()->loadTo(t, "t5");
+    getArg2()->loadTo(t, "t6");
+    t->add(std::string("\trem\tt4, t5, t6"));
+    getResult()->storeFrom(t, "t4");
 }
 
 void IRIfGreaterThanZeroGoto::genTargetCode(TargetCodeList * t) {
