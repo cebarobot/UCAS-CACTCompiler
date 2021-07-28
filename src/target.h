@@ -4,16 +4,6 @@
 #include <string>
 #include <iostream>
 
-#include "IR.h"
-
-class TargetGen {
-    IRProgram * ir;
-public:
-    TargetGen(IRProgram * newIR);
-
-    void gen(std::ostream & ofs);
-};
-
 class TargetCodeList {
 private:
     std::vector<std::string> list;
