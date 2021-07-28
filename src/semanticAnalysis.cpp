@@ -361,6 +361,7 @@ void SemanticAnalysis::exitStmtAssign(CACTParser::StmtAssignContext * ctx) {
         } else if (ctx->lVal()->dataType == DOUBLE) {
             irGen->addCode(new IRCopyToIndexedD(ctx->lVal()->result, ctx->exp()->result, ctx->lVal()->index));
         }
+        irGen->endArrOp();
     } else {
         if (ctx->lVal()->dataType == INT || ctx->lVal()->dataType == BOOL) {
             irGen->addCode(new IRCopyW(ctx->lVal()->result, ctx->exp()->result));
@@ -1019,6 +1020,8 @@ void SemanticAnalysis::exitLValBasic(CACTParser::LValBasicContext * ctx) {
     } else if (thisSymbolType == SymbolType::VAR_ARRAY) {
         ctx->isArray = true;
         ctx->arraySize = thisSymbol->getArraySize();
+
+        irGen->startArrOp(ctx->dataType, ctx->arraySize);
         ctx->index = irGen->getArrRepeatVar();
     } else {
         throw std::runtime_error(

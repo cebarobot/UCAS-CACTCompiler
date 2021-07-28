@@ -115,10 +115,12 @@ void IRGenerator::startArrOp(DataType datatype, int len) {
 }
 
 void IRGenerator::endArrOp() {
-    addCode(new IRIfGreaterThanZeroGoto(arrRepeatLabel, arrRepeatVar));
+    if (arrRepeatVar) {
+        addCode(new IRIfGreaterThanZeroGoto(arrRepeatLabel, arrRepeatVar));
 
-    arrRepeatLabel = nullptr;
-    arrRepeatVar = nullptr;
+        arrRepeatLabel = nullptr;
+        arrRepeatVar = nullptr;
+    }
 }
 
 IROperand * IRGenerator::getArrRepeatVar() {
