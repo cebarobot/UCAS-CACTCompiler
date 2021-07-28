@@ -1,0 +1,15 @@
+// test function call
+
+int fibonacci(int n)
+{
+    int a = 0, b = 1, c = 0;
+    c = a + b;
+    return c;
+}
+
+int main()
+{
+    int n = 2;
+    fibonacci(n);
+    return 0;
+}
