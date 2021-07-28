@@ -12,9 +12,15 @@
 using namespace antlr4;
 
 int main(int argc, const char* argv[]) {
-    std::ifstream stream;
-    stream.open(argv[1]);
-    ANTLRInputStream input(stream);
+    std::string sourceName = argv[1];
+    size_t lastIndex = sourceName.find_last_of("."); 
+    std::string rawName = sourceName.substr(0, lastIndex); 
+    std::string asmName = rawName + std::string(".s");
+
+    std::ifstream sourceStream;
+    sourceStream.open(sourceName);
+
+    ANTLRInputStream input(sourceStream);
     CACTLexer lexer(&input);
     CommonTokenStream tokens(&lexer);
     CACTParser parser(&tokens);
@@ -37,7 +43,7 @@ int main(int argc, const char* argv[]) {
     // std::cout << "========================= AST ========================" << std::endl;
 
     BlockInfo globalBlockInfo(nullptr);
-    IRProgram ir;
+    IRProgram ir(sourceName);
     IRGenerator irGen(&ir);
     SemanticAnalysis listener(&globalBlockInfo, &irGen);
 
@@ -49,6 +55,13 @@ int main(int argc, const char* argv[]) {
     }
 
     ir.print();
+
+    TargetCodeList targetCode;
+    ir.targetGen(&targetCode);
+
+    std::ofstream asmStream;
+    asmStream.open(asmName);
+    asmStream << targetCode;
 
     return 0;
 }

@@ -16,6 +16,15 @@ void IRFunction::print() {
     std::cout << std::endl;
 }
 
+void IRFunction::targetGen(TargetCodeList * t) {
+    for (auto oneCode : codes) {
+        oneCode->genTargetCode(t);
+    }
+}
+
+IRProgram::IRProgram(std::string newFilename)
+: filename(newFilename) { }
+
 void IRProgram::print() {
     std::cout << "------------------------- IR -------------------------" << std::endl;
     std::cout << "data: " << std::endl;
@@ -31,4 +40,13 @@ void IRProgram::print() {
     }
 
     std::cout << "========================= IR =========================" << std::endl;
+}
+
+void IRProgram::targetGen(TargetCodeList * t) {
+    for (auto oneValue : globalValues) {
+        oneValue->alloc(t);
+    }
+    for (auto oneFunc : functions) {
+        oneFunc->targetGen(t);
+    }
 }

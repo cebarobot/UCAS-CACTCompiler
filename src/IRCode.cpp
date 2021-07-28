@@ -484,3 +484,255 @@ void IRIfLessEqualThanGotoD::print() {
               << getArg2()->getName() 
               << "Goto " << getResult()->getName() << ";" << std::endl;
 }
+
+void IRLabelHere::genTargetCode(TargetCodeList * t) {
+    t->add(getArg1()->getImme() + std::string(":"));
+}
+
+void IRParamW::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, t->getRegParamX());
+}
+
+void IRParamF::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, t->getRegParamF());
+}
+
+void IRParamD::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, t->getRegParamF());
+}
+
+void IRGetParamW::genTargetCode(TargetCodeList * t) {
+    getResult()->storeFrom(t, t->getRegGetParamX());
+}
+
+void IRGetParamF::genTargetCode(TargetCodeList * t) {
+    getResult()->storeFrom(t, t->getRegGetParamF());
+}
+
+void IRGetParamD::genTargetCode(TargetCodeList * t) {
+    getResult()->storeFrom(t, t->getRegGetParamF());
+}
+
+void IRCall::genTargetCode(TargetCodeList * t) {
+    t->add(std::string("\tcall\t") + getArg1()->getImme());
+}
+
+void IRReturnW::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "a0");
+}
+
+void IRReturnF::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "fa0");
+}
+
+void IRReturnD::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "fa0");
+}
+
+void IRGetReturnW::genTargetCode(TargetCodeList * t) {
+    getResult()->storeFrom(t, "a0");
+}
+
+void IRGetReturnF::genTargetCode(TargetCodeList * t) {
+    getResult()->storeFrom(t, "fa0");
+}
+
+void IRGetReturnD::genTargetCode(TargetCodeList * t) {
+    getResult()->storeFrom(t, "fa0");
+}
+
+void IRCopyW::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "t5");
+    getResult()->storeFrom(t, "t5");
+}
+
+void IRCopyF::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "ft5");
+    getResult()->storeFrom(t, "ft5");
+}
+
+void IRCopyD::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "ft5");
+    getResult()->storeFrom(t, "ft5");
+}
+
+void IRCopyFromIndexedW::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadAddrTo(t, "t6");
+    getArg2()->loadAddrTo(t, "t7");
+    t->add(std::string("\tadd\tt6, t6, t7"));
+    t->add(std::string("\tlw\tt5, 0(t6)"));
+    getResult()->storeFrom(t, "t5");
+}
+
+void IRCopyFromIndexedF::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadAddrTo(t, "t6");
+    getArg2()->loadAddrTo(t, "t7");
+    t->add(std::string("\tadd\tt6, t6, t7"));
+    t->add(std::string("\tflw\tft5, 0(t6)"));
+    getResult()->storeFrom(t, "ft5");
+}
+
+void IRCopyFromIndexedD::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadAddrTo(t, "t6");
+    getArg2()->loadAddrTo(t, "t7");
+    t->add(std::string("\tadd\tt6, t6, t7"));
+    t->add(std::string("\tfld\tft5, 0(t6)"));
+    getResult()->storeFrom(t, "ft5");
+}
+
+void IRCopyToIndexedW::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "t5");
+    getResult()->loadAddrTo(t, "t6");
+    getArg2()->loadAddrTo(t, "t7");
+    t->add(std::string("\tadd\tt6, t6, t7"));
+    t->add(std::string("\tsw\tt5, 0(t6)"));
+}
+
+void IRCopyToIndexedF::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "ft5");
+    getResult()->loadAddrTo(t, "t6");
+    getArg2()->loadAddrTo(t, "t7");
+    t->add(std::string("\tadd\tt6, t6, t7"));
+    t->add(std::string("\tfsw\tft5, 0(t6)"));
+}
+
+void IRCopyToIndexedD::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "ft5");
+    getResult()->loadAddrTo(t, "t6");
+    getArg2()->loadAddrTo(t, "t7");
+    t->add(std::string("\tadd\tt6, t6, t7"));
+    t->add(std::string("\tfsd\tft5, 0(t6)"));
+}
+
+void IRAddInt::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "t6");
+    getArg2()->loadTo(t, "t7");
+    t->add(std::string("\tadd\tt5, t6, t7"));
+    getResult()->storeFrom(t, "t5");
+}
+
+void IRAddFloat::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRAddDouble::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRSubInt::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "t6");
+    getArg2()->loadTo(t, "t7");
+    t->add(std::string("\tsub\tt5, t6, t7"));
+    getResult()->storeFrom(t, "t5");
+}
+
+void IRSubFloat::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRSubDouble::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRNegInt::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "t6");
+    t->add(std::string("\tsub\tt5, x0, t6"));
+    getResult()->storeFrom(t, "t5");
+}
+
+void IRNegFloat::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRNegDouble::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRMulInt::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "t6");
+    getArg2()->loadTo(t, "t7");
+    t->add(std::string("\tmul\tt5, t6, t7"));
+    getResult()->storeFrom(t, "t5");
+}
+
+void IRMulFloat::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRMulDouble::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRDivInt::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "t6");
+    getArg2()->loadTo(t, "t7");
+    t->add(std::string("\tdiv\tt5, t6, t7"));
+    getResult()->storeFrom(t, "t5");
+}
+
+void IRDivFloat::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRDivDouble::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRModInt::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "t6");
+    getArg2()->loadTo(t, "t7");
+    t->add(std::string("\trem\tt5, t6, t7"));
+    getResult()->storeFrom(t, "t5");
+}
+
+void IRIfGreaterThanZeroGoto::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfGreaterThanGotoW::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfGreaterThanGotoF::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfGreaterThanGotoD::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfGreaterEqualThanGotoW::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfGreaterEqualThanGotoF::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfGreaterEqualThanGotoD::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfLessThanGotoW::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfLessThanGotoF::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfLessThanGotoD::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfLessEqualThanGotoW::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfLessEqualThanGotoF::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfLessEqualThanGotoD::genTargetCode(TargetCodeList * t) {
+
+}
