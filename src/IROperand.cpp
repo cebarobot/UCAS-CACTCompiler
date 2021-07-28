@@ -91,7 +91,7 @@ void IRVariable::storeFrom(TargetCodeList * t, std::string reg) {
 
 void IRVariable::loadAddrTo(TargetCodeList * t, std::string reg) {
     t->add(std::string("\tli\t") + reg + std::string(", ") + std::to_string(getMemOff()));
-    t->add(std::string("\taddi\t") + reg + std::string(", ") + reg + std::string(", s0"));
+    t->add(std::string("\tadd\t") + reg + std::string(", ") + reg + std::string(", s0"));
 }
 
 int IRVariable::getAlign() {

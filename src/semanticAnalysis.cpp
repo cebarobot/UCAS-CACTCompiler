@@ -114,7 +114,6 @@ void SemanticAnalysis::exitConstDefBasic(CACTParser::ConstDefBasicContext * ctx)
 
     } else {
         initVal->setName(name);
-        initVal->setVariable(true);
         ctx->thisSymbolInfo->setOp(initVal);
     }
 }
@@ -185,6 +184,7 @@ void SemanticAnalysis::exitVarDefBasic(CACTParser::VarDefBasicContext * ctx) {
 
     } else {
         initVal->setName(name);
+        initVal->setVariable(true);
         ctx->thisSymbolInfo->setOp(initVal);
     }
 }
@@ -222,6 +222,7 @@ void SemanticAnalysis::exitVarDefArray(CACTParser::VarDefArrayContext * ctx) {
 
     } else {
         initVal->setName(name);
+        initVal->setVariable(true);
         ctx->thisSymbolInfo->setOp(initVal);
     }
 }

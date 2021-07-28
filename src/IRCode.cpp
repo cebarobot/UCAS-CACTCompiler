@@ -566,7 +566,7 @@ void IRCopyD::genTargetCode(TargetCodeList * t) {
 
 void IRCopyFromIndexedW::genTargetCode(TargetCodeList * t) {
     getArg1()->loadAddrTo(t, "t5");
-    getArg2()->loadAddrTo(t, "t6");
+    getArg2()->loadTo(t, "t6");
     t->add(std::string("\tadd\tt5, t5, t6"));
     t->add(std::string("\tlw\tt4, 0(t5)"));
     getResult()->storeFrom(t, "t4");
@@ -574,7 +574,7 @@ void IRCopyFromIndexedW::genTargetCode(TargetCodeList * t) {
 
 void IRCopyFromIndexedF::genTargetCode(TargetCodeList * t) {
     getArg1()->loadAddrTo(t, "t5");
-    getArg2()->loadAddrTo(t, "t6");
+    getArg2()->loadTo(t, "t6");
     t->add(std::string("\tadd\tt5, t5, t6"));
     t->add(std::string("\tflw\tft4, 0(t5)"));
     getResult()->storeFrom(t, "ft4");
@@ -582,7 +582,7 @@ void IRCopyFromIndexedF::genTargetCode(TargetCodeList * t) {
 
 void IRCopyFromIndexedD::genTargetCode(TargetCodeList * t) {
     getArg1()->loadAddrTo(t, "t5");
-    getArg2()->loadAddrTo(t, "t6");
+    getArg2()->loadTo(t, "t6");
     t->add(std::string("\tadd\tt5, t5, t6"));
     t->add(std::string("\tfld\tft4, 0(t5)"));
     getResult()->storeFrom(t, "ft4");
@@ -591,7 +591,7 @@ void IRCopyFromIndexedD::genTargetCode(TargetCodeList * t) {
 void IRCopyToIndexedW::genTargetCode(TargetCodeList * t) {
     getArg1()->loadTo(t, "t4");
     getResult()->loadAddrTo(t, "t5");
-    getArg2()->loadAddrTo(t, "t6");
+    getArg2()->loadTo(t, "t6");
     t->add(std::string("\tadd\tt5, t5, t6"));
     t->add(std::string("\tsw\tt4, 0(t5)"));
 }
@@ -599,7 +599,7 @@ void IRCopyToIndexedW::genTargetCode(TargetCodeList * t) {
 void IRCopyToIndexedF::genTargetCode(TargetCodeList * t) {
     getArg1()->loadTo(t, "ft4");
     getResult()->loadAddrTo(t, "t5");
-    getArg2()->loadAddrTo(t, "t6");
+    getArg2()->loadTo(t, "t6");
     t->add(std::string("\tadd\tt5, t5, t6"));
     t->add(std::string("\tfsw\tft4, 0(t5)"));
 }
@@ -607,7 +607,7 @@ void IRCopyToIndexedF::genTargetCode(TargetCodeList * t) {
 void IRCopyToIndexedD::genTargetCode(TargetCodeList * t) {
     getArg1()->loadTo(t, "ft4");
     getResult()->loadAddrTo(t, "t5");
-    getArg2()->loadAddrTo(t, "t6");
+    getArg2()->loadTo(t, "t6");
     t->add(std::string("\tadd\tt5, t5, t6"));
     t->add(std::string("\tfsd\tft4, 0(t5)"));
 }
