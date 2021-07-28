@@ -30,6 +30,12 @@ int main(int argc, const char* argv[]) {
         return 1;
     }
 
+    // std::cout << "debug: hello" << std::endl;
+
+    // std::cout << "------------------------- AST ------------------------" << std::endl;
+    // std::cout << tree->toStringTree(&parser) << std::endl;
+    // std::cout << "========================= AST ========================" << std::endl;
+
     BlockInfo globalBlockInfo(nullptr);
     IRProgram ir;
     IRGenerator irGen(&ir);
@@ -41,14 +47,6 @@ int main(int argc, const char* argv[]) {
         std::cerr << "Semantic Error: " << excp.what() << std::endl;
 		return 1;
     }
-
-    
-    
-    std::cout << "debug: hello" << std::endl;
-
-    std::cout << "------------------------- AST ------------------------" << std::endl;
-    std::cout << tree->toStringTree(&parser) << std::endl;
-    std::cout << "========================= AST ========================" << std::endl;
 
     ir.print();
 

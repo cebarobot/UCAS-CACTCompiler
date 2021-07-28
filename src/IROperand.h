@@ -6,6 +6,7 @@
 
 #include "CACT.h"
 #include "symbolTable.h"
+#include "target.h"
 
 enum MemBase {
     STACK,

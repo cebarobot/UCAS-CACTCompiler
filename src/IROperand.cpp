@@ -15,6 +15,10 @@ std::string IRLabel::getName() {
     return name;
 }
 
+int IRLabel::getSize() {
+    return 0;
+}
+
 std::string IRLabel::getImme() {
     return name;
 }
@@ -58,7 +62,7 @@ int IRVariable::getSize() {
 }
 
 std::string IRVariable::getImme() {
-    return name;
+    return "";
 }
 
 void IRVariable::alloc(TargetCodeList * t) {
