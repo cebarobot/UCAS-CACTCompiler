@@ -137,8 +137,12 @@ void IRGenerator::addReturn() {
 }
 
 void IRGenerator::assignBasic(DataType datatype, IROperand * d, IROperand * s) {
-    if (datatype == INT) {
+    if (datatype == INT || datatype == BOOL) {
         addCode(new IRCopyW(d, s));
+    } else if (datatype == FLOAT) {
+        addCode(new IRCopyF(d, s));
+    } else if (datatype == DOUBLE) {
+        addCode(new IRCopyD(d, s));
     }
 }
 
@@ -151,6 +155,12 @@ void IRGenerator::assignArray(DataType datatype, int len, IROperand * d, IROpera
     if (datatype == INT) {
         addCode(new IRCopyFromIndexedW(temp, s, ppp));
         addCode(new IRCopyToIndexedW(d, temp, ppp));
+    } else if (datatype == FLOAT) {
+        addCode(new IRCopyFromIndexedF(temp, s, ppp));
+        addCode(new IRCopyToIndexedF(d, temp, ppp));
+    } else if (datatype == DOUBLE) {
+        addCode(new IRCopyFromIndexedD(temp, s, ppp));
+        addCode(new IRCopyToIndexedD(d, temp, ppp));
     }
 
     endArrOp();

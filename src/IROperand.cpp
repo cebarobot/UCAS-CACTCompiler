@@ -192,17 +192,17 @@ void IRValue::loadTo(TargetCodeList * t, std::string reg) {
     }
     if (dataType == INT || dataType == BOOL) {
         if (isVar) {
-            t->add(std::string("\tlui\tt1, %%hi(") + name + std::string(")"));
-            t->add(std::string("\tlw\t") + reg + std::string(", %%lo(") + name + std::string(")(t1)"));
+            t->add(std::string("\tlui\tt1, %hi(") + name + std::string(")"));
+            t->add(std::string("\tlw\t") + reg + std::string(", %lo(") + name + std::string(")(t1)"));
         } else {
             t->add(std::string("\tli\t") + reg + std::string(", ") + values[0]);
         }
     } else if (dataType == FLOAT) {
-        t->add(std::string("\tlui\tt1, %%hi(") + name + std::string(")"));
-        t->add(std::string("\tflw\t") + reg + std::string(", %%lo(") + name + std::string(")(t1)"));
+        t->add(std::string("\tlui\tt1, %hi(") + name + std::string(")"));
+        t->add(std::string("\tflw\t") + reg + std::string(", %lo(") + name + std::string(")(t1)"));
     } else if (dataType == DOUBLE) {
-        t->add(std::string("\tlui\tt1, %%hi(") + name + std::string(")"));
-        t->add(std::string("\tfld\t") + reg + std::string(", %%lo(") + name + std::string(")(t1)"));
+        t->add(std::string("\tlui\tt1, %hi(") + name + std::string(")"));
+        t->add(std::string("\tfld\t") + reg + std::string(", %lo(") + name + std::string(")(t1)"));
     }
 }
 
@@ -215,20 +215,20 @@ void IRValue::storeFrom(TargetCodeList * t, std::string reg) {
     }
 
     if (dataType == INT || dataType == BOOL) {
-        t->add(std::string("\tlui\tt1, %%hi(") + name + std::string(")"));
-        t->add(std::string("\tsw\t") + reg + std::string(", %%lo(") + name + std::string(")(t1)"));
+        t->add(std::string("\tlui\tt1, %hi(") + name + std::string(")"));
+        t->add(std::string("\tsw\t") + reg + std::string(", %lo(") + name + std::string(")(t1)"));
     } else if (dataType == FLOAT) {
-        t->add(std::string("\tlui\tt1, %%hi(") + name + std::string(")"));
-        t->add(std::string("\tfsw\t") + reg + std::string(", %%lo(") + name + std::string(")(t1)"));
+        t->add(std::string("\tlui\tt1, %hi(") + name + std::string(")"));
+        t->add(std::string("\tfsw\t") + reg + std::string(", %lo(") + name + std::string(")(t1)"));
     } else if (dataType == DOUBLE) {
-        t->add(std::string("\tlui\tt1, %%hi(") + name + std::string(")"));
-        t->add(std::string("\tfsd\t") + reg + std::string(", %%lo(") + name + std::string(")(t1)"));
+        t->add(std::string("\tlui\tt1, %hi(") + name + std::string(")"));
+        t->add(std::string("\tfsd\t") + reg + std::string(", %lo(") + name + std::string(")(t1)"));
     }
 }
 
 void IRValue::loadAddrTo(TargetCodeList * t, std::string reg) {
-    t->add(std::string("\tlui\t") + reg + std::string(", %%hi(") + name + std::string(")"));
-    t->add(std::string("\taddi\t") + reg + std::string(", ") + reg + std::string(", %%lo(") + name + std::string(")"));
+    t->add(std::string("\tlui\t") + reg + std::string(", %hi(") + name + std::string(")"));
+    t->add(std::string("\taddi\t") + reg + std::string(", ") + reg + std::string(", %lo(") + name + std::string(")"));
 }
 
 void IRValue::addValue(std::string newValue) {
