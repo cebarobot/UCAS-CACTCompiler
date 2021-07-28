@@ -60,6 +60,7 @@ enum IROperation {
     IF_LESS_EQUAL_THAN_GOTO_W,
     IF_LESS_EQUAL_THAN_GOTO_F,
     IF_LESS_EQUAL_THAN_GOTO_D,
+    GOTO,
 };
 
 class IRCode {
@@ -491,6 +492,14 @@ public:
 class IRIfLessEqualThanGotoD : public IRCode {
 public:
     IRIfLessEqualThanGotoD(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2);
+
+    virtual void print();
+    void genTargetCode(TargetCodeList * t);
+};
+
+class IRGoto : public IRCode {
+public:
+    IRGoto(IROperand * new_result);
 
     virtual void print();
     void genTargetCode(TargetCodeList * t);

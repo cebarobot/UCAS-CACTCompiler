@@ -94,6 +94,14 @@ void IRVariable::loadAddrTo(TargetCodeList * t, std::string reg) {
     t->add(std::string("\taddi\t") + reg + std::string(", ") + reg + std::string(", s0"));
 }
 
+int IRVariable::getAlign() {
+    if (dataType == DOUBLE) {
+        return 3;
+    } else {
+        return 2;
+    }
+}
+
 void IRVariable::setMemOff(int off) {
     memOffset = off;
 }
@@ -104,12 +112,16 @@ int IRVariable::getMemOff() {
 
 
 IRValue::IRValue(std::string newName, DataType newDataType) 
-: name(newName), dataType(newDataType), isVar(true) { }
+: name(newName), dataType(newDataType) { }
 
 
 IRValue::IRValue(int newVal)
-: name(std::to_string(newVal)), dataType(INT), isVar(true) {
+: name(std::to_string(newVal)), dataType(INT) {
     values.push_back(std::to_string(newVal));
+}
+
+void IRValue::setVariable(bool newIsVar) {
+    isVar = newIsVar;
 }
 
 bool IRValue::isVariable() {
@@ -146,7 +158,7 @@ void IRValue::alloc(TargetCodeList * t) {
         if (isVar) {
             t->add(std::string("\t.data"));
         } else {
-            t->add(std::string("\t.rodata"));
+            t->add(std::string("\t.section\t.rodata"));
         }
         t->add(std::string("\t.align\t3"));
         t->add(std::string("\t.type\t") + name + std::string(", @object"));

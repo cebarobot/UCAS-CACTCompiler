@@ -8,13 +8,16 @@ IRGenerator::IRGenerator(IRProgram * newIR)
 
 void IRGenerator::enterFunc(std::string name) {
     currentIRFunc = new IRFunction(name);
+    funcEndLabel = newLabel(std::string("__end_") + name);
     ir->functions.push_back(currentIRFunc);
 
     tempCount = 1;
 }
 
 void IRGenerator::exitFunc() {
+    addCode(new IRLabelHere(funcEndLabel));
     currentIRFunc = nullptr;
+    funcEndLabel = nullptr;
 }
 
 IRValue * IRGenerator::newValue(DataType dataType) {
@@ -127,6 +130,10 @@ void IRGenerator::addCode(IRCode * newCode) {
         throw std::runtime_error("not in any function, cannot add code");
     }
     currentIRFunc->codes.push_back(newCode);
+}
+
+void IRGenerator::addReturn() {
+    addCode(new IRGoto(funcEndLabel));
 }
 
 void IRGenerator::assignBasic(DataType datatype, IROperand * d, IROperand * s) {

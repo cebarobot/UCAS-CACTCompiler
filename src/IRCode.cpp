@@ -178,6 +178,9 @@ IRIfLessEqualThanGotoF::IRIfLessEqualThanGotoF(IROperand * new_result, IROperand
 IRIfLessEqualThanGotoD::IRIfLessEqualThanGotoD(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
 : IRCode(IF_LESS_EQUAL_THAN_GOTO_D, new_result, new_arg1, new_arg2) { }
 
+IRGoto::IRGoto(IROperand * new_result)
+: IRCode(GOTO, new_result, nullptr, nullptr) { }
+
 void IRLabelHere::print() {
     std::cout << getArg1()->getName() << ":" << std::endl;
 }
@@ -485,6 +488,10 @@ void IRIfLessEqualThanGotoD::print() {
               << "Goto " << getResult()->getName() << ";" << std::endl;
 }
 
+void IRGoto::print() {
+    std::cout << "Goto " << getResult()->getName() << ";" << std::endl;
+}
+
 void IRLabelHere::genTargetCode(TargetCodeList * t) {
     t->add(getArg1()->getImme() + std::string(":"));
 }
@@ -735,4 +742,8 @@ void IRIfLessEqualThanGotoF::genTargetCode(TargetCodeList * t) {
 
 void IRIfLessEqualThanGotoD::genTargetCode(TargetCodeList * t) {
 
+}
+
+void IRGoto::genTargetCode(TargetCodeList * t) {
+    t->add(std::string("\tj\t") + getResult()->getImme());
 }

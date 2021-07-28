@@ -14,6 +14,8 @@ public:
     std::string functionName;
     std::vector<IRVariable *> localVariables;
     std::vector<IRCode *> codes;
+    
+    int frameSize;
 
     IRFunction(std::string newFunctionName);
 

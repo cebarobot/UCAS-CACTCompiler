@@ -114,6 +114,7 @@ void SemanticAnalysis::exitConstDefBasic(CACTParser::ConstDefBasicContext * ctx)
 
     } else {
         initVal->setName(name);
+        initVal->setVariable(true);
         ctx->thisSymbolInfo->setOp(initVal);
     }
 }
@@ -249,6 +250,7 @@ void SemanticAnalysis::enterFuncDef(CACTParser::FuncDefContext * ctx) {
     }
     ctx->block()->thisFuncInfo = ctx->thisFuncInfo;
     currentFunc = ctx->thisFuncInfo;
+    currentFunc->setOp(new IRLabel(ctx->Ident()->getText()));
 
     irGen->enterFunc(ctx->Ident()->getText());
 }
@@ -437,6 +439,7 @@ void SemanticAnalysis::exitStmtReturn(CACTParser::StmtReturnContext * ctx) {
     } else if (dt == DOUBLE) {
         irGen->addCode(new IRReturnD(ctx->exp()->result));
     }
+    irGen->addReturn();
 
 }
 
@@ -940,7 +943,7 @@ void SemanticAnalysis::exitNumValIntConst(CACTParser::NumValIntConstContext * ct
     ctx->isArray = false;
     ctx->arraySize = 0;
     ctx->dataType = DataType::INT;
-    ctx->result = irGen->newValue(FLOAT, ctx->IntConst()->getText());
+    ctx->result = irGen->newValue(INT, ctx->IntConst()->getText());
 }
 
 void SemanticAnalysis::enterNumValFloatConst(CACTParser::NumValFloatConstContext * ctx) {
@@ -964,7 +967,7 @@ void SemanticAnalysis::exitNumValDoubleConst(CACTParser::NumValDoubleConstContex
     ctx->isArray = false;
     ctx->arraySize = 0;
     ctx->dataType = DataType::DOUBLE;
-    ctx->result = irGen->newValue(FLOAT, ctx->DoubleConst()->getText());
+    ctx->result = irGen->newValue(DOUBLE, ctx->DoubleConst()->getText());
 }
 
 void SemanticAnalysis::enterBoolVal(CACTParser::BoolValContext * ctx) {

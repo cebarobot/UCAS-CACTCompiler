@@ -71,6 +71,7 @@ public:
     virtual void storeFrom(TargetCodeList * t, std::string reg);
     virtual void loadAddrTo(TargetCodeList * t, std::string reg);
 
+    int getAlign();
     void setMemOff(int off);
     int getMemOff();
 };
@@ -79,13 +80,14 @@ class IRValue : public IROperand {
 private:
     std::string name;
     DataType dataType;
-    bool isVar;
+    bool isVar = false;
     std::vector<std::string> values;
 
 public:
     IRValue(std::string newName, DataType newDataType);
     IRValue(int newVal);
 
+    void setVariable(bool newIsVar);
     virtual bool isVariable();
     virtual std::string getName();
     virtual void setName(std::string);

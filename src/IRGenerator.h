@@ -15,6 +15,8 @@ private:
     int labelCount;
     int valueCount;
 
+    IRLabel * funcEndLabel;
+
     IRLabel * arrRepeatLabel;
     IROperand * arrRepeatVar;
 public:
@@ -45,6 +47,8 @@ public:
     IROperand * getArrRepeatVar();
 
     void addCode(IRCode * newCode);
+
+    void addReturn();
 
     void assignBasic(DataType datatype, IROperand * d, IROperand * s);
     void assignArray(DataType datatype, int len, IROperand * d, IROperand * s);
