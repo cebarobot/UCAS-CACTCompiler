@@ -173,7 +173,7 @@ void SemanticAnalysis::exitVarDefBasic(CACTParser::VarDefBasicContext * ctx) {
         }
 
     } else {
-        initVal = irGen->newValue(currentDataType, "0");
+        initVal = irGen->newValue(currentDataType, "");
     }
 
     if (currentFunc) {

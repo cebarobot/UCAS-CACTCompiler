@@ -47,7 +47,7 @@ void IRGenerator::removeValues(int cnt) {
 }
 
 IRVariable * IRGenerator::newVar(std::string name, DataType dataType) {
-    IRVariable * var = new IRVariable(name, SizeOfDataType(dataType));
+    IRVariable * var = new IRVariable(name, dataType);
 
     if (currentIRFunc) {
         currentIRFunc->localVariables.push_back(var);
@@ -59,7 +59,7 @@ IRVariable * IRGenerator::newVar(std::string name, DataType dataType) {
 }
 
 IRVariable * IRGenerator::newVar(std::string name, DataType dataType, int len) {
-    IRVariable * var = new IRVariable(name, SizeOfDataType(dataType) * len);
+    IRVariable * var = new IRVariable(name, dataType, len);
 
     if (currentIRFunc) {
         currentIRFunc->localVariables.push_back(var);
@@ -93,7 +93,7 @@ IRVariable * IRGenerator::newTemp(DataType dataType) {
     std::string name = std::string("temp") + std::to_string(tempCount);
     tempCount += 1;
 
-    IRVariable * temp = new IRVariable(name, SizeOfDataType(dataType));
+    IRVariable * temp = new IRVariable(name, dataType);
     return temp;
 }
 

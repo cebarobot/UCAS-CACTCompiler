@@ -7,6 +7,7 @@
 #include "CACT.h"
 #include "IRCode.h"
 #include "IROperand.h"
+#include "target.h"
 
 class IRFunction {
 public:
