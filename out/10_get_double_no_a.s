@@ -12,8 +12,8 @@ main:
 	fld	fa0, -24(s0)
 	call	print_double
 	li	a0, 0
-	j	__end_main
-__end_main:
+	j	.END_main
+.END_main:
 	ld	ra, 24(sp)
 	ld	s0, 16(sp)
 	addi	sp, sp, 32

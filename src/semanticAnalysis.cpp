@@ -121,12 +121,18 @@ void SemanticAnalysis::exitConstDefArray(CACTParser::ConstDefArrayContext * ctx)
     int arraySize = std::stoi(ctx->IntConst()->getText());
     IRValue * initVal = ctx->constArrExp()->result;
     
-    if (ctx->constArrExp()->dataType != currentDataType) {
-        throw std::runtime_error("inital value data type not match.");
-    }
+    if (ctx->constArrExp() && ctx->constArrExp()->result) {
+        initVal = ctx->constArrExp()->result;
 
-    if (ctx->constArrExp()->arraySize > arraySize) {
-        throw std::runtime_error("inital value array size not match.");
+        if (ctx->constArrExp()->dataType != currentDataType) {
+            throw std::runtime_error("inital value data type not match.");
+        }
+        
+        if (ctx->constArrExp()->arraySize > arraySize) {
+            throw std::runtime_error("inital value array size not match.");
+        }
+    } else {
+        initVal = irGen->newValue(currentDataType);
     }
     initVal->fillValue(arraySize);
 
@@ -157,7 +163,7 @@ void SemanticAnalysis::exitVarDefBasic(CACTParser::VarDefBasicContext * ctx) {
     std::string name = ctx->Ident()->getText();
     IRValue * initVal;
 
-    if (ctx->constExp()) {
+    if (ctx->constExp() && ctx->constExp()->result) {
         initVal = ctx->constExp()->result;
 
         if (ctx->constExp()->dataType != currentDataType) {
@@ -170,7 +176,6 @@ void SemanticAnalysis::exitVarDefBasic(CACTParser::VarDefBasicContext * ctx) {
 
     if (currentFunc) {
         IRVariable * irVar = irGen->newVar(name, currentDataType);
-        std::cerr << irVar << std::endl;
         irGen->assignBasic(currentDataType, irVar, initVal);
         ctx->thisSymbolInfo->setOp(irVar);
 
@@ -192,7 +197,7 @@ void SemanticAnalysis::exitVarDefArray(CACTParser::VarDefArrayContext * ctx) {
     int arraySize = std::stoi(ctx->IntConst()->getText());
     IRValue * initVal;
 
-    if (ctx->constArrExp()) {
+    if (ctx->constArrExp() && ctx->constArrExp()->result) {
         initVal = ctx->constArrExp()->result;
 
         if (ctx->constArrExp()->dataType != currentDataType) {
@@ -1138,16 +1143,20 @@ void SemanticAnalysis::exitConstArrExp(CACTParser::ConstArrExpContext * ctx) {
 
     ctx->isArray = true;
     ctx->arraySize = ctx->constExp().size();
-    ctx->dataType = ctx->constExp(0)->dataType;
-    ctx->result = irGen->newValue(ctx->dataType);
+    if (ctx->arraySize) {
+        ctx->dataType = ctx->constExp(0)->dataType;
+        ctx->result = irGen->newValue(ctx->dataType);
 
-    for (auto pExp : ctx->constExp()) {
-        if (pExp->dataType != ctx->dataType) {
-            throw std::runtime_error("data type not match");
+        for (auto pExp : ctx->constExp()) {
+            if (pExp->dataType != ctx->dataType) {
+                throw std::runtime_error("data type not match");
+            }
+
+            ctx->result->addValue(pExp->result->getValue(0));
+            delete pExp->result;
         }
-
-        ctx->result->addValue(pExp->result->getValue(0));
-        delete pExp->result;
+    } else {
+        ctx->result = nullptr;
     }
 }
 
@@ -1398,7 +1407,6 @@ void SemanticAnalysis::exitFuncVal(CACTParser::FuncValContext * ctx) {
     IROperand * funcLabel = ctx->thisFunc->getOp();
     
     if (ctx->funcRParams() == nullptr && thisFunc->getparamNum() > 0) {
-        std::cerr << thisFunc->getparamNum() << std::endl;
         throw std::runtime_error(
             std::string("too few parameters for function ") +
             thisFunc->getName()

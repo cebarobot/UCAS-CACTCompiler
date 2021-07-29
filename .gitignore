@@ -1,3 +1,6 @@
 build
-samples/output.txt
+out/*.o
+samples_syntax/*.s
+samples_semantic/*.s
+samples_codegen/*.s
 .vscode

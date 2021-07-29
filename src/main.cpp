@@ -13,9 +13,16 @@ using namespace antlr4;
 
 int main(int argc, const char* argv[]) {
     std::string sourceName = argv[1];
-    size_t lastIndex = sourceName.find_last_of("."); 
-    std::string rawName = sourceName.substr(0, lastIndex); 
-    std::string asmName = rawName + std::string(".s");
+
+    std::string asmName;
+
+    if (argc == 3) {
+        asmName = argv[2];
+    } else {
+        size_t lastIndex = sourceName.find_last_of("."); 
+        std::string rawName = sourceName.substr(0, lastIndex); 
+        asmName = rawName + std::string(".s");
+    }
 
     std::ifstream sourceStream;
     sourceStream.open(sourceName);

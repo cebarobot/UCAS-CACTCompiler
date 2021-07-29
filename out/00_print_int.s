@@ -7,13 +7,13 @@ main:
 	sd	ra, 24(sp)
 	sd	s0, 16(sp)
 	addi	s0, sp, 32
-	li	t5, 3
-	sw	t5, -20(s0)
+	li	t4, 3
+	sw	t4, -20(s0)
 	lw	a0, -20(s0)
 	call	print_int
 	li	a0, 0
-	j	__end_main
-__end_main:
+	j	.END_main
+.END_main:
 	ld	ra, 24(sp)
 	ld	s0, 16(sp)
 	addi	sp, sp, 32
