@@ -1044,7 +1044,7 @@ void SemanticAnalysis::enterLAndExpLAndExp(CACTParser::LAndExpLAndExpContext * c
 
         ctx->eqExp()->codeBefore.push_back(new IRLabelHere(ctx->lAndExp()->flowTrue));
         ctx->eqExp()->flowTrue = ctx->flowTrue;
-        ctx->eqExp()->flowTrue = ctx->flowFalse;
+        ctx->eqExp()->flowFalse = ctx->flowFalse;
     } else {
         // do value operation
     }
