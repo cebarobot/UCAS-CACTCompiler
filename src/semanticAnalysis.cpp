@@ -418,7 +418,7 @@ void SemanticAnalysis::exitStmtCtrlIf(CACTParser::StmtCtrlIfContext * ctx) {
     }
 }
 
-void SemanticAnalysis::enterStmtCtrlIfElse(CACTParser::StmtCtrlIfElseContext * ctx) {
+void SemanticAnalysis::enterStmtCtrlIfElse(CACTParser::StmtCtrlIfElseContext * ctx) {    
     irGen->addCode(ctx->codeBefore);
 
     if (!ctx->flowNext) {
@@ -961,6 +961,7 @@ void SemanticAnalysis::exitEqExpRelExp(CACTParser::EqExpRelExpContext * ctx) {
         // nothing to do
     } else {
         // do value operation
+        ctx->result = ctx->relExp()->result;
     }
 }
 

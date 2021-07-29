@@ -108,7 +108,7 @@ stmt
     | (exp)? ';'                                #stmtExp
     | block                                     #stmtBlock
     | 'if' '(' cond ')' stmt                    #stmtCtrlIf
-    | 'if' '(' cond ')' stmt ('else' stmt)?     #stmtCtrlIfElse
+    | 'if' '(' cond ')' stmt 'else' stmt        #stmtCtrlIfElse
     | 'while' '(' cond ')' stmt                 #stmtCtrlWhile
     | 'break' ';'                               #stmtCtrlBreak
     | 'continue' ';'                            #stmtCtrlContinue
