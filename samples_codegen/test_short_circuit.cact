@@ -1,0 +1,23 @@
+//OUTPUT:3
+
+void ppp(int b)
+{
+    b = b + 1;
+    print_int(b);
+}
+
+int main()
+{
+    int a = 0;
+    int b = 2;
+    if(a == 0 || b == 2){
+        ppp(b);
+    }
+    else
+    {
+        int b = 2;
+        a = b;
+        print_int(a);
+    }
+    return 0;
+}
