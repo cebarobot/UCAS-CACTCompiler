@@ -78,11 +78,6 @@ SymbolInfo * FuncSymbolInfo::addParamArray(const std::string & name, DataType da
     return newParam;
 }
 
-int FuncSymbolInfo::calcParamNum() {
-    paramNum = paramList.size();
-    return paramNum;
-}
-
 SymbolInfo * BlockInfo::lookUpSymbol(std::string symbolName) {
     if (symbolTable.count(symbolName) == 1) {
         return symbolTable[symbolName];

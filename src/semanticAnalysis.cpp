@@ -12,38 +12,30 @@ void SemanticAnalysis::enterCompUnit(CACTParser::CompUnitContext * ctx) {
 
     FuncSymbolInfo * printBoolFunc = globalBlock->addNewFunc("print_bool", DataType::VOID);
     printBoolFunc->addParamVar("value", DataType::BOOL);
-    printBoolFunc->calcParamNum();
     printBoolFunc->setOp(irGen->newLabel("print_bool"));
 
     FuncSymbolInfo * printIntFunc = globalBlock->addNewFunc("print_int", DataType::VOID);
     printIntFunc->addParamVar("value", DataType::INT);
-    printIntFunc->calcParamNum();
     printIntFunc->setOp(irGen->newLabel("print_int"));
     
     FuncSymbolInfo * printFloatFunc = globalBlock->addNewFunc("print_float", DataType::VOID);
     printFloatFunc->addParamVar("value", DataType::FLOAT);
-    printFloatFunc->calcParamNum();
     printFloatFunc->setOp(irGen->newLabel("print_float"));
 
     FuncSymbolInfo * printDoubleFunc = globalBlock->addNewFunc("print_double", DataType::VOID);
     printDoubleFunc->addParamVar("value", DataType::DOUBLE);
-    printDoubleFunc->calcParamNum();
     printDoubleFunc->setOp(irGen->newLabel("print_double"));
 
     FuncSymbolInfo * getBoolFunc = globalBlock->addNewFunc("get_bool", DataType::BOOL);
-    getBoolFunc->calcParamNum();
     getBoolFunc->setOp(irGen->newLabel("get_bool"));
 
     FuncSymbolInfo * getIntFunc = globalBlock->addNewFunc("get_int", DataType::INT);
-    getIntFunc->calcParamNum();
     getIntFunc->setOp(irGen->newLabel("get_int"));
 
     FuncSymbolInfo * getFloatFunc = globalBlock->addNewFunc("get_float", DataType::FLOAT);
-    getFloatFunc->calcParamNum();
     getFloatFunc->setOp(irGen->newLabel("get_float"));
 
     FuncSymbolInfo * getDoubleFunc = globalBlock->addNewFunc("get_double", DataType::DOUBLE);
-    getDoubleFunc->calcParamNum();
     getDoubleFunc->setOp(irGen->newLabel("get_double"));
 }
 
@@ -256,7 +248,6 @@ void SemanticAnalysis::enterFuncDef(CACTParser::FuncDefContext * ctx) {
     irGen->enterFunc(ctx->Ident()->getText());
 }
 void SemanticAnalysis::exitFuncDef(CACTParser::FuncDefContext * ctx) {
-    ctx->thisFuncInfo->calcParamNum();
     currentFunc = nullptr;
 
     irGen->exitFunc();
@@ -1407,8 +1398,9 @@ void SemanticAnalysis::exitFuncVal(CACTParser::FuncValContext * ctx) {
     IROperand * funcLabel = ctx->thisFunc->getOp();
     
     if (ctx->funcRParams() == nullptr && thisFunc->getparamNum() > 0) {
+        std::cerr << thisFunc->getparamNum() << std::endl;
         throw std::runtime_error(
-            std::string("too many or too few parameters for function ") +
+            std::string("too few parameters for function ") +
             thisFunc->getName()
         );
         return;

@@ -21,7 +21,7 @@ void IRGenerator::exitFunc() {
 }
 
 IRValue * IRGenerator::newValue(DataType dataType) {
-    std::string name = std::string(".Val") + std::to_string(valueCount);
+    std::string name = std::string(".Value") + std::to_string(valueCount);
     valueCount += 1;
 
     IRValue * val = new IRValue(name, dataType);

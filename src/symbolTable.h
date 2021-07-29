@@ -85,19 +85,17 @@ class BlockInfo;
 class FuncSymbolInfo : public SymbolInfo {
 private:
     DataType returnType;
-    int paramNum;
     std::vector < SymbolInfo * > paramList;
     BlockInfo * blockInfo;
 public:
     virtual DataType getDataType()  { return returnType; }
-    virtual int getArraySize() { return paramNum; };
+    virtual int getArraySize() { return paramList.size(); };
     virtual SymbolType getSymbolType()  { return SymbolType::FUNC; }
     std::vector < SymbolInfo * > getparamList() { return paramList; }
-    int getparamNum() { return paramNum; }
+    int getparamNum() { return paramList.size(); }
 
     SymbolInfo * addParamVar(const std::string & name, DataType dataType);
     SymbolInfo * addParamArray(const std::string & name, DataType dataType);
-    int calcParamNum();
 
     // FuncSymbolInfo(const std::string & name, DataType returnType, int paramNum);
     FuncSymbolInfo(const std::string & name, DataType returnType);
