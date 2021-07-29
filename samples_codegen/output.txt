@@ -20,4 +20,8 @@
 0 	 ./19_array_double.cact
 0 	 ./20_array_double_vector_add.cact
 0 	 ./21_global_int.cact
+0 	 ./test_and.cact
+0 	 ./test_and_or.cact
+0 	 ./test_or.cact
+0 	 ./test_short_circuit.cact
 0 	 ./xx_test_func_call.cact

@@ -1,23 +1,23 @@
-//OUTPUT:3
-
-void ppp(int b)
+bool ppp()
 {
-    b = b + 1;
-    print_int(b);
+    print_int(99999);
+    return true;
 }
 
 int main()
 {
     int a = 0;
-    int b = 2;
-    if(a == 0 || b == 2){
-        ppp(b);
+    if(a == 0 || ppp()) {       //  
+        print_int(11111);       // 11111
     }
-    else
-    {
-        int b = 2;
-        a = b;
-        print_int(a);
+    if(a != 0 || ppp()) {       // 99999
+        print_int(22222);       // 22222
+    }
+    if(a == 0 && ppp()) {       // 99999
+        print_int(33333);       // 33333
+    }
+    if(a != 0 && ppp()) {       // 
+        print_int(44444);       // 
     }
     return 0;
 }

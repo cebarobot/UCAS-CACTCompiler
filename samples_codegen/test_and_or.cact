@@ -7,9 +7,6 @@ int main()
     if(a == 1 || a== 0 && b == 2){
         print_int(b);
     }
-    else
-    {
-        print_int(a);
-    }
+    print_int(a);
     return 0;
 }

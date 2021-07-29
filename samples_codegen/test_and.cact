@@ -1,19 +1,18 @@
-//OUTPUT:3
+//OUTPUT:4
 
 int main()
 {
-    int a = 0;
-    int b = 2;
-    if(a == 0 && b == 0){
-        int a = 4;
-        b = a;
-        print_int(b);
+    if (false && false){
+        print_int(1);
     }
-    else
-    {
-        int b = 3;
-        a = b;
-        print_int(a);
+    if (false && true){
+        print_int(2);
+    }
+    if (true && false){
+        print_int(3);
+    }
+    if (true && true){
+        print_int(4);
     }
     return 0;
 }
