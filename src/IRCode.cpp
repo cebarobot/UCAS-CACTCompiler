@@ -766,67 +766,108 @@ void IRNotBool::genTargetCode(TargetCodeList * t) {
 }
 
 void IRIfGreaterThanZeroGoto::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "t5");
+    t->add(std::string("\tbgtz\tt5, ") + getResult()->getImme());
 }
 
 void IRIfEqualGotoW::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "t5");
+    getArg1()->loadTo(t, "t6");
+    t->add(std::string("\tbeq\tt5, t6, ") + getResult()->getImme());
 }
 
 void IRIfEqualGotoF::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg1()->loadTo(t, "ft6");
+    t->add(std::string("\tfeq.s\tt4, ft5, ft6") + getResult()->getImme());
+    t->add(std::string("\tbnez\tt4, ") + getResult()->getImme());
 }
 
 void IRIfEqualGotoD::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg1()->loadTo(t, "ft6");
+    t->add(std::string("\tfeq.d\tt4, ft5, ft6") + getResult()->getImme());
+    t->add(std::string("\tbnez\tt4, ") + getResult()->getImme());
 }
 
 void IRIfGreaterThanGotoW::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "t5");
+    getArg1()->loadTo(t, "t6");
+    t->add(std::string("\tbgt\tt5, t6, ") + getResult()->getImme());
 }
 
 void IRIfGreaterThanGotoF::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg1()->loadTo(t, "ft6");
+    t->add(std::string("\tfgt.s\tt4, ft5, ft6") + getResult()->getImme());
+    t->add(std::string("\tbnez\tt4, ") + getResult()->getImme());
 }
 
 void IRIfGreaterThanGotoD::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg1()->loadTo(t, "ft6");
+    t->add(std::string("\tfgt.d\tt4, ft5, ft6") + getResult()->getImme());
+    t->add(std::string("\tbnez\tt4, ") + getResult()->getImme());
 }
 
 void IRIfGreaterEqualThanGotoW::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "t5");
+    getArg1()->loadTo(t, "t6");
+    t->add(std::string("\tbge\tt5, t6, ") + getResult()->getImme());
 }
 
 void IRIfGreaterEqualThanGotoF::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg1()->loadTo(t, "ft6");
+    t->add(std::string("\tfge.s\tt4, ft5, ft6") + getResult()->getImme());
+    t->add(std::string("\tbnez\tt4, ") + getResult()->getImme());
 }
 
 void IRIfGreaterEqualThanGotoD::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg1()->loadTo(t, "ft6");
+    t->add(std::string("\tfge.d\tt4, ft5, ft6") + getResult()->getImme());
+    t->add(std::string("\tbnez\tt4, ") + getResult()->getImme());
 }
 
 void IRIfLessThanGotoW::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "t5");
+    getArg1()->loadTo(t, "t6");
+    t->add(std::string("\tblt\tt5, t6, ") + getResult()->getImme());
 }
 
 void IRIfLessThanGotoF::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg1()->loadTo(t, "ft6");
+    t->add(std::string("\tflt.s\tt4, ft5, ft6") + getResult()->getImme());
+    t->add(std::string("\tbnez\tt4, ") + getResult()->getImme());
 }
 
 void IRIfLessThanGotoD::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg1()->loadTo(t, "ft6");
+    t->add(std::string("\tflt.d\tt4, ft5, ft6") + getResult()->getImme());
+    t->add(std::string("\tbnez\tt4, ") + getResult()->getImme());
 }
 
 void IRIfLessEqualThanGotoW::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "t5");
+    getArg1()->loadTo(t, "t6");
+    t->add(std::string("\tble\tt5, t6, ") + getResult()->getImme());
 }
 
 void IRIfLessEqualThanGotoF::genTargetCode(TargetCodeList * t) {
-    
+    getArg1()->loadTo(t, "ft5");
+    getArg1()->loadTo(t, "ft6");
+    t->add(std::string("\tfle.s\tt4, ft5, ft6") + getResult()->getImme());
+    t->add(std::string("\tbnez\tt4, ") + getResult()->getImme());
 }
 
 void IRIfLessEqualThanGotoD::genTargetCode(TargetCodeList * t) {
-
+    getArg1()->loadTo(t, "ft5");
+    getArg1()->loadTo(t, "ft6");
+    t->add(std::string("\tfle.d\tt4, ft5, ft6") + getResult()->getImme());
+    t->add(std::string("\tbnez\tt4, ") + getResult()->getImme());
 }
 
 void IRGoto::genTargetCode(TargetCodeList * t) {

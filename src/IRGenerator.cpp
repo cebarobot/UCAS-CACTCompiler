@@ -8,7 +8,7 @@ IRGenerator::IRGenerator(IRProgram * newIR)
 
 void IRGenerator::enterFunc(std::string name) {
     currentIRFunc = new IRFunction(name);
-    funcEndLabel = newLabel(std::string("__end_") + name);
+    funcEndLabel = newLabel(std::string(".END_") + name);
     ir->functions.push_back(currentIRFunc);
 
     tempCount = 1;
@@ -21,7 +21,7 @@ void IRGenerator::exitFunc() {
 }
 
 IRValue * IRGenerator::newValue(DataType dataType) {
-    std::string name = std::string("value") + std::to_string(valueCount);
+    std::string name = std::string(".Val") + std::to_string(valueCount);
     valueCount += 1;
 
     IRValue * val = new IRValue(name, dataType);
@@ -32,7 +32,7 @@ IRValue * IRGenerator::newValue(DataType dataType) {
 }
 
 IRValue * IRGenerator::newValue(DataType dataType, std::string value) {
-    std::string name = std::string("value") + std::to_string(valueCount);
+    std::string name = std::string(".Val") + std::to_string(valueCount);
     valueCount += 1;
 
     IRValue * val = new IRValue(name, dataType);
@@ -80,7 +80,7 @@ IRLabel * IRGenerator::newLabel(std::string name) {
 }
 
 IRLabel * IRGenerator::newLabel() {
-    std::string name = std::string("label") + std::to_string(labelCount);
+    std::string name = std::string(".Label") + std::to_string(labelCount);
     labelCount += 1;
 
     IRLabel * label = new IRLabel(name);
@@ -93,7 +93,7 @@ IRValue * IRGenerator::newInt(int intVal) {
 }
 
 IRVariable * IRGenerator::newTemp(DataType dataType) {
-    std::string name = std::string("temp") + std::to_string(tempCount);
+    std::string name = std::string(".Temp") + std::to_string(tempCount);
     tempCount += 1;
 
     IRVariable * temp = new IRVariable(name, dataType);
