@@ -137,6 +137,15 @@ void IRGenerator::addCode(IRCode * newCode) {
     currentIRFunc->codes.push_back(newCode);
 }
 
+void IRGenerator::addCode(std::vector<IRCode *> newCodes) {
+    if (!currentIRFunc) {
+        throw std::runtime_error("not in any function, cannot add code");
+    }
+    for (IRCode * oneCode : newCodes) {
+        currentIRFunc->codes.push_back(oneCode);
+    }
+}
+
 void IRGenerator::addReturn() {
     addCode(new IRGoto(funcEndLabel));
 }
@@ -169,4 +178,20 @@ void IRGenerator::assignArray(DataType datatype, int len, IROperand * d, IROpera
     }
 
     endArrOp();
+}
+
+void IRGenerator::enterLoop(IRLabel * labelBegin, IRLabel * labelEnd) {
+    loopLabels.push(std::pair<IRLabel * , IRLabel *>(labelBegin, labelEnd));
+}
+
+void IRGenerator::exitLoop() {
+    loopLabels.pop();
+}
+
+IRLabel * IRGenerator::getLoopBegin() {
+    return loopLabels.top().first;
+}
+
+IRLabel * IRGenerator::getLoopEnd() {
+    return loopLabels.top().second;
 }

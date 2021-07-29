@@ -139,8 +139,20 @@ IRDivDouble::IRDivDouble(IROperand * new_result, IROperand * new_arg1, IROperand
 IRModInt::IRModInt(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
 : IRCode(DIV_INT, new_result, new_arg1, new_arg2) { }
 
+IRNotBool::IRNotBool(IROperand * new_result, IROperand * new_arg1)
+: IRCode(DIV_INT, new_result, new_arg1, nullptr) { }
+
 IRIfGreaterThanZeroGoto::IRIfGreaterThanZeroGoto(IROperand * new_result, IROperand * new_arg1)
 : IRCode(IF_GREATER_THAN_ZERO_GOTO, new_result, new_arg1, nullptr) { }
+
+IRIfEqualGotoW::IRIfEqualGotoW(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(IF_EQUAL_GOTO_W, new_result, new_arg1, new_arg2) { }
+
+IRIfEqualGotoF::IRIfEqualGotoF(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(IF_EQUAL_GOTO_F, new_result, new_arg1, new_arg2) { }
+
+IRIfEqualGotoD::IRIfEqualGotoD(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
+: IRCode(IF_EQUAL_GOTO_D, new_result, new_arg1, new_arg2) { }
 
 IRIfGreaterThanGotoW::IRIfGreaterThanGotoW(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2)
 : IRCode(IF_GREATER_THAN_GOTO_W, new_result, new_arg1, new_arg2) { }
@@ -398,9 +410,35 @@ void IRModInt::print() {
               << getArg2()->getName() << ";" << std::endl;
 }
 
+void IRNotBool::print() {
+    std::cout << getResult()->getName() << " := not"
+              << getArg1()->getName() << ";" << std::endl;
+}
+
 void IRIfGreaterThanZeroGoto::print() {
     std::cout << "If "
               << getArg1()->getName() << " >= 0 "
+              << "Goto " << getResult()->getName() << ";" << std::endl;
+}
+
+void IRIfEqualGotoW::print() {
+    std::cout << "If "
+              << getArg1()->getName() << " == "
+              << getArg2()->getName() 
+              << "Goto " << getResult()->getName() << ";" << std::endl;
+}
+
+void IRIfEqualGotoF::print() {
+    std::cout << "If "
+              << getArg1()->getName() << " == "
+              << getArg2()->getName() 
+              << "Goto " << getResult()->getName() << ";" << std::endl;
+}
+
+void IRIfEqualGotoD::print() {
+    std::cout << "If "
+              << getArg1()->getName() << " == "
+              << getArg2()->getName() 
               << "Goto " << getResult()->getName() << ";" << std::endl;
 }
 
@@ -656,7 +694,7 @@ void IRSubDouble::genTargetCode(TargetCodeList * t) {
 
 void IRNegInt::genTargetCode(TargetCodeList * t) {
     getArg1()->loadTo(t, "t5");
-    t->add(std::string("\tsub\tt4, x0, t5"));
+    t->add(std::string("\tneg\tt4, t5"));
     getResult()->storeFrom(t, "t4");
 }
 
@@ -721,7 +759,25 @@ void IRModInt::genTargetCode(TargetCodeList * t) {
     getResult()->storeFrom(t, "t4");
 }
 
+void IRNotBool::genTargetCode(TargetCodeList * t) {
+    getArg1()->loadTo(t, "t5");
+    t->add(std::string("\tnot\tt4, t5"));
+    getResult()->storeFrom(t, "t4");
+}
+
 void IRIfGreaterThanZeroGoto::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfEqualGotoW::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfEqualGotoF::genTargetCode(TargetCodeList * t) {
+    
+}
+
+void IRIfEqualGotoD::genTargetCode(TargetCodeList * t) {
     
 }
 

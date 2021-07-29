@@ -3,6 +3,8 @@
 #include "CACT.h"
 #include "IR.h"
 #include "symbolTable.h"
+#include <vector>
+#include <stack>
 
 class IRGenerator {
 private:
@@ -19,6 +21,9 @@ private:
 
     IRLabel * arrRepeatLabel;
     IROperand * arrRepeatVar;
+
+    std::stack<std::pair<IRLabel *, IRLabel *>> loopLabels;
+
 public:
     IRGenerator(IRProgram * newIR);
 
@@ -27,6 +32,11 @@ public:
 
     void startConstArr();
     void endConstArr();
+
+    void enterLoop(IRLabel * labelBegin, IRLabel * labelEnd);
+    void exitLoop();
+    IRLabel * getLoopBegin();
+    IRLabel * getLoopEnd();
 
     IRValue * newValue(DataType dataType);
     IRValue * newValue(DataType dataType, std::string value);
@@ -47,6 +57,7 @@ public:
     IROperand * getArrRepeatVar();
 
     void addCode(IRCode * newCode);
+    void addCode(std::vector<IRCode *> newCodes);
 
     void addReturn();
 

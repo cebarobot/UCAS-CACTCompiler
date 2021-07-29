@@ -80,6 +80,9 @@ public:
   virtual void enterStmtCtrlIf(CACTParser::StmtCtrlIfContext * /*ctx*/) override { }
   virtual void exitStmtCtrlIf(CACTParser::StmtCtrlIfContext * /*ctx*/) override { }
 
+  virtual void enterStmtCtrlIfElse(CACTParser::StmtCtrlIfElseContext * /*ctx*/) override { }
+  virtual void exitStmtCtrlIfElse(CACTParser::StmtCtrlIfElseContext * /*ctx*/) override { }
+
   virtual void enterStmtCtrlWhile(CACTParser::StmtCtrlWhileContext * /*ctx*/) override { }
   virtual void exitStmtCtrlWhile(CACTParser::StmtCtrlWhileContext * /*ctx*/) override { }
 
@@ -143,11 +146,11 @@ public:
   virtual void enterRelExpRelExp(CACTParser::RelExpRelExpContext * /*ctx*/) override { }
   virtual void exitRelExpRelExp(CACTParser::RelExpRelExpContext * /*ctx*/) override { }
 
+  virtual void enterRelExpBoolVal(CACTParser::RelExpBoolValContext * /*ctx*/) override { }
+  virtual void exitRelExpBoolVal(CACTParser::RelExpBoolValContext * /*ctx*/) override { }
+
   virtual void enterRelExpAddExp(CACTParser::RelExpAddExpContext * /*ctx*/) override { }
   virtual void exitRelExpAddExp(CACTParser::RelExpAddExpContext * /*ctx*/) override { }
-
-  virtual void enterRelExpBoolConst(CACTParser::RelExpBoolConstContext * /*ctx*/) override { }
-  virtual void exitRelExpBoolConst(CACTParser::RelExpBoolConstContext * /*ctx*/) override { }
 
   virtual void enterRelOp(CACTParser::RelOpContext * /*ctx*/) override { }
   virtual void exitRelOp(CACTParser::RelOpContext * /*ctx*/) override { }

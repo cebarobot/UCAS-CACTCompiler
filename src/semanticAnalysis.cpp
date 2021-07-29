@@ -324,7 +324,8 @@ void SemanticAnalysis::exitBlockItem(CACTParser::BlockItemContext * ctx) {
 }
 
 void SemanticAnalysis::enterStmtAssign(CACTParser::StmtAssignContext * ctx) {
-    // nothing to do
+    irGen->addCode(ctx->codeBefore);
+
 }
 void SemanticAnalysis::exitStmtAssign(CACTParser::StmtAssignContext * ctx) {
     if (ctx->lVal()->dataType != ctx->exp()->dataType) {
@@ -371,52 +372,116 @@ void SemanticAnalysis::exitStmtAssign(CACTParser::StmtAssignContext * ctx) {
             irGen->addCode(new IRCopyD(ctx->lVal()->result, ctx->exp()->result));
         }
     }
+
+    if (ctx->flowNext) {
+        irGen->addCode(new IRGoto(ctx->flowNext));
+    }
 }
 
 void SemanticAnalysis::enterStmtExp(CACTParser::StmtExpContext * ctx) {
-    // nothing to do
+    irGen->addCode(ctx->codeBefore);
 }
 void SemanticAnalysis::exitStmtExp(CACTParser::StmtExpContext * ctx) {
-    // nothing to do
+    if (ctx->flowNext) {
+        irGen->addCode(new IRGoto(ctx->flowNext));
+    }
 }
 
 void SemanticAnalysis::enterStmtBlock(CACTParser::StmtBlockContext * ctx) {
+    irGen->addCode(ctx->codeBefore);
+
     ctx->block()->thisFuncInfo = nullptr;
 }
 void SemanticAnalysis::exitStmtBlock(CACTParser::StmtBlockContext * ctx) {
-    // nothing to do
+    if (ctx->flowNext) {
+        irGen->addCode(new IRGoto(ctx->flowNext));
+    }
 }
 
 void SemanticAnalysis::enterStmtCtrlIf(CACTParser::StmtCtrlIfContext * ctx) {
-    // nothing to do
+    irGen->addCode(ctx->codeBefore);
+
+    if (!ctx->flowNext) {
+        ctx->flowEnd = irGen->newLabel();
+        ctx->flowNext = ctx->flowEnd;
+    }
+
+    ctx->cond()->flowTrue = irGen->newLabel();
+    ctx->cond()->flowFalse = ctx->flowNext;
+
+    ctx->stmt()->codeBefore.push_back(new IRLabelHere(ctx->cond()->flowTrue));
+    ctx->stmt()->flowNext = ctx->flowNext;
 }
 void SemanticAnalysis::exitStmtCtrlIf(CACTParser::StmtCtrlIfContext * ctx) {
-    // nothing to do
+    if (ctx->flowEnd) {
+        irGen->addCode(new IRLabelHere(ctx->flowEnd));
+    }
+}
+
+void SemanticAnalysis::enterStmtCtrlIfElse(CACTParser::StmtCtrlIfElseContext * ctx) {
+    irGen->addCode(ctx->codeBefore);
+
+    if (!ctx->flowNext) {
+        ctx->flowEnd = irGen->newLabel();
+        ctx->flowNext = ctx->flowEnd;
+    }
+
+    ctx->cond()->flowTrue = irGen->newLabel();
+    ctx->cond()->flowFalse = irGen->newLabel();
+
+    ctx->stmt(0)->codeBefore.push_back(new IRLabelHere(ctx->cond()->flowTrue));
+    ctx->stmt(0)->flowNext = ctx->flowNext;
+
+    ctx->stmt(1)->codeBefore.push_back(new IRLabelHere(ctx->cond()->flowFalse));
+    ctx->stmt(1)->flowNext = ctx->flowNext;
+}
+void SemanticAnalysis::exitStmtCtrlIfElse(CACTParser::StmtCtrlIfElseContext * ctx) {
+    if (ctx->flowEnd) {
+        irGen->addCode(new IRLabelHere(ctx->flowEnd));
+    }
 }
 
 void SemanticAnalysis::enterStmtCtrlWhile(CACTParser::StmtCtrlWhileContext * ctx) {
-    // nothing to do
+    irGen->addCode(ctx->codeBefore);
+
+    IRLabel * flowBegin = irGen->newLabel();
+    irGen->addCode(new IRLabelHere(flowBegin));
+
+    if (!ctx->flowNext) {
+        ctx->flowEnd = irGen->newLabel();
+        ctx->flowNext = ctx->flowEnd;
+    }
+
+    ctx->cond()->flowTrue = irGen->newLabel();
+    ctx->cond()->flowFalse = ctx->flowNext;
+
+    ctx->stmt()->codeBefore.push_back(new IRLabelHere(ctx->cond()->flowTrue));
+    ctx->stmt()->flowNext = flowBegin;
+
+    irGen->enterLoop(flowBegin, ctx->flowNext);
 }
 void SemanticAnalysis::exitStmtCtrlWhile(CACTParser::StmtCtrlWhileContext * ctx) {
-    // nothing to do
+    if (ctx->flowEnd) {
+        irGen->addCode(new IRLabelHere(ctx->flowEnd));
+    }
 }
 
 void SemanticAnalysis::enterStmtCtrlBreak(CACTParser::StmtCtrlBreakContext * ctx) {
-    // nothing to do
+    irGen->addCode(ctx->codeBefore);
 }
 void SemanticAnalysis::exitStmtCtrlBreak(CACTParser::StmtCtrlBreakContext * ctx) {
-    // nothing to do
+    irGen->addCode(new IRGoto(irGen->getLoopEnd()));
 }
 
 void SemanticAnalysis::enterStmtCtrlContinue(CACTParser::StmtCtrlContinueContext * ctx) {
-    // nothing to do
+    irGen->addCode(ctx->codeBefore);
 }
 void SemanticAnalysis::exitStmtCtrlContinue(CACTParser::StmtCtrlContinueContext * ctx) {
-    // nothing to do
+    irGen->addCode(new IRGoto(irGen->getLoopBegin()));
 }
 
 void SemanticAnalysis::enterStmtReturn(CACTParser::StmtReturnContext * ctx) {
-    // nothing to do
+    irGen->addCode(ctx->codeBefore);
 }
 void SemanticAnalysis::exitStmtReturn(CACTParser::StmtReturnContext * ctx) {
     if (currentFunc == nullptr) {
@@ -471,8 +536,13 @@ void SemanticAnalysis::exitExpBoolConst(CACTParser::ExpBoolConstContext * ctx) {
 }
 
 void SemanticAnalysis::enterCond(CACTParser::CondContext * ctx) {
-    // nothing to do
-}
+    if (ctx->flowTrue) {
+        ctx->lOrExp()->flowTrue = ctx->flowTrue;
+        ctx->lOrExp()->flowFalse = ctx->flowFalse;
+    } else {
+        // return value.
+    }
+}            
 void SemanticAnalysis::exitCond(CACTParser::CondContext * ctx) {
     if (ctx->lOrExp()->isArray) {
         throw std::runtime_error("an array cannot be a condition");
@@ -555,18 +625,16 @@ void SemanticAnalysis::exitUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext * 
 
         if (unaryOp == "+") {
             ctx->result = ctx->unaryExp()->result;
+
         } else if (unaryOp == "-") {
+            ctx->result = irGen->newTemp(ctx->dataType);
             if (ctx->dataType == INT) {
-                ctx->result = irGen->newTemp(ctx->dataType);
                 irGen->addCode(new IRNegInt(ctx->result, ctx->unaryExp()->result));
             } else if (ctx->dataType == FLOAT) {
-                ctx->result = irGen->newTemp(ctx->dataType);
                 irGen->addCode(new IRNegFloat(ctx->result, ctx->unaryExp()->result));
             } else if (ctx->dataType == DOUBLE) {
-                ctx->result = irGen->newTemp(ctx->dataType);
                 irGen->addCode(new IRNegDouble(ctx->result, ctx->unaryExp()->result));
             }
-            // TODO:
         }
 
     } else if (unaryOp == "!") {
@@ -585,9 +653,8 @@ void SemanticAnalysis::exitUnaryExpUnaryOp(CACTParser::UnaryExpUnaryOpContext * 
             ctx->isArray = false;
             ctx->dataType = DataType::BOOL;
         }
-
-        // TODO
-
+        ctx->result = irGen->newTemp(ctx->dataType);
+        irGen->addCode(new IRNotBool(ctx->result, ctx->unaryExp()->result));
     }
 }
 
@@ -746,8 +813,6 @@ void SemanticAnalysis::exitAddExpAddExp(CACTParser::AddExpAddExpContext * ctx) {
             irGen->addCode(new IRSubDouble(ctx->result, ctx->addExp()->result, ctx->mulExp()->result));
         }
     }
-    // TODO:
-
 }
 
 void SemanticAnalysis::enterRelOp(CACTParser::RelOpContext * ctx) {
@@ -758,16 +823,36 @@ void SemanticAnalysis::exitRelOp(CACTParser::RelOpContext * ctx) {
 }
 
 void SemanticAnalysis::enterRelExpAddExp(CACTParser::RelExpAddExpContext * ctx) {
-    // nothing to do
+    if (ctx->flowTrue && ctx->flowFalse) {
+        // nothing to do
+    } else {
+        // do value operation
+    }
 }
 void SemanticAnalysis::exitRelExpAddExp(CACTParser::RelExpAddExpContext * ctx) {
     ctx->isArray = ctx->addExp()->isArray;
     ctx->arraySize = ctx->addExp()->arraySize;
     ctx->dataType = ctx->addExp()->dataType;
+
+    if (ctx->flowTrue && ctx->flowFalse) {
+        if (ctx->addExp()->dataType == BOOL) {
+            irGen->addCode(new IRIfGreaterThanZeroGoto(ctx->flowTrue, ctx->addExp()->result));
+            irGen->addCode(new IRGoto(ctx->flowFalse));
+        } else {
+            throw std::runtime_error("non-bool value cannot work as cond");
+        }
+    } else {
+        // do value operation
+        ctx->result = ctx->addExp()->result;
+    }
 }
 
 void SemanticAnalysis::enterRelExpRelExp(CACTParser::RelExpRelExpContext * ctx) {
-    // nothing to do
+    if (ctx->flowTrue && ctx->flowFalse) {
+        // nothing to do
+    } else {
+        // do value operation
+    }
 }
 void SemanticAnalysis::exitRelExpRelExp(CACTParser::RelExpRelExpContext * ctx) {
     ctx->isArray = false;
@@ -788,14 +873,66 @@ void SemanticAnalysis::exitRelExpRelExp(CACTParser::RelExpRelExpContext * ctx) {
         throw std::runtime_error("cannot use logical operation between arrays");
         return;
     }
+
+    DataType dt = ctx->relExp()->dataType;
+    std::string relOp = ctx->relOp()->getText();
+
+    if (ctx->flowTrue && ctx->flowFalse) {
+        if (dt == INT) {
+            if (relOp == "<") {
+                irGen->addCode(new IRIfLessThanGotoW(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            } else if (relOp == ">") {
+                irGen->addCode(new IRIfGreaterThanGotoW(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            } else if (relOp == "<=") {
+                irGen->addCode(new IRIfLessEqualThanGotoW(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            } else if (relOp == "<=") {
+                irGen->addCode(new IRIfGreaterEqualThanGotoW(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            }
+        } else if (dt == FLOAT) {
+            if (relOp == "<") {
+                irGen->addCode(new IRIfLessThanGotoF(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            } else if (relOp == ">") {
+                irGen->addCode(new IRIfGreaterThanGotoF(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            } else if (relOp == "<=") {
+                irGen->addCode(new IRIfLessEqualThanGotoF(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            } else if (relOp == "<=") {
+                irGen->addCode(new IRIfGreaterEqualThanGotoF(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            }
+        } else if (dt == DOUBLE) {
+            if (relOp == "<") {
+                irGen->addCode(new IRIfLessThanGotoD(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            } else if (relOp == ">") {
+                irGen->addCode(new IRIfGreaterThanGotoD(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            } else if (relOp == "<=") {
+                irGen->addCode(new IRIfLessEqualThanGotoD(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            } else if (relOp == "<=") {
+                irGen->addCode(new IRIfGreaterEqualThanGotoD(ctx->flowTrue, ctx->relExp()->result, ctx->addExp()->result));
+            }
+        }
+        irGen->addCode(new IRGoto(ctx->flowFalse));
+    } else {
+        // do value operation
+    }
 }
 
-void SemanticAnalysis::enterRelExpBoolConst(CACTParser::RelExpBoolConstContext * ctx) {
-    // nothing to do
+void SemanticAnalysis::enterRelExpBoolVal(CACTParser::RelExpBoolValContext * ctx) {
+    if (ctx->flowTrue && ctx->flowFalse) {
+        // nothing to do
+    } else {
+        // do value operation
+    }
 }
-void SemanticAnalysis::exitRelExpBoolConst(CACTParser::RelExpBoolConstContext * ctx) {
+void SemanticAnalysis::exitRelExpBoolVal(CACTParser::RelExpBoolValContext * ctx) {
     ctx->isArray = false;
     ctx->dataType = DataType::BOOL;
+
+    if (ctx->flowTrue && ctx->flowFalse) {
+        irGen->addCode(new IRIfGreaterThanZeroGoto(ctx->flowTrue, ctx->boolVal()->result));
+        irGen->addCode(new IRGoto(ctx->flowFalse));
+    } else {
+        // do value operation
+        ctx->result = ctx->boolVal()->result;
+    }
 }
 
 void SemanticAnalysis::enterEqOp(CACTParser::EqOpContext * ctx) {
@@ -806,16 +943,35 @@ void SemanticAnalysis::exitEqOp(CACTParser::EqOpContext * ctx) {
 }
 
 void SemanticAnalysis::enterEqExpRelExp(CACTParser::EqExpRelExpContext * ctx) {
-    // nothing to do
+    irGen->addCode(ctx->codeBefore);
+
+    if (ctx->flowTrue && ctx->flowFalse) {
+        ctx->relExp()->flowTrue = ctx->flowTrue;
+        ctx->relExp()->flowFalse = ctx->flowFalse;
+    } else {
+        // do value operation
+    }
 }
 void SemanticAnalysis::exitEqExpRelExp(CACTParser::EqExpRelExpContext * ctx) {
     ctx->isArray = ctx->relExp()->isArray;
     ctx->arraySize = ctx->relExp()->arraySize;
     ctx->dataType = ctx->relExp()->dataType;
+
+    if (ctx->flowTrue && ctx->flowFalse) {
+        // nothing to do
+    } else {
+        // do value operation
+    }
 }
 
 void SemanticAnalysis::enterEqExpEqExp(CACTParser::EqExpEqExpContext * ctx) {
-    // nothing to do
+    irGen->addCode(ctx->codeBefore);
+
+    if (ctx->flowTrue && ctx->flowFalse) {
+        // nothing to do
+    } else {
+        // do value operation
+    }
 }
 void SemanticAnalysis::exitEqExpEqExp(CACTParser::EqExpEqExpContext * ctx) {
     ctx->isArray = false;
@@ -833,19 +989,68 @@ void SemanticAnalysis::exitEqExpEqExp(CACTParser::EqExpEqExpContext * ctx) {
         throw std::runtime_error("cannot use logical operation between arrays");
         return;
     }
+
+    DataType dt = ctx->eqExp()->dataType;
+
+    if (ctx->flowTrue && ctx->flowFalse) {
+        IRLabel * equalWay, * notEqualWay;
+        if (ctx->eqOp()->getText() == "==") {
+            equalWay = ctx->flowTrue;
+            notEqualWay = ctx->flowFalse;
+        } else if (ctx->eqOp()->getText() == "!=") {
+            equalWay = ctx->flowFalse;
+            notEqualWay = ctx->flowTrue;
+        }
+
+        if (dt == BOOL || dt == INT) {
+            irGen->addCode(new IRIfEqualGotoW(equalWay, ctx->eqExp()->result, ctx->relExp()->result));
+        } else if (dt == FLOAT) {
+            irGen->addCode(new IRIfEqualGotoF(equalWay, ctx->eqExp()->result, ctx->relExp()->result));
+        } else if (dt == DOUBLE) {
+            irGen->addCode(new IRIfEqualGotoD(equalWay, ctx->eqExp()->result, ctx->relExp()->result));
+        }
+        irGen->addCode(new IRGoto(notEqualWay));
+
+    } else {
+        // do value operation
+    }
 }
 
 void SemanticAnalysis::enterLAndExpEqExp(CACTParser::LAndExpEqExpContext * ctx) {
-    // nothing to do
+    irGen->addCode(ctx->codeBefore);
+
+    if (ctx->flowTrue && ctx->flowFalse) {
+        ctx->eqExp()->flowTrue = ctx->flowTrue;
+        ctx->eqExp()->flowFalse = ctx->flowFalse;
+    } else {
+        // do value operation
+    }
 }
 void SemanticAnalysis::exitLAndExpEqExp(CACTParser::LAndExpEqExpContext * ctx) {
     ctx->isArray = ctx->eqExp()->isArray;
     ctx->arraySize = ctx->eqExp()->arraySize;
     ctx->dataType = ctx->eqExp()->dataType;
+    
+    if (ctx->flowTrue && ctx->flowFalse) {
+        // nothing to do
+    } else {
+        // do value operation
+    }
 }
 
 void SemanticAnalysis::enterLAndExpLAndExp(CACTParser::LAndExpLAndExpContext * ctx) {
-    // nothing to do
+    irGen->addCode(ctx->codeBefore);
+
+    if (ctx->flowTrue && ctx->flowFalse) {
+        ctx->lAndExp()->flowTrue = irGen->newLabel();
+        ctx->lAndExp()->flowFalse = ctx->flowFalse;
+
+        ctx->eqExp()->codeBefore.push_back(new IRLabelHere(ctx->lAndExp()->flowTrue));
+        ctx->eqExp()->flowTrue = ctx->flowTrue;
+        ctx->eqExp()->flowTrue = ctx->flowFalse;
+    } else {
+        // do value operation
+    }
 }
 void SemanticAnalysis::exitLAndExpLAndExp(CACTParser::LAndExpLAndExpContext * ctx) {
     ctx->isArray = false;
@@ -866,19 +1071,45 @@ void SemanticAnalysis::exitLAndExpLAndExp(CACTParser::LAndExpLAndExpContext * ct
         throw std::runtime_error("cannot use logical operation between arrays");
         return;
     }
+    
+    if (ctx->flowTrue && ctx->flowFalse) {
+        // nothing to do
+    } else {
+        // do value operation
+    }
 }
 
 void SemanticAnalysis::enterLOrExpLAndExp(CACTParser::LOrExpLAndExpContext * ctx) {
-    // nothing to do
+    if (ctx->flowTrue && ctx->flowFalse) {
+        ctx->lAndExp()->flowTrue = ctx->flowTrue;
+        ctx->lAndExp()->flowFalse = ctx->flowFalse;
+    } else {
+        // do value operation
+    }
 }
 void SemanticAnalysis::exitLOrExpLAndExp(CACTParser::LOrExpLAndExpContext * ctx) {
     ctx->isArray = ctx->lAndExp()->isArray;
     ctx->arraySize = ctx->lAndExp()->arraySize;
     ctx->dataType = ctx->lAndExp()->dataType;
+    
+    if (ctx->flowTrue && ctx->flowFalse) {
+        // nothing to do
+    } else {
+        // do value operation
+    }
 }
 
 void SemanticAnalysis::enterLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * ctx) {
-    // nothing to do
+    if (ctx->flowTrue && ctx->flowFalse) {
+        ctx->lOrExp()->flowTrue = ctx->flowTrue;
+        ctx->lOrExp()->flowFalse = irGen->newLabel();
+
+        ctx->lAndExp()->codeBefore.push_back(new IRLabelHere(ctx->lOrExp()->flowFalse));
+        ctx->lAndExp()->flowTrue = ctx->flowTrue;
+        ctx->lAndExp()->flowFalse = ctx->flowFalse;
+    } else {
+        // do value operation
+    }
 }
 void SemanticAnalysis::exitLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * ctx) {
     ctx->isArray = false;
@@ -898,6 +1129,12 @@ void SemanticAnalysis::exitLOrExpLOrExp(CACTParser::LOrExpLOrExpContext * ctx) {
     if (ctx->lOrExp()->isArray || ctx->lAndExp()->isArray) {
         throw std::runtime_error("cannot use logical operation between arrays");
         return;
+    }
+
+    if (ctx->flowTrue && ctx->flowFalse) {
+        // nothing to do
+    } else {
+        // do value operation
     }
 }
 

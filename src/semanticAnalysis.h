@@ -77,6 +77,9 @@ public:
     void enterStmtCtrlIf(CACTParser::StmtCtrlIfContext * ctx) override;
     void exitStmtCtrlIf(CACTParser::StmtCtrlIfContext * ctx) override;
 
+    void enterStmtCtrlIfElse(CACTParser::StmtCtrlIfElseContext * ctx) override;
+    void exitStmtCtrlIfElse(CACTParser::StmtCtrlIfElseContext * ctx) override;
+
     void enterStmtCtrlWhile(CACTParser::StmtCtrlWhileContext * ctx) override;
     void exitStmtCtrlWhile(CACTParser::StmtCtrlWhileContext * ctx) override;
 
@@ -146,8 +149,8 @@ public:
     void enterRelExpAddExp(CACTParser::RelExpAddExpContext * ctx) override;
     void exitRelExpAddExp(CACTParser::RelExpAddExpContext * ctx) override;
 
-    void enterRelExpBoolConst(CACTParser::RelExpBoolConstContext * ctx) override;
-    void exitRelExpBoolConst(CACTParser::RelExpBoolConstContext * ctx) override;
+    void enterRelExpBoolVal(CACTParser::RelExpBoolValContext * ctx) override;
+    void exitRelExpBoolVal(CACTParser::RelExpBoolValContext * ctx) override;
 
     void enterEqOp(CACTParser::EqOpContext * ctx) override;
     void exitEqOp(CACTParser::EqOpContext * ctx) override;

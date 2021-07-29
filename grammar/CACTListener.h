@@ -78,6 +78,9 @@ public:
   virtual void enterStmtCtrlIf(CACTParser::StmtCtrlIfContext *ctx) = 0;
   virtual void exitStmtCtrlIf(CACTParser::StmtCtrlIfContext *ctx) = 0;
 
+  virtual void enterStmtCtrlIfElse(CACTParser::StmtCtrlIfElseContext *ctx) = 0;
+  virtual void exitStmtCtrlIfElse(CACTParser::StmtCtrlIfElseContext *ctx) = 0;
+
   virtual void enterStmtCtrlWhile(CACTParser::StmtCtrlWhileContext *ctx) = 0;
   virtual void exitStmtCtrlWhile(CACTParser::StmtCtrlWhileContext *ctx) = 0;
 
@@ -141,11 +144,11 @@ public:
   virtual void enterRelExpRelExp(CACTParser::RelExpRelExpContext *ctx) = 0;
   virtual void exitRelExpRelExp(CACTParser::RelExpRelExpContext *ctx) = 0;
 
+  virtual void enterRelExpBoolVal(CACTParser::RelExpBoolValContext *ctx) = 0;
+  virtual void exitRelExpBoolVal(CACTParser::RelExpBoolValContext *ctx) = 0;
+
   virtual void enterRelExpAddExp(CACTParser::RelExpAddExpContext *ctx) = 0;
   virtual void exitRelExpAddExp(CACTParser::RelExpAddExpContext *ctx) = 0;
-
-  virtual void enterRelExpBoolConst(CACTParser::RelExpBoolConstContext *ctx) = 0;
-  virtual void exitRelExpBoolConst(CACTParser::RelExpBoolConstContext *ctx) = 0;
 
   virtual void enterRelOp(CACTParser::RelOpContext *ctx) = 0;
   virtual void exitRelOp(CACTParser::RelOpContext *ctx) = 0;

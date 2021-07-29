@@ -99,10 +99,16 @@ blockItem
     ;
 
 stmt
+    locals[
+        IRLabel * flowNext = nullptr,
+        IRLabel * flowEnd = nullptr,
+        std::vector<IRCode *> codeBefore,
+    ]
     : lVal '=' exp ';'                          #stmtAssign
     | (exp)? ';'                                #stmtExp
     | block                                     #stmtBlock
-    | 'if' '(' cond ')' stmt ('else' stmt)?     #stmtCtrlIf
+    | 'if' '(' cond ')' stmt                    #stmtCtrlIf
+    | 'if' '(' cond ')' stmt ('else' stmt)?     #stmtCtrlIfElse
     | 'while' '(' cond ')' stmt                 #stmtCtrlWhile
     | 'break' ';'                               #stmtCtrlBreak
     | 'continue' ';'                            #stmtCtrlContinue
@@ -122,6 +128,8 @@ exp
 
 cond
     locals[
+        IRLabel * flowTrue = nullptr,
+        IRLabel * flowFalse = nullptr,
         DataType dataType,
         IROperand * result
     ]
@@ -193,6 +201,8 @@ addOp
 
 relExp
     locals[
+        IRLabel * flowTrue = nullptr,
+        IRLabel * flowFalse = nullptr,
         bool isArray,
         int arraySize,
         DataType dataType,
@@ -200,7 +210,7 @@ relExp
     ]
     : addExp                    #relExpAddExp
     | relExp relOp addExp       #relExpRelExp
-    | BoolConst                 #relExpBoolConst
+    | boolVal                   #relExpBoolVal
     ;
 
 relOp
@@ -212,6 +222,9 @@ relOp
 
 eqExp
     locals[
+        std::vector<IRCode *> codeBefore,
+        IRLabel * flowTrue = nullptr,
+        IRLabel * flowFalse = nullptr,
         bool isArray,
         int arraySize,
         DataType dataType,
@@ -228,6 +241,10 @@ eqOp
 
 lAndExp
     locals[
+        std::vector<IRCode *> codeBefore,
+        IRLabel * label = nullptr;
+        IRLabel * flowTrue = nullptr,
+        IRLabel * flowFalse = nullptr,
         bool isArray,
         int arraySize,
         DataType dataType,
@@ -239,6 +256,8 @@ lAndExp
 
 lOrExp
     locals[
+        IRLabel * flowTrue = nullptr,
+        IRLabel * flowFalse = nullptr,
         bool isArray,
         int arraySize,
         DataType dataType,

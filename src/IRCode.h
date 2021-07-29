@@ -47,7 +47,11 @@ enum IROperation {
     DIV_FLOAT,
     DIV_DOUBLE,
     MOD_INT,
+    NOT_BOOL,
     IF_GREATER_THAN_ZERO_GOTO,
+    IF_EQUAL_GOTO_W,
+    IF_EQUAL_GOTO_F,
+    IF_EQUAL_GOTO_D,
     IF_GREATER_THAN_GOTO_W,
     IF_GREATER_THAN_GOTO_F,
     IF_GREATER_THAN_GOTO_D,
@@ -393,9 +397,41 @@ public:
     void genTargetCode(TargetCodeList * t);
 };
 
+class IRNotBool : public IRCode {
+public:
+    IRNotBool(IROperand * new_result, IROperand * new_arg1);
+
+    virtual void print();
+    void genTargetCode(TargetCodeList * t);
+};
+
 class IRIfGreaterThanZeroGoto : public IRCode {
 public:
     IRIfGreaterThanZeroGoto(IROperand * new_result, IROperand * new_arg1);
+
+    virtual void print();
+    void genTargetCode(TargetCodeList * t);
+};
+
+class IRIfEqualGotoW : public IRCode {
+public:
+    IRIfEqualGotoW(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2);
+
+    virtual void print();
+    void genTargetCode(TargetCodeList * t);
+};
+
+class IRIfEqualGotoF : public IRCode {
+public:
+    IRIfEqualGotoF(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2);
+
+    virtual void print();
+    void genTargetCode(TargetCodeList * t);
+};
+
+class IRIfEqualGotoD : public IRCode {
+public:
+    IRIfEqualGotoD(IROperand * new_result, IROperand * new_arg1, IROperand * new_arg2);
 
     virtual void print();
     void genTargetCode(TargetCodeList * t);

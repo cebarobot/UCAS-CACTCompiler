@@ -328,6 +328,9 @@ public:
 
   class  StmtContext : public antlr4::ParserRuleContext {
   public:
+    IRLabel * flowNext = nullptr;
+    IRLabel * flowEnd = nullptr;
+    std::vector<IRCode *> codeBefore;
     StmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     StmtContext() = default;
@@ -407,6 +410,16 @@ public:
     StmtCtrlIfContext(StmtContext *ctx);
 
     CondContext *cond();
+    StmtContext *stmt();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
+  class  StmtCtrlIfElseContext : public StmtContext {
+  public:
+    StmtCtrlIfElseContext(StmtContext *ctx);
+
+    CondContext *cond();
     std::vector<StmtContext *> stmt();
     StmtContext* stmt(size_t i);
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -454,6 +467,8 @@ public:
 
   class  CondContext : public antlr4::ParserRuleContext {
   public:
+    IRLabel * flowTrue = nullptr;
+    IRLabel * flowFalse = nullptr;
     DataType dataType;
     IROperand * result;
     CondContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -676,6 +691,8 @@ public:
 
   class  RelExpContext : public antlr4::ParserRuleContext {
   public:
+    IRLabel * flowTrue = nullptr;
+    IRLabel * flowFalse = nullptr;
     bool isArray;
     int arraySize;
     DataType dataType;
@@ -702,20 +719,20 @@ public:
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
 
+  class  RelExpBoolValContext : public RelExpContext {
+  public:
+    RelExpBoolValContext(RelExpContext *ctx);
+
+    BoolValContext *boolVal();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
   class  RelExpAddExpContext : public RelExpContext {
   public:
     RelExpAddExpContext(RelExpContext *ctx);
 
     AddExpContext *addExp();
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-  };
-
-  class  RelExpBoolConstContext : public RelExpContext {
-  public:
-    RelExpBoolConstContext(RelExpContext *ctx);
-
-    antlr4::tree::TerminalNode *BoolConst();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };
@@ -736,6 +753,9 @@ public:
 
   class  EqExpContext : public antlr4::ParserRuleContext {
   public:
+    std::vector<IRCode *> codeBefore;
+    IRLabel * flowTrue = nullptr;
+    IRLabel * flowFalse = nullptr;
     bool isArray;
     int arraySize;
     DataType dataType;
@@ -787,6 +807,10 @@ public:
 
   class  LAndExpContext : public antlr4::ParserRuleContext {
   public:
+    std::vector<IRCode *> codeBefore;
+    IRLabel * label = nullptr;
+            IRLabel * flowTrue = nullptr;
+    IRLabel * flowFalse = nullptr;
     bool isArray;
     int arraySize;
     DataType dataType;
@@ -825,6 +849,8 @@ public:
   LAndExpContext* lAndExp(int precedence);
   class  LOrExpContext : public antlr4::ParserRuleContext {
   public:
+    IRLabel * flowTrue = nullptr;
+    IRLabel * flowFalse = nullptr;
     bool isArray;
     int arraySize;
     DataType dataType;
