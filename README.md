@@ -1,6 +1,11 @@
-# Compiler
+# CACT Compiler
+> 中国科学院大学 编译原理研讨课（2021年春季学期） 大作业
 
-Antlr and CACT compiler demo.
+一个类 C 语言的简单编译器，前端基于 ANTLR4。
+
+## Dependence
+* ANTLR4 
+* g++ 5
 
 ## Compile
 
@@ -14,9 +19,5 @@ make
 ## Run demo
 
 ```shell
-./compiler ../samples/00_main.cact
+./compiler ../samples_syntax/00_main.cact
 ```
-
-
-
-
